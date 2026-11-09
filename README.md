@@ -1,6 +1,9 @@
 <div align="center">
 
-# Websites With Punch
+<h1>
+  <img src="public/logo.svg" alt="" width="44" height="44" />
+  Websites With Punch
+</h1>
 
 **Website health monitoring — uptime, SSL certificate and domain expiry alerts on one dashboard.**
 
