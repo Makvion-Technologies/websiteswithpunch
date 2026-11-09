@@ -1,147 +1,132 @@
+<div align="center">
+
 # Websites With Punch
 
-**websiteswithpunch.com** — Website health SaaS MVP: uptime monitoring, SSL expiry, and domain expiry in one clean dashboard.
+**Website health monitoring — uptime, SSL certificate and domain expiry alerts on one dashboard.**
+
+[websiteswithpunch.com](https://websiteswithpunch.com)
+
+</div>
+
+## About
+
+Websites With Punch watches the sites you care about and tells you before something breaks. Each monitored site gets a daily check for uptime, SSL certificate expiry and domain expiry, with email alerts when a site goes down or is about to lapse. Free tools on the marketing site let anyone run a one-off SSL, domain or “is it down?” check without an account.
 
 ## Features
 
-- **Uptime** — HTTP(S) checks, status history, up/down marking
-- **SSL expiry** — certificate days remaining with warn thresholds
-- **Domain expiry** — best-effort RDAP / WHOIS for the root domain
-- **Dashboard** — list sites with status, last check, SSL days, domain days
-- **CRUD** — add / edit / delete monitored sites
-- **One site = one host** — www and paths count as the same site; other subdomains are separate
-- **Auth** — email/password signup + login (NextAuth credentials), password reset by email (Resend)
-- **Plans** — Free = 1 site; Pro = 10 sites at **$12/mo**; Business = 50 sites at **$42/mo**
-- **Billing via [Dodo Payments](https://dodopayments.com)** (merchant of record) — hosted checkout, customer portal, signed webhook
-- **Cron** — protected `/api/cron/check` to run all checks
+- **Uptime monitoring** — daily HTTPS checks, on-demand recheck, status and response-time history
+- **SSL expiry** — certificate days remaining with configurable warn thresholds and email alerts
+- **Domain expiry** — root-domain lookup (RDAP / WHOIS) with warn thresholds and alerts
+- **Dashboard** — sites list with health status, last check, SSL and domain days left
+- **Auth** — email/password signup and login (NextAuth credentials), email verification, password reset
+- **Plans** — Free (1 site), Pro (10 sites), Business (50 sites), with optional site packs on paid plans
+- **Billing** — [Dodo Payments](https://dodopayments.com) as merchant of record (checkout, portal, webhooks)
+- **Email** — transactional mail via Resend (contact form, auth, alerts)
+- **Free public tools** — SSL checker, domain expiry checker, website down checker
+- **Referral program** — share a link and earn commission on referred paid plans
+- **Cron checks** — protected `/api/cron/check` scheduled via Vercel Cron
 
-## Stack
+## Tech stack
 
-- Next.js 14 (App Router) + TypeScript + Tailwind CSS
-- Prisma + PostgreSQL (e.g. [Neon](https://neon.tech))
-- NextAuth.js (credentials)
-- Dodo Payments (optional locally)
+| Layer | Stack |
+| --- | --- |
+| Web app | Next.js 14 (App Router), React 18, TypeScript, Tailwind CSS |
+| Database | Prisma + PostgreSQL (e.g. Neon) |
+| Auth | NextAuth.js (credentials) |
+| Payments | Dodo Payments |
+| Email | Resend |
+| Hosting / cron | Vercel (app + daily cron) |
+| Analytics | Vercel Analytics, Speed Insights |
 
-## Quick start
+## Getting started
+
+### Prerequisites
+
+- Node.js 20+
+- npm
+- A PostgreSQL database (Neon or local)
+
+### Install
 
 ```bash
-git clone https://github.com/mardavsj/websiteswithpunch.git
-cd websiteswithpunch
-cp .env.example .env   # then set DATABASE_URL to your Postgres / Neon connection string
 npm install
-npm run db:setup    # prisma db push + seed demo user
-npm run dev
+cp .env.example .env.local
 ```
 
-You need a PostgreSQL database. A free [Neon](https://neon.tech) project works: copy its
-connection string (Connect → keep `?sslmode=require`) into `DATABASE_URL`. A local Postgres
-works too, e.g. `postgresql://postgres:postgres@localhost:5432/wwp`.
+Set at least `DATABASE_URL`, `NEXTAUTH_SECRET` and `NEXTAUTH_URL` (see below). Then:
 
-Open [http://localhost:3000](http://localhost:3000).
+```bash
+npm run db:setup   # prisma db push + seed
+npm run dev        # http://localhost:3000
+```
 
-### Demo account (after seed)
+`db:setup` seeds a local demo user; the seed script prints the login details to the console.
 
-| Field    | Value                         |
-|----------|-------------------------------|
-| Email    | `demo@websiteswithpunch.com`  |
-| Password | `demo12345`                   |
+## Environment
 
-Log in → Dashboard → **Recheck** on Example.com to populate uptime/SSL/domain fields.
+Copy `.env.example` to `.env.local`. Variable names and meaning:
 
-## Environment variables
-
-See `.env.example`. Required for local demo:
-
-- `DATABASE_URL` (PostgreSQL connection string)
-- `NEXTAUTH_SECRET`
-- `NEXTAUTH_URL`
-- `CRON_SECRET`
-
-`DODO_*` vars are optional. Without them, the Upgrade CTA still appears; checkout/portal return a clear configuration error. Webhooks require `DODO_PAYMENTS_WEBHOOK_KEY`.
+| Variable | Meaning |
+| --- | --- |
+| `DATABASE_URL` | PostgreSQL connection string (pooled Neon URL with `sslmode=require` works) |
+| `NEXTAUTH_SECRET` | Secret used to sign NextAuth sessions |
+| `NEXTAUTH_URL` | Public site URL (also used to build password-reset links) |
+| `CRON_SECRET` | Bearer secret for `/api/cron/check` |
+| `SEED_SECRET` | Optional key for the seed-test-users endpoint (falls back to `NEXTAUTH_SECRET`) |
+| `SSL_WARN_DAYS` | Optional SSL expiry warn threshold in days |
+| `DOMAIN_WARN_DAYS` | Optional domain expiry warn threshold in days |
+| `DODO_PAYMENTS_API_KEY` | Dodo API key (optional locally; billing shows unavailable without it) |
+| `DODO_PAYMENTS_WEBHOOK_KEY` | Dodo webhook signing secret |
+| `DODO_PAYMENTS_ENVIRONMENT` | `test_mode` or `live_mode` |
+| `DODO_PRODUCT_*` | Dodo product IDs for Pro/Business monthly and annual plans |
+| `DODO_ADDON_PACK_*` | Dodo add-on IDs for site packs (Pro and Business, monthly and annual) |
+| `RESEND_API_KEY` | Resend API key for outbound email |
+| `CONTACT_FROM_EMAIL` | From address for contact mail (verified Resend domain) |
+| `CONTACT_TO_EMAIL` | Inbox that receives contact form messages |
+| `AUTH_FROM_EMAIL` | Optional From address for auth emails (defaults to `CONTACT_FROM_EMAIL`) |
+| `ADMIN_EMAILS` | Comma-separated emails with admin access |
+| `UNSUBSCRIBE_SECRET` | Secret used to sign alert unsubscribe links |
 
 ## Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Dev server |
-| `npm run build` | Generate Prisma client + production build |
-| `npm run start` | Start production server |
-| `npm run db:push` | Create/update tables in the Postgres database (`prisma db push`) |
-| `npm run db:seed` | Seed demo user + sample site |
-| `npm run db:setup` | Push + seed |
-| `npm test` | Unit tests (webhook signature, plan mapping, site details) |
-| `npm run indexnow` | Optional, after a deploy: ping IndexNow (Bing etc.) with every sitemap URL, or `npm run indexnow -- /path` for specific pages. Needs `public/<key>.txt` live first |
-
-## Cron / scheduled checks
-
-Protect the route with `CRON_SECRET`:
-
 ```bash
-curl -H "Authorization: Bearer $CRON_SECRET" \
-  http://localhost:3000/api/cron/check
+npm run dev          # Next.js development server
+npm run build        # prisma generate + next build
+npm run start        # serve the production build
+npm run lint         # ESLint
+npm run test         # unit tests (tsx)
+npm run db:push      # prisma db push
+npm run db:seed      # seed demo data
+npm run db:setup     # db push + seed
+npm run indexnow     # submit URLs to IndexNow
 ```
 
-Or:
+## Project structure
 
-```bash
-curl -H "x-cron-secret: $CRON_SECRET" \
-  http://localhost:3000/api/cron/check
+```
+src/app/           Next.js App Router (pages, API routes, cron, webhooks)
+src/components/    UI, dashboard, marketing, billing, referrals
+src/lib/           Checks, alerts, auth, Dodo, email, plans
+src/content/       Marketing copy and free-tool content
+prisma/            Schema and seed
+scripts/           Ops helpers (IndexNow, Dodo catalog / reconcile)
+tests/             Unit and DB tests
+vercel.json        Region and cron schedule
 ```
 
-On Vercel, add a Cron Job hitting `/api/cron/check` with the secret header. Elsewhere use systemd timer, GitHub Actions, or EasyCron.
+## Deployment
 
-## Dodo Payments setup
+- **App** — deploy to [Vercel](https://vercel.com). Set the environment variables above in the project settings. `vercel.json` schedules `/api/cron/check` once daily (`30 0 * * *`) in the `sin1` region.
+- **Database** — point `DATABASE_URL` at your production Postgres (e.g. Neon), then run `prisma db push` (or migrations) against that database.
+- **Billing** — configure Dodo products, add-ons and the webhook endpoint (`/api/webhooks/dodo`) in test mode first, then live. See `DODO_SETUP.md` in this repo for the dashboard checklist.
+- **Email** — verify your sending domain in Resend and set `RESEND_API_KEY`.
 
-Full dashboard walkthrough (test mode first, then live): see `DODO_SETUP.md` in the launch notes. In short:
+## Contributing
 
-1. **Developer → API Keys**: create a key → `DODO_PAYMENTS_API_KEY`; set `DODO_PAYMENTS_ENVIRONMENT` to `test_mode` or `live_mode`.
-2. **Products** (subscription, tax category SaaS), one per plan × interval:
-   - Pro **$12/mo** / **$120/yr** → `DODO_PRODUCT_PRO_MONTHLY` / `DODO_PRODUCT_PRO_ANNUAL`
-   - Business **$42/mo** / **$420/yr** → `DODO_PRODUCT_BUSINESS_MONTHLY` / `DODO_PRODUCT_BUSINESS_ANNUAL`
-3. **Add-ons** (site packs), attached to the matching product:
-   - Pro pack **+5 sites @ $6/mo** / **$60/yr** → `DODO_ADDON_PACK_PRO_MONTHLY` / `_ANNUAL`
-   - Business pack **+10 sites @ $9/mo** / **$90/yr** → `DODO_ADDON_PACK_BUSINESS_MONTHLY` / `_ANNUAL`
-4. **Developer → Webhooks**: endpoint `https://www.websiteswithpunch.com/api/webhooks/dodo`, events `subscription.*`, `payment.succeeded`, `payment.failed`. Signing secret → `DODO_PAYMENTS_WEBHOOK_KEY`.
-5. Customer portal: allow cancel at next billing date only; plan changes stay in-app.
+Internal contributions follow the Makvion Technologies guide:
 
-### Billing model (single subscription)
-
-Each customer has **one** Dodo subscription (product = plan + interval, add-on quantity = packs) with **one** renewal date:
-
-- **Free → paid** goes through Dodo hosted checkout; the webhook sets the plan (the dashboard also polls `/api/billing/sync` on return).
-- **Upgrades** (Pro→Business, monthly→annual, pack add) charge now with `prorated_immediately`: the unused part of the current period is credited and the billing date moves to today. `on_payment_failure: prevent_change` means nothing changes if the charge fails.
-- **Downgrades** (Business→Pro, pack removal, annual→monthly) are booked for the next billing date with `do_not_bill`: no refund, current limits stay until then. Only one scheduled change exists at a time.
-- **Cancel / Resume** are in-app (`cancel_at_next_billing_date`). Portal cancels are mirrored via webhook.
-- **Status**: `active` and `past_due` (Dodo retry grace) keep the paid plan; `on_hold`, `cancelled`, `expired` and `failed` drop to Free. `on_hold` shows an "update your payment method" banner linking to the portal.
-- **Site locking**: active (unlocked) sites count toward the limit. Locked sites keep history but skip cron checks; APIs hide metrics (`SITE_LOCKED`). Before a scheduled reduction takes effect, users can change which sites stay active; if no keep-selection was made, the oldest stay active.
-- Webhooks are signature-verified (Standard Webhooks) and deduplicated by `webhook-id`; each subscription/payment event re-reads the subscription from the Dodo API (so event order doesn't matter), then `enforceSiteLimit` runs. `/api/billing/summary` also re-syncs if the stored plan drifts from Dodo.
-- Checkout forces USD (`billing_currency: "USD"`, no currency picker). Keep **Adaptive Currency off** in Dodo.
-
-Without Dodo keys the product still demos fully for Free-plan monitoring.
-
-## Deploy notes (websiteswithpunch.com)
-
-1. Host on Vercel (or similar) with Node runtime.
-2. Set all env vars, including `DATABASE_URL` for your production Postgres (Neon), then run `npx prisma db push` once against it (and again after schema changes).
-3. Set `NEXTAUTH_URL=https://websiteswithpunch.com` (password reset links are built from it). Set `RESEND_API_KEY` so reset emails are sent; `AUTH_FROM_EMAIL` is optional and defaults to `CONTACT_FROM_EMAIL`.
-4. Point the Dodo webhook to `https://www.websiteswithpunch.com/api/webhooks/dodo`.
-5. Schedule cron against `/api/cron/check` with `CRON_SECRET`.
-6. Ensure `/privacy` and `/terms` remain publicly reachable (payment provider review).
-
-## Plan limits
-
-| Plan     | Sites | Price  |
-|----------|-------|--------|
-| Free     | 1     | $0     |
-| Pro      | 10    | $12/mo |
-| Business | 50    | $42/mo |
-
-Optional site packs (from the dashboard, on the same subscription): Pro +5 sites for $6/mo (max 4 packs, 30 sites); Business +10 sites for $9/mo (max 5 packs, 100 sites). Need more than 100? Contact [hello@websiteswithpunch.com](mailto:hello@websiteswithpunch.com). Enforced server-side when creating sites.
-
-## Lockfile
-
-`package-lock.json` is generated by `npm install`. If it is not present in the clone, run `npm install` once to create it before building.
+[CONTRIBUTING.md](https://github.com/Makvion-Technologies/.github/blob/main/CONTRIBUTING.md)
 
 ## License
 
-Private / proprietary — mardavsj / Websites With Punch.
+© Makvion Technologies LLP. All rights reserved.
