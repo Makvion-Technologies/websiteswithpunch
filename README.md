@@ -1,7 +1,7 @@
 <div align="center">
 
-<h1>
-  <img src="public/logo.svg" alt="" width="44" height="44" />
+<h1 align="center">
+  <img src=".github/assets/readme-logo.png" alt="" height="48" />
   Websites With Punch
 </h1>
 
