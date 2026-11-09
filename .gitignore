@@ -39,3 +39,18 @@ prisma/*.db
 prisma/*.db-journal
 *.db
 *.db-journal
+
+# Local AI tooling
+CLAUDE.md
+AGENTS.md
+GEMINI.md
+.cursor/
+.claude/
+.cursorrules
+.windsurfrules
+.github/copilot-instructions.md
+**/copilot-instructions.md
+
+# Local ops scratch (not for the public tree)
+RECONCILE.md
+RETEST.md
