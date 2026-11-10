@@ -1,6 +1,7 @@
 import { HubHero } from "@/components/tools-hub/HubHero";
 import { HubWhy } from "@/components/tools-hub/HubWhy";
 import { ToolCards } from "@/components/tools-hub/ToolCards";
+import { IsDownPromo } from "@/components/tools-hub/IsDownPromo";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { TOOL_LINKS } from "@/content/links";
 import { pageMeta } from "@/lib/seo-meta";
@@ -35,6 +36,7 @@ export default function ToolsIndex() {
       <JsonLd data={itemList} />
       <HubHero />
       <ToolCards />
+      <IsDownPromo />
       <HubWhy />
     </div>
   );

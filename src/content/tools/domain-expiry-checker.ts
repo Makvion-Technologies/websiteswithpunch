@@ -2,10 +2,10 @@ import type { ArticleSection, Faq } from "@/components/seo/types";
 
 export const domainChecker = {
   path: "/tools/domain-expiry-checker",
-  title: "Domain Expiry Checker: Free Expiration Date Lookup (RDAP)",
+  title: "Domain Expiry Check: Free Domain Expiration Date Lookup",
   description:
-    "Free domain expiry checker. See when any domain expires, how many days are left and which registrar manages it, read live from the registry over RDAP.",
-  h1: "Domain expiry checker",
+    "Free domain expiry check. See when any domain expires, how many days are left and which registrar manages it, read live from the registry over RDAP.",
+  h1: "Domain expiry check",
   intro:
     "Enter a domain to see its registration expiry date, the days left and the registrar of record, read live from the registry using RDAP (the official successor to WHOIS). Free, no signup.",
   sections: [
@@ -45,7 +45,7 @@ export const domainChecker = {
     {
       h: "When no expiry date is shown",
       p: [
-        "Some country-code registries don't publish expiry dates at all, or only in a format we can't read reliably; .de and some others keep them private, and a few ccTLDs (for example .io or .co) are not listed in IANA's RDAP bootstrap. In those cases we say so rather than guess. Your registrar's dashboard always shows the real renewal date.",
+        "Some country-code registries don't publish expiry dates at all, or only in a format we can't read reliably; .de and some others keep them private, and a few ccTLDs (for example .io or .co) are not listed in IANA's RDAP bootstrap. In those cases we say so rather than guess. Your registrar's dashboard always shows the real renewal date. If the domain doesn't resolve at all, try the [website down checker](/tools/website-down-checker) or an [is it down](/is-down) page for a known site, and confirm the [SSL certificate](/tools/ssl-checker) is still valid once DNS is back.",
       ],
     },
   ] satisfies ArticleSection[],

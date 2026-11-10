@@ -2,9 +2,9 @@ import type { ArticleSection, Faq } from "@/components/seo/types";
 
 export const sslChecker = {
   path: "/tools/ssl-checker",
-  title: "SSL Checker: Check SSL Certificate Expiry Date & Issuer",
+  title: "SSL Checker: Check SSL Certificate Expiry Date (Free)",
   description:
-    "Free SSL checker: see who issued a site's certificate, the exact expiry date, days left, the hostnames it covers and whether browsers trust it.",
+    "Free SSL checker: see who issued a site's certificate, the exact expiry date, days left, the hostnames it covers and whether browsers trust it. No signup.",
   h1: "SSL certificate checker",
   intro:
     "Enter a domain to read the SSL/TLS certificate it serves on port 443: the issuer, the expiry date, how many days are left, the hostnames it covers and whether browsers will trust it. Free, no signup.",
@@ -13,7 +13,7 @@ export const sslChecker = {
       h: "What this SSL checker does",
       p: [
         "The checker opens a TLS connection to the domain on port 443, the same handshake a browser performs, and reads the certificate the server presents. It does not load the page or send any data to the site. The result shows the certificate's notAfter date (when it expires), the number of whole days left, the certificate authority that issued it, the date it became valid, the DNS names listed in its Subject Alternative Name field and the TLS version that was negotiated.",
-        "It also tells you whether a browser would trust the certificate. A certificate can still be inside its validity dates and fail anyway: if it doesn't list the hostname you typed, if it's self-signed, or if the server forgets to send the intermediate certificate, visitors get a full-page warning instead of your site.",
+        "It also tells you whether a browser would trust the certificate. A certificate can still be inside its validity dates and fail anyway: if it doesn't list the hostname you typed, if it's self-signed, or if the server forgets to send the intermediate certificate, visitors get a full-page warning instead of your site. An expired certificate is a common reason a site looks down in the browser; confirm it here, then use the [website down checker](/tools/website-down-checker) if you still can't load the page.",
       ],
     },
     {

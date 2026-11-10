@@ -27,6 +27,7 @@ const columns: { title: string; links: FooterLink[] }[] = [
       { label: "SSL checker", href: "/tools/ssl-checker" },
       { label: "Domain expiry checker", href: "/tools/domain-expiry-checker" },
       { label: "Website down checker", href: "/tools/website-down-checker" },
+      { label: "Is a site down?", href: "/is-down" },
       { label: "All free tools", href: "/tools" },
     ],
   },

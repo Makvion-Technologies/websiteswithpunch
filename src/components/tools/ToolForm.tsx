@@ -5,14 +5,14 @@ import { ToolResult, ToolResultSkeleton, type ToolKind } from "./ToolResult";
 
 const API: Record<ToolKind, string> = { ssl: "/api/tools/ssl", domain: "/api/tools/domain", down: "/api/tools/down" };
 
-type Props = { kind: ToolKind; label: string; placeholder: string; button: string };
+type Props = { kind: ToolKind; label: string; placeholder: string; button: string; initial?: string; locked?: boolean };
 
 /**
  * Public checker: one field, one button. The request is a GET so a repeat lookup can be served
  * from cache; ?q= in the address bar pre-fills and runs the check (shareable links).
  */
-export function ToolForm({ kind, label, placeholder, button }: Props) {
-  const [value, setValue] = useState("");
+export function ToolForm({ kind, label, placeholder, button, initial, locked }: Props) {
+  const [value, setValue] = useState(initial ?? "");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<Record<string, unknown> | null>(null);
@@ -73,13 +73,15 @@ export function ToolForm({ kind, label, placeholder, button }: Props) {
             spellCheck={false}
             placeholder={placeholder}
             value={value}
+            readOnly={locked}
             onChange={(e) => {
+              if (locked) return;
               setValue(e.target.value);
               if (error) setError(null);
             }}
             aria-invalid={Boolean(error)}
             aria-describedby={error ? `${id}-error` : undefined}
-            className={`block w-full min-w-0 flex-1 rounded-none border bg-bg px-3 py-3 text-base text-ink placeholder:text-muted/70 outline-none transition focus:ring-2 ${
+            className={`block w-full min-w-0 flex-1 rounded-none border bg-bg px-3 py-3 text-base text-ink placeholder:text-muted/70 outline-none transition focus:ring-2 ${locked ? "cursor-default " : ""}${
               error ? "border-danger focus:ring-danger/20" : "border-rule focus:border-accent focus:ring-accent/20"
             }`}
           />

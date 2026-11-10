@@ -41,8 +41,25 @@ export function GuestMenu() {
       {open && (
         <div
           role="menu"
-          className="absolute right-0 z-50 mt-2 w-48 max-w-[calc(100vw-2rem)] border border-rule bg-surface py-1 shadow-lg"
+          className="absolute right-0 z-50 mt-2 w-52 max-w-[calc(100vw-2rem)] border border-rule bg-surface py-1 shadow-lg"
         >
+          <Link
+            role="menuitem"
+            href="/tools"
+            onClick={() => setOpen(false)}
+            className="flex min-h-11 items-center px-3 text-sm text-ink hover:bg-accent-soft focus:bg-accent-soft md:min-h-0 md:py-2"
+          >
+            Free tools
+          </Link>
+          <Link
+            role="menuitem"
+            href="/is-down"
+            onClick={() => setOpen(false)}
+            className="flex min-h-11 items-center px-3 text-sm text-ink hover:bg-accent-soft focus:bg-accent-soft md:min-h-0 md:py-2"
+          >
+            Is it down?
+          </Link>
+          <div className="my-1 border-t border-rule" role="separator" />
           <Link
             role="menuitem"
             href="/login"

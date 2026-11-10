@@ -2,10 +2,10 @@ import type { ArticleSection, Faq } from "@/components/seo/types";
 
 export const downChecker = {
   path: "/tools/website-down-checker",
-  title: "Is My Website Down? Free Website Down Checker",
+  title: "Website Down Checker: Check If a Site Is Down (Free)",
   description:
-    "Is your website down for everyone or just you? Enter a URL to load it from our server and see the HTTP status code, response time and where redirects end up.",
-  h1: "Is my website down?",
+    "Free site down checker: check if a website is down for everyone or just you. See the HTTP status, response time and where redirects end up. No signup.",
+  h1: "Check if a website is down",
   intro:
     "Enter a website to load it from our server, not your device. You'll see whether it answered, the HTTP status code, how long it took and where any redirects ended up, so you know if it's down for everyone or just for you. Free, no signup.",
   sections: [
@@ -38,6 +38,12 @@ export const downChecker = {
         "Read the application error logs for 500s, and roll back the most recent deploy, plugin update or theme change if the problem started right after it.",
         "If you see 502 or 504 behind a CDN, restart or scale the origin server, then purge the CDN cache once it answers again.",
         "Run this check again after each fix. Results are cached for about a minute so a fresh check reflects the change quickly.",
+      ],
+    },
+    {
+      h: "Check a popular site",
+      p: [
+        "If you already know the service, we have ready-made pages that check it from our server: [Instagram](/is-down/instagram.com), [Gmail](/is-down/gmail.com), [ChatGPT](/is-down/chatgpt.com), [GitHub](/is-down/github.com), [WhatsApp](/is-down/whatsapp.com) and [IRCTC](/is-down/irctc.co.in). The [full list](/is-down) covers social apps, Google, AI tools, banks, gaming, developer platforms and Indian sites.",
       ],
     },
     {

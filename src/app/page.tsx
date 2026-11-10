@@ -12,6 +12,7 @@ import { WhyItMattersSection } from "@/components/marketing/sections-why";
 import { HowItWorksSection } from "@/components/marketing/sections-how";
 import { HeroSection } from "@/components/marketing/sections-hero";
 import { IntroLine, ProofStrip } from "@/components/marketing/sections-top";
+import { HomeToolsStrip } from "@/components/marketing/HomeToolsStrip";
 import { HomeJsonLd } from "@/components/marketing/HomeJsonLd";
 
 export const metadata: Metadata = {
@@ -33,6 +34,7 @@ export default function HomePage() {
       <ProofStrip />
       <HowItWorksSection />
       <FeaturesSection />
+      <HomeToolsStrip />
       <CtaBand line="Uptime, SSL and domain expiry for your site, checked every day." />
       <WhyItMattersSection />
       <ProductPreviewSection />
