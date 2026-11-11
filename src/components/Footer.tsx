@@ -16,25 +16,32 @@ const columns: { title: string; links: FooterLink[] }[] = [
       { label: "Uptime monitoring", href: "/uptime-monitoring" },
       { label: "SSL monitoring", href: "/ssl-certificate-monitoring" },
       { label: "Domain expiry monitoring", href: "/domain-expiry-monitoring" },
-      { label: "How it works", href: "/#how-it-works" },
       { label: "Pricing", href: "/pricing" },
-      { label: "Referral program", href: "/referrals" },
+      { label: "Create a free account", href: "/signup" },
     ],
   },
   {
     title: "Free tools",
     links: [
+      { label: "Website down checker", href: "/tools/website-down-checker" },
       { label: "SSL checker", href: "/tools/ssl-checker" },
       { label: "Domain expiry checker", href: "/tools/domain-expiry-checker" },
-      { label: "Website down checker", href: "/tools/website-down-checker" },
       { label: "Is a site down?", href: "/is-down" },
       { label: "All free tools", href: "/tools" },
     ],
   },
   {
-    title: "Support",
+    title: "Resources",
     links: [
+      { label: "How it works", href: "/#how-it-works" },
+      { label: "Features", href: "/#features" },
       { label: "FAQ", href: "/#faq" },
+      { label: "Referral program", href: "/referrals" },
+    ],
+  },
+  {
+    title: "Company",
+    links: [
       { label: "Contact us", href: contactHref("general") },
       { label: "Billing help", href: contactHref("billing") },
       { label: "Custom site limits", href: customPlanHref },
@@ -62,7 +69,7 @@ export function Footer() {
   return (
     <footer className="overflow-hidden border-t border-rule bg-bg">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="grid gap-12 pb-10 pt-16 sm:pt-20 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.3fr)] md:gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.3fr)] lg:gap-20 lg:pb-12">
+        <div className="grid gap-12 pb-10 pt-16 sm:pt-20 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.6fr)] lg:gap-16 lg:pb-12">
           <div>
             <Link href="/" className="inline-flex items-center gap-3 text-ink">
               <Image src="/logo.svg" alt="" width={36} height={36} unoptimized className="h-9 w-9 object-contain" />
@@ -82,7 +89,7 @@ export function Footer() {
               {EMAIL}
             </Link>
           </div>
-          <div className="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 sm:gap-x-8">
+          <div className="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-4 sm:gap-x-8">
             {columns.map((col) => (
               <nav key={col.title} aria-labelledby={`footer-${col.title}`}>
                 <h2 id={`footer-${col.title}`} className="font-display text-sm font-medium text-ink">
@@ -105,7 +112,9 @@ export function Footer() {
           <FooterThemeSwitch />
         </div>
         <div className="flex flex-col gap-4 border-t border-rule py-6 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
-          <p>© {year} Websites With Punch. All rights reserved. | A product by Makvion Technologies, India.</p>
+          <p>© {year} Websites With Punch. All rights reserved. | A product by{" "}
+            <a href="https://makvion.com" target="_blank" rel="noopener" className="underline decoration-rule underline-offset-2 transition-colors hover:text-ink hover:decoration-current">Makvion Technologies</a>, India.
+          </p>
           <nav aria-label="Legal" className="flex flex-wrap gap-x-5 gap-y-2 sm:justify-end">
             {legal.map((l) => (
               <Link key={l.href} href={l.href} className="transition-colors hover:text-ink">
