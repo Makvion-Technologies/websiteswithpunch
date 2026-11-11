@@ -233,3 +233,36 @@ h6 {
 @media (prefers-reduced-motion: reduce) {
   .toast-in { animation: none; }
 }
+
+/* nav hint: see components/nav/nav-hint.ts. Only the pre-hydration markup carries these classes. */
+.nav-shell,
+.nav-shell-admin,
+.nav-shell-up,
+.nav-shell-avatar {
+  display: none;
+}
+.nav-pending-guest {
+  display: contents;
+}
+html[data-nav] .nav-pending-guest {
+  display: none;
+}
+html[data-nav] .nav-shell {
+  display: flex;
+}
+html[data-nav="a"] .nav-shell-admin {
+  display: inline-block;
+}
+html[data-nav^="u-"] .nav-shell-avatar,
+html[data-nav="a"] .nav-shell-avatar {
+  display: flex;
+}
+.nav-shell-avatar::before {
+  content: var(--nav-initial, "");
+}
+@media (min-width: 768px) {
+  html[data-nav="u-free"] .nav-shell-up[data-up="free"],
+  html[data-nav="u-pro"] .nav-shell-up[data-up="pro"] {
+    display: flex;
+  }
+}

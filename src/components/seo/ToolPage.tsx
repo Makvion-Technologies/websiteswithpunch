@@ -3,14 +3,13 @@ import { ToolForm } from "@/components/tools/ToolForm";
 import { StageChip, ToolStage } from "@/components/tools/ToolStage";
 import { ToolSwitcher } from "@/components/tools/ToolSwitcher";
 import type { ToolKind } from "@/components/tools/ToolResult";
-import { relatedFor } from "@/content/links";
+import { SplitLayout } from "@/components/layout/SplitLayout";
+import { ToolRail } from "@/components/layout/ToolRail";
 import { SITE_NAME, SITE_URL } from "@/lib/site-config";
 import { Article } from "./Article";
 import { Breadcrumbs } from "./Breadcrumbs";
 import { FaqBlock } from "./FaqBlock";
 import { JsonLd } from "./JsonLd";
-import { RelatedLinks } from "./RelatedLinks";
-import { SoftCta } from "./SoftCta";
 import type { ArticleSection, Faq } from "./types";
 
 export type ToolContent = {
@@ -28,7 +27,7 @@ const ICONS = { ssl: IconLock, domain: IconGlobe, down: IconPulse } as const;
 
 type Props = { content: ToolContent; kind: ToolKind; crumb: string; label: string; placeholder: string; button: string };
 
-/** Free tool page: the checker on top, then a server-rendered explainer, FAQ and soft CTA. */
+/** Free tool page: the checker on top, then a server-rendered explainer and FAQ; related links and a CTA in the sidebar. */
 export function ToolPage({ content: c, kind, crumb, label, placeholder, button }: Props) {
   const Icon = ICONS[kind];
   const app = {
@@ -44,7 +43,7 @@ export function ToolPage({ content: c, kind, crumb, label, placeholder, button }
     publisher: { "@id": `${SITE_URL}/#organization` },
   };
   return (
-    <div className="mx-auto max-w-3xl px-4 pb-20 pt-8 sm:px-6 sm:pt-12">
+    <SplitLayout aside={<ToolRail current={c.path} cta={c.cta} />}>
       <JsonLd data={app} />
       <Breadcrumbs items={[{ name: "Free tools", href: "/tools" }, { name: crumb, href: c.path }]} />
       <p className="label-caps mt-8 text-accent">Free tool</p>
@@ -60,14 +59,8 @@ export function ToolPage({ content: c, kind, crumb, label, placeholder, button }
         <Article sections={c.sections} />
       </div>
       <div className="mt-16">
-        <SoftCta body={c.cta} />
-      </div>
-      <div className="mt-16">
         <FaqBlock faqs={c.faqs} />
       </div>
-      <div className="mt-16">
-        <RelatedLinks title="More free tools and guides" links={relatedFor(c.path, "tools")} />
-      </div>
-    </div>
+    </SplitLayout>
   );
 }

@@ -4,7 +4,8 @@ import { relatedFor } from "@/content/links";
 import { Article } from "./Article";
 import { Breadcrumbs } from "./Breadcrumbs";
 import { FaqBlock } from "./FaqBlock";
-import { RelatedLinks } from "./RelatedLinks";
+import { RailLinks } from "@/components/layout/RailLinks";
+import { SPLIT } from "@/components/layout/frame";
 import { SoftCta } from "./SoftCta";
 import type { ArticleSection, Faq } from "./types";
 
@@ -53,14 +54,20 @@ export function FeaturePage({ content: c, Visual, tool }: Props) {
           <Visual />
         </div>
       </div>
-      <div className="mx-auto mt-20 max-w-3xl space-y-16">
-        <Article sections={c.sections} />
-        <FaqBlock faqs={c.faqs} />
-        <SoftCta
-          title="Start monitoring for free"
-          body="The free plan covers one site with uptime, SSL and domain checks on one dashboard. Pro covers 10 sites and Business 50. No card needed to start."
-        />
-        <RelatedLinks title="Related" links={relatedFor(c.path, "features")} />
+      <div className={`mt-20 ${SPLIT}`}>
+        <div className="min-w-0 space-y-16">
+          <Article sections={c.sections} />
+          <FaqBlock faqs={c.faqs} />
+          <SoftCta
+            title="Start monitoring for free"
+            body="The free plan covers one site with uptime, SSL and domain checks on one dashboard. Pro covers 10 sites and Business 50. No card needed to start."
+          />
+        </div>
+        <aside aria-label="Related" className="min-w-0">
+          <div className="lg:sticky lg:top-24">
+            <RailLinks title="Related" links={relatedFor(c.path, "features")} />
+          </div>
+        </aside>
       </div>
     </div>
   );

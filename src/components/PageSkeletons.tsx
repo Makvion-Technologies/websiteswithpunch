@@ -160,7 +160,8 @@ export function DocSkeleton() {
   const para =
     "Websites With Punch provides website health monitoring, including uptime checks, SSL expiry lookups and best-effort domain expiry lookups for the sites you add.";
   return (
-    <div className="relative mx-auto max-w-3xl px-4 py-16 sm:px-6" role="status" aria-busy="true">
+    <div className="relative mx-auto w-full max-w-6xl px-4 py-16 sm:px-6" role="status" aria-busy="true">
+      <div className="max-w-[720px]">
       <SkStatus />
       <h1 className="font-display text-3xl font-medium">
         <Sk>Terms of Service</Sk>
@@ -182,6 +183,7 @@ export function DocSkeleton() {
             </p>
           </div>
         ))}
+      </div>
       </div>
     </div>
   );

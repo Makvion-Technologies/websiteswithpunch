@@ -2,9 +2,12 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
-import { GuestMenu } from "@/components/GuestMenu";
+import { GuestNav } from "@/components/nav/GuestNav";
+import { NavShell } from "@/components/nav/NavShell";
+import { navHintValue, writeNavHint } from "@/components/nav/nav-hint";
 import { NavUpgradeButtons } from "@/components/NavUpgradeButtons";
 import { ProfileMenu } from "@/components/ProfileMenu";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -25,6 +28,14 @@ export function Navbar() {
   const verifying = pathname === "/verify-email" || unverified;
   const status = guestOnly ? "unauthenticated" : rawStatus;
   const admin = Boolean(session?.user?.admin) && !unverified;
+  // Before the session resolves (SSR and first client render) the guest menu and the signed-in copy
+  // are both in the HTML; the head script + CSS show the right one, so nothing is empty or flips.
+  const pending = status === "loading" && pathname !== "/verify-email";
+  const guest = pending || (status === "unauthenticated" && !verifying);
+
+  useEffect(() => {
+    if (rawStatus !== "loading") writeNavHint(navHintValue(data ?? null));
+  }, [rawStatus, data]);
 
   return (
     <header className="sticky top-0 z-50 border-b border-rule bg-bg/90 backdrop-blur">
@@ -35,7 +46,7 @@ export function Navbar() {
         >
           <Image
             src="/logo.svg"
-            alt="Websites With Punch"
+            alt=""
             width={32}
             height={32}
             priority
@@ -44,8 +55,16 @@ export function Navbar() {
           />
           <span className="truncate">Websites With Punch</span>
         </Link>
+        {guest ? (
+          <nav aria-label="Main" className="flex min-w-0 flex-1 items-center justify-end gap-2 text-sm lg:justify-between lg:pl-8">
+            <div className={pending ? "nav-pending-guest" : "contents"}>
+              <GuestNav />
+            </div>
+            {pending ? <NavShell /> : null}
+          </nav>
+        ) : (
         <nav className="flex shrink-0 items-center gap-2 text-sm">
-          {status === "loading" || verifying ? (
+          {verifying ? (
             <>
               {unverified && pathname !== "/verify-email" && (
                 <Link href="/verify-email" className="px-3 py-1.5 font-medium text-accent hover:bg-accent-soft">
@@ -66,39 +85,9 @@ export function Navbar() {
               <ThemeToggle />
               <ProfileMenu />
             </>
-          ) : (
-            <>
-              <Link
-                href="/tools"
-                className="hidden rounded-none px-3 py-1.5 text-ink hover:bg-accent-soft lg:inline-flex"
-              >
-                Free tools
-              </Link>
-              <Link
-                href="/is-down"
-                className="hidden rounded-none px-3 py-1.5 text-ink hover:bg-accent-soft lg:inline-flex"
-              >
-                Is it down?
-              </Link>
-              <Link
-                href="/login"
-                className="hidden rounded-none px-3 py-1.5 text-ink hover:bg-accent-soft md:inline-flex"
-              >
-                Log in
-              </Link>
-              <Link
-                href="/signup"
-                className="hidden rounded-none bg-accent px-3 py-1.5 font-medium text-white hover:bg-accent-hover md:inline-flex"
-              >
-                Start free
-              </Link>
-              <ThemeToggle />
-              <div className="md:hidden">
-                <GuestMenu />
-              </div>
-            </>
-          )}
+          ) : null}
         </nav>
+        )}
       </div>
     </header>
   );

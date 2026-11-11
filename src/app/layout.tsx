@@ -8,6 +8,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { AppFooter } from "@/components/AppFooter";
 import { SiteChrome } from "@/components/SiteChrome";
+import { NAV_HINT_SCRIPT } from "@/components/nav/nav-hint";
 import {
   SITE_DESCRIPTION,
   SITE_NAME,
@@ -80,12 +81,14 @@ export const viewport: Viewport = {
 
 const themeInitScript = `(function(){try{var t=localStorage.getItem("theme");if(t==="dark")document.documentElement.classList.add("dark");}catch(e){}})();`;
 
-// No session read here: it would make every page dynamic. The client SessionProvider resolves it.
+// No session read here: it would make every page dynamic (the tools, is-down and legal pages are
+// static). The client SessionProvider resolves it; NAV_HINT_SCRIPT picks the right navbar before paint.
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        <script dangerouslySetInnerHTML={{ __html: NAV_HINT_SCRIPT }} />
       </head>
       <body className={`${inter.variable} ${spaceGrotesk.variable} font-body`}>
         <Providers>

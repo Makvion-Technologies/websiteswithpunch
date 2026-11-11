@@ -2,20 +2,20 @@ import { IconPulse } from "@/components/marketing/icons";
 import { Article } from "@/components/seo/Article";
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { FaqBlock } from "@/components/seo/FaqBlock";
-import { RelatedLinks } from "@/components/seo/RelatedLinks";
-import { SoftCta } from "@/components/seo/SoftCta";
+import { SplitLayout } from "@/components/layout/SplitLayout";
+import { ToolRail } from "@/components/layout/ToolRail";
 import { StageChip, ToolStage } from "@/components/tools/ToolStage";
 import { siteCopy } from "@/content/is-down/copy";
 import { relatedSites, type DownSite } from "@/content/is-down";
 import { IsDownCheck } from "./IsDownCheck";
 import { SiteGrid } from "./SiteGrid";
 
-/** One statically generated “Is X down?” page: check button, category guidance, FAQ, related sites. */
+/** One statically generated “Is X down?” page: check button, guidance, FAQ, related sites; tools + CTA in the sidebar. */
 export function IsDownPage({ site }: { site: DownSite }) {
   const c = siteCopy(site);
   const related = relatedSites(site.host, 9);
   return (
-    <div className="mx-auto max-w-3xl px-4 pb-20 pt-8 sm:px-6 sm:pt-12">
+    <SplitLayout aside={<ToolRail current="/is-down" cta={c.cta} ctaTitle="Monitor your own site free" />}>
       <Breadcrumbs
         items={[
           { name: "Is a site down?", href: "/is-down" },
@@ -39,25 +39,11 @@ export function IsDownPage({ site }: { site: DownSite }) {
         <Article sections={c.sections} />
       </div>
       <div className="mt-16">
-        <SoftCta title="Monitor your own site free" body={c.cta} />
-      </div>
-      <div className="mt-16">
         <FaqBlock faqs={c.faqs} />
       </div>
       <div className="mt-16">
         <SiteGrid sites={related} title={`Other ${site.catLabel.toLowerCase()} sites`} />
       </div>
-      <div className="mt-16">
-        <RelatedLinks
-          title="Free tools"
-          links={[
-            { href: "/tools/website-down-checker", title: "Website down checker", body: "Check any website, not just the ones on this list." },
-            { href: "/tools/ssl-checker", title: "SSL checker", body: "Certificate expiry, issuer and whether browsers trust it." },
-            { href: "/tools/domain-expiry-checker", title: "Domain expiry check", body: "Registrar and expiration date, read from the registry." },
-            { href: "/is-down", title: "All “is it down?” pages", body: "Live checks for 150+ popular sites, grouped by category." },
-          ]}
-        />
-      </div>
-    </div>
+    </SplitLayout>
   );
 }

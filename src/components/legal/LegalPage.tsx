@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { InAppBackLink } from "@/components/InAppBackLink";
+import { RailLinks } from "@/components/layout/RailLinks";
+import { SplitLayout } from "@/components/layout/SplitLayout";
 
 /** Shared layout and text pieces for /terms, /privacy, /refund-policy and /cookie-policy. */
 export const LEGAL_LINKS = [
@@ -22,23 +24,23 @@ export function LegalPage({
   path: string;
   children: React.ReactNode;
 }) {
-  const others = LEGAL_LINKS.filter((l) => l.href !== path);
+  const others = LEGAL_LINKS.filter((l) => l.href !== path).map((l) => ({ href: l.href, title: l.label }));
+  const aside = (
+    <>
+      <RailLinks title="Other policies" links={others} />
+      <RailLinks
+        title="Questions?"
+        links={[{ href: "/contact?topic=general", title: "Contact us", body: "We aim to reply within 1–2 business days." }]}
+      />
+    </>
+  );
   return (
-    <div className="relative mx-auto max-w-3xl px-4 py-16 sm:px-6">
+    <SplitLayout aside={aside} className="py-16" relative>
       <InAppBackLink />
       <h1 className="font-display text-3xl font-medium text-ink">{title}</h1>
       <p className="mt-2 text-sm text-muted">Last updated: {updated}</p>
       <div className="mt-8 space-y-6 leading-relaxed text-ink">{children}</div>
-      <p className="mt-12 border-t border-rule pt-6 text-sm text-muted">
-        See also:{" "}
-        {others.map((l, i) => (
-          <span key={l.href}>
-            {i > 0 ? " · " : ""}
-            <A href={l.href}>{l.label}</A>
-          </span>
-        ))}
-      </p>
-    </div>
+    </SplitLayout>
   );
 }
 

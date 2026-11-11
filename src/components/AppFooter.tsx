@@ -39,8 +39,8 @@ export function AppFooter() {
         </nav>
       </div>
       <div className="border-t border-rule py-4 text-center text-xs text-muted">
-        © {new Date().getFullYear()} Websites With Punch. All rights reserved. | A product by Makvion Technologies,
-        India. | hello@websiteswithpunch.com
+        © {new Date().getFullYear()} Websites With Punch. All rights reserved. | A product by{" "}
+        <a href="https://makvion.com" target="_blank" rel="noopener" className="underline decoration-rule underline-offset-2 transition-colors hover:text-ink hover:decoration-current">Makvion Technologies</a>, India. | hello@websiteswithpunch.com
       </div>
     </footer>
   );
