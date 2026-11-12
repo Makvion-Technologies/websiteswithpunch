@@ -3,6 +3,7 @@ import Image from "next/image";
 import { customPlanHref } from "@/components/marketing/pricing-content";
 import { contactHref } from "@/lib/contact";
 import { FooterThemeSwitch } from "@/components/FooterThemeSwitch";
+import { HEARTBEATS } from "@/lib/heartbeats/config";
 
 const EMAIL = "hello@websiteswithpunch.com";
 
@@ -16,6 +17,7 @@ const columns: { title: string; links: FooterLink[] }[] = [
       { label: "Uptime monitoring", href: "/uptime-monitoring" },
       { label: "SSL monitoring", href: "/ssl-certificate-monitoring" },
       { label: "Domain expiry monitoring", href: "/domain-expiry-monitoring" },
+      ...(HEARTBEATS ? [{ label: "Cron job monitoring", href: "/cron-job-monitoring" }] : []),
       { label: "Pricing", href: "/pricing" },
       { label: "Create a free account", href: "/signup" },
     ],

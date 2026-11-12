@@ -11,7 +11,7 @@ export function isAdminEmail(email: string | null | undefined, list = process.en
 /** Customer-only pages: admins are sent to /admin instead. */
 const CUSTOMER_PAGE = /^\/(dashboard|plan|referrals|checkout|onboarding)(\/|$)/;
 /** Customer APIs that create or change sites, billing or referral state: 403 for admins. */
-const CUSTOMER_API = /^\/api\/(sites|billing|referrals)(\/|$)/;
+const CUSTOMER_API = /^\/api\/(sites|heartbeats|billing|referrals)(\/|$)/;
 const ADMIN_AREA = /^\/(admin|api\/admin)(\/|$)/;
 
 export type AdminDecision = "next" | "to-admin" | "not-found" | "forbidden";

@@ -123,10 +123,16 @@ export async function GET(req: Request) {
 
   // Housekeeping: old check history, expired rate-limit rows, old webhook ids, and accounts that
   // never verified their email within 48h (only if they have no sites and no Dodo customer).
-  const cleanup = { checks: 0, rateLimits: 0, webhookEvents: 0, unverifiedUsers: 0, codes: 0 };
+  const cleanup = { checks: 0, heartbeatHistory: 0, rateLimits: 0, webhookEvents: 0, unverifiedUsers: 0, codes: 0 };
   try {
     const cutoff = new Date(Date.now() - RETENTION_DAYS * DAY_MS);
     cleanup.checks = (await prisma.checkResult.deleteMany({ where: { checkedAt: { lt: cutoff } } })).count;
+    // Heartbeat missed/resumed history and daily ping counts: same window as check history.
+    const [hbEvents, hbDays] = await Promise.all([
+      prisma.heartbeatEvent.deleteMany({ where: { at: { lt: cutoff } } }),
+      prisma.heartbeatDay.deleteMany({ where: { day: { lt: cutoff } } }),
+    ]);
+    cleanup.heartbeatHistory = hbEvents.count + hbDays.count;
     cleanup.rateLimits = await pruneRateLimits();
     cleanup.webhookEvents = (
       await prisma.webhookEvent.deleteMany({ where: { createdAt: { lt: new Date(Date.now() - 30 * DAY_MS) } } })

@@ -19,6 +19,8 @@ import { loadAccount } from "@/lib/account-load";
 import { toDashboardSite } from "@/lib/dashboard-sites";
 import { RememberLayout } from "@/components/skeleton/shape";
 import { FAST_CHECKS, cadenceText } from "@/lib/monitor/config";
+import { HEARTBEATS } from "@/lib/heartbeats/config";
+import { HeartbeatsSection } from "@/components/heartbeats/HeartbeatsSection";
 
 export const dynamic = "force-dynamic";
 
@@ -193,6 +195,8 @@ export default async function DashboardPage({
           </div>
         </SiteRecheckScope>
       )}
+
+      {HEARTBEATS && <HeartbeatsSection userId={user.id} plan={plan} />}
     </div>
   );
 }

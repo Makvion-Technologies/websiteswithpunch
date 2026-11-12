@@ -1,6 +1,8 @@
 import { runChunk, type ChunkResult } from "./chunk";
 import { rollup } from "./rollup";
 import { loadSites } from "./store";
+import { handlePing } from "./ping";
+import { hbRefresh, hbRollup, hbStatus, hbTick, putHb, validHb } from "./heartbeat";
 import type { Budget, Env, Site } from "./types";
 import { MIN } from "./types";
 
@@ -15,9 +17,11 @@ export default {
   },
 
   async fetch(req: Request, env: Env): Promise<Response> {
-    // Everything needs the shared secret; anything else looks like nothing is here.
-    if (req.method !== "POST" || !authorized(req, env)) return new Response("Not found", { status: 404 });
     const path = new URL(req.url).pathname;
+    // Public: heartbeat pings (GET, POST or HEAD /hb/<token>).
+    if (path.startsWith("/hb/")) return handlePing(req, env, path.slice(4).replace(/\/$/, ""));
+    // Everything else needs the shared secret; anything else looks like nothing is here.
+    if (req.method !== "POST" || !authorized(req, env)) return new Response("Not found", { status: 404 });
     const body = (await req.json().catch(() => ({}))) as Record<string, unknown>;
     if (path === "/run") {
       const sites = (body.sites as Site[]) ?? [];
@@ -32,6 +36,18 @@ export default {
       const sites = await loadSites(env, { left: 2 }, Date.now(), true);
       return Response.json({ sites: sites.length });
     }
+    // Heartbeats: the app pushes one change at a time and reads live state for the dashboard.
+    if (path === "/hbput") {
+      if (!validHb(body.hb)) return Response.json({ ok: false }, { status: 400 });
+      await putHb(env, body.hb, Date.now()).run();
+      return Response.json({ ok: true });
+    }
+    if (path === "/hbdel") {
+      await env.DB.prepare("DELETE FROM hb WHERE id = ?").bind(String(body.i ?? "")).run();
+      return Response.json({ ok: true });
+    }
+    if (path === "/hbstatus") return Response.json({ rows: await hbStatus(env, (body.ids as string[]) ?? []) });
+    if (path === "/hbsync") return Response.json({ changes: await hbRefresh(env, { left: 2 }, Date.now(), true) });
     if (path === "/tick") return Response.json(await tick(env, Date.now()));
     return new Response("Not found", { status: 404 });
   },
@@ -59,6 +75,8 @@ async function tick(env: Env, now: number) {
   const hourly = minute % 60 === HOURLY_AT;
   const budget: Budget = { left: 48 };
   const sites = await loadSites(env, budget, now, hourly);
+  // Heartbeats run beside the site batches; a failure here never stops uptime checks.
+  const hb = heartbeats(env, now, minute, hourly).catch((e) => ({ error: String(e) }));
   const size = Math.max(1, Math.min(Number(env.CHUNK) || 20, 90));
 
   // Batches are fixed by position in the (id-sorted) list, so a site stays in one batch.
@@ -102,7 +120,16 @@ async function tick(env: Env, now: number) {
     rolled = todo.length;
   }
 
-  return { minute, sites: sites.length, batches: work.length, waiting: due.length - work.length, rolled, results };
+  return { minute, sites: sites.length, batches: work.length, waiting: due.length - work.length, rolled, results, hb: await hb };
+}
+
+/** List refresh (hourly or stale), missed / resumed check (every minute), ping roll-up (hourly). */
+async function heartbeats(env: Env, now: number, minute: number, hourly: boolean) {
+  const budget: Budget = { left: 3 };
+  const synced = await hbRefresh(env, budget, now, hourly);
+  const changes = await hbTick(env, budget, now);
+  const rolled = minute % 60 >= HOURLY_AT + 1 ? await hbRollup(env, budget, minute) : null;
+  return { synced, ...changes, rolled };
 }
 
 /** Run part of the job in a fresh invocation of this Worker (service binding to itself). */

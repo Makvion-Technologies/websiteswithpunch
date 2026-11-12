@@ -20,18 +20,18 @@ export type AlertSiteInfo = {
 
 const fmtDate = (d: Date) =>
   d.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric", timeZone: "UTC" });
-const fmtTime = (d: Date) =>
+export const fmtTime = (d: Date) =>
   `${d.toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short", timeZone: "UTC" })} UTC`;
 const plural = (n: number, w: string) => `${n} ${w}${n === 1 ? "" : "s"}`;
 
-function duration(ms: number): string {
+export function duration(ms: number): string {
   const m = Math.max(1, Math.round(ms / 60_000));
   if (m < 60) return plural(m, "minute");
   const h = Math.round(m / 60);
   return h < 48 ? plural(h, "hour") : plural(Math.round(h / 24), "day");
 }
 
-function banner(tone: Tone, label: string, line: string) {
+export function banner(tone: Tone, label: string, line: string) {
   const t = TONE[tone];
   return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 20px"><tr>
 <td style="background:${t.bg};border-left:4px solid ${t.fg};padding:12px 16px;font-family:${FONT}">
@@ -40,7 +40,7 @@ function banner(tone: Tone, label: string, line: string) {
 </td></tr></table>`;
 }
 
-function facts(rows: [string, string][]) {
+export function facts(rows: [string, string][]) {
   const tr = rows.map(([k, v]) => `<tr>
 <td class="wwp-muted wwp-rule" style="padding:9px 0;border-top:1px solid ${C.rule};font-family:${FONT};font-size:13px;color:${C.muted};width:38%;vertical-align:top">${escapeHtml(k)}</td>
 <td class="wwp-ink wwp-rule" style="padding:9px 0;border-top:1px solid ${C.rule};font-family:${FONT};font-size:13px;color:${C.ink};word-break:break-word">${escapeHtml(v)}</td></tr>`);

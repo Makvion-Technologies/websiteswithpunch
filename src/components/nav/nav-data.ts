@@ -1,6 +1,7 @@
 import { ratePercent } from "@/lib/referrals/config";
 import type { NavIconName } from "./nav-icons";
 import { byCadence } from "@/lib/monitor/config";
+import { HEARTBEATS } from "@/lib/heartbeats/config";
 
 export type NavItem = { href: string; title: string; desc: string; icon: NavIconName };
 export type NavMenu = { id: string; label: string; items: NavItem[]; footer?: { href: string; label: string } };
@@ -17,6 +18,9 @@ export const NAV_MENUS: NavMenu[] = [
       { href: "/uptime-monitoring", title: "Uptime monitoring", desc: byCadence("Checks every 1–5 minutes, confirmed alerts and 90 days of history.", "Daily checks, rechecks on demand and 90 days of history."), icon: "pulse" },
       { href: "/ssl-certificate-monitoring", title: "SSL monitoring", desc: "Days left on every certificate, with alerts before expiry.", icon: "lock" },
       { href: "/domain-expiry-monitoring", title: "Domain expiry monitoring", desc: "Renewal dates for your own and your clients' domains.", icon: "globe" },
+      ...(HEARTBEATS
+        ? [{ href: "/cron-job-monitoring", title: "Cron job monitoring", desc: "Heartbeat URLs that email you when a scheduled job misses a run.", icon: "bell" as const }]
+        : []),
       { href: "/#how-it-works", title: "How it works", desc: "Add a site, get a health score and the top fixes.", icon: "chart" },
     ],
     footer: { href: "/pricing", label: "See plans and pricing" },

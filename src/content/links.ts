@@ -1,5 +1,6 @@
 import type { RelatedLink } from "@/components/seo/types";
 import { byCadence } from "@/lib/monitor/config";
+import { HEARTBEATS } from "@/lib/heartbeats/config";
 
 /** Every public tool and feature page, used for related links, the tools index, nav and sitemap. */
 export const TOOL_LINKS: RelatedLink[] = [
@@ -12,6 +13,9 @@ export const FEATURE_LINKS: RelatedLink[] = [
   { href: "/uptime-monitoring", title: "Uptime monitoring", body: byCadence("Uptime every minute on Pro and Business, every 5 minutes on Free, with confirmed alerts and 90 days of history.", "A daily check of every site, on-demand rechecks, auto refresh and 90 days of history.") },
   { href: "/ssl-certificate-monitoring", title: "SSL certificate monitoring", body: "Days left on every certificate you look after, amber at 30 days and red at 7." },
   { href: "/domain-expiry-monitoring", title: "Domain expiry monitoring", body: "Renewal dates for your own and your clients' domains on one dashboard." },
+  ...(HEARTBEATS
+    ? [{ href: "/cron-job-monitoring", title: "Cron job monitoring", body: "Heartbeat URLs for backups and scheduled tasks, with an email when a run is missed." }]
+    : []),
 ];
 
 /** Related links for a page: the other pages first, never the page itself. */

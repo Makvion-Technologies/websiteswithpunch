@@ -3,10 +3,13 @@
 import { useState } from "react";
 import { useToast } from "@/components/Toast";
 import { alertsSentWhen } from "@/lib/monitor/config";
+import { HEARTBEATS } from "@/lib/heartbeats/config";
 
 export type Prefs = { alertDown: boolean; alertSsl: boolean; alertDomain: boolean };
 const ROWS: { key: keyof Prefs; title: string; body: string }[] = [
-  { key: "alertDown", title: "Site down and recovered", body: "When a check can't reach a site, and once when it's back up." },
+  HEARTBEATS
+    ? { key: "alertDown", title: "Down and recovered", body: "When a check can't reach a site or a heartbeat misses its ping, and once when it's back." }
+    : { key: "alertDown", title: "Site down and recovered", body: "When a check can't reach a site, and once when it's back up." },
   { key: "alertSsl", title: "SSL certificate", body: "30, 7 and 1 day before expiry, when it expires, or if browsers stop trusting it." },
   { key: "alertDomain", title: "Domain expiry", body: "30, 7 and 1 day before the domain expires, and when it has expired." },
 ];
