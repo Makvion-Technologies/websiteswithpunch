@@ -17,6 +17,7 @@ import {
   toClientSite,
 } from "@/lib/site-limits";
 import { assertHostnameResolves, assertPublicSite } from "@/lib/dns-check";
+import { syncMonitor } from "@/lib/monitor/sync";
 import { HOUR, clientIp, rateLimit, tooMany } from "@/lib/rate-limit";
 import {
   SiteUrlError,
@@ -219,6 +220,7 @@ export async function POST(req: Request) {
   }
 
   const refreshed = await prisma.site.findUnique({ where: { id: site.id } });
+  await syncMonitor();
   return NextResponse.json(
     {
       site: refreshed ? toClientSite(refreshed as unknown as Record<string, unknown>) : refreshed,

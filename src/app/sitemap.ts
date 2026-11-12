@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { BLOG_UPDATED, POSTS } from "@/content/blog";
 import { SITES } from "@/content/is-down";
 import { FEATURE_LINKS, TOOL_LINKS } from "@/content/links";
 import { SITE_URL } from "@/lib/site-config";
@@ -25,6 +26,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     page("/tools", 0.8, "weekly"),
     page("/is-down", 0.8, "weekly"),
     ...SITES.map((s) => page(`/is-down/${s.host}`, 0.7, "weekly")),
+    page("/blog", 0.7, "weekly", new Date(BLOG_UPDATED)),
+    ...POSTS.map((p) => page(`/blog/${p.slug}`, 0.6, "monthly", new Date(p.updated))),
     page("/referrals", 0.5),
     ...TOOL_LINKS.map((l) => page(l.href, 0.8, "weekly")),
     page("/contact", 0.5, "yearly", legal),

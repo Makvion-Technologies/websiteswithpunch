@@ -6,7 +6,7 @@ export type NavMenu = { id: string; label: string; items: NavItem[]; footer?: { 
 
 /**
  * Guest navbar menus. Only pages that exist today, with honest one-liners (checks run daily).
- * Add comparison pages, guides and status pages here once they ship.
+ * Add comparison pages and status pages here once they ship. Billing help lives in the footer.
  */
 export const NAV_MENUS: NavMenu[] = [
   {
@@ -35,10 +35,10 @@ export const NAV_MENUS: NavMenu[] = [
     id: "resources",
     label: "Resources",
     items: [
+      { href: "/blog", title: "Blog", desc: "Guides on uptime, SSL renewal, domains and fixing outages.", icon: "book" },
       { href: "/#faq", title: "FAQ", desc: "Checks, alerts, plans and billing, answered.", icon: "help" },
       { href: "/referrals", title: "Referral program", desc: `Earn ${ratePercent}% when friends you refer pay for a plan.`, icon: "gift" },
       { href: "/contact?topic=general", title: "Contact us", desc: "Questions or feedback? We reply within 1–2 business days.", icon: "mail" },
-      { href: "/contact?topic=billing", title: "Billing help", desc: "Invoices, plan changes and refunds.", icon: "card" },
     ],
   },
 ];

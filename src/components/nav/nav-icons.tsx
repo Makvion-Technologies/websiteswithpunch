@@ -44,6 +44,14 @@ function IconCard(props: P) {
   );
 }
 
+function IconBook(props: P) {
+  return (
+    <Base {...props}>
+      <path d="M4 5h6a2 2 0 0 1 2 2v13a2 2 0 0 0-2-2H4zM20 5h-6a2 2 0 0 0-2 2v13a2 2 0 0 1 2-2h6z" />
+    </Base>
+  );
+}
+
 /** Icons by name, so the nav data stays plain (serialisable) objects. */
 export const NAV_ICONS = {
   pulse: IconPulse,
@@ -56,6 +64,7 @@ export const NAV_ICONS = {
   gift: IconGift,
   mail: IconMail,
   card: IconCard,
+  book: IconBook,
 } as const;
 
 export type NavIconName = keyof typeof NAV_ICONS;

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useToast } from "@/components/Toast";
+import { alertsSentWhen } from "@/lib/monitor/config";
 
 export type Prefs = { alertDown: boolean; alertSsl: boolean; alertDomain: boolean };
 const ROWS: { key: keyof Prefs; title: string; body: string }[] = [
@@ -40,7 +41,7 @@ export function AlertPrefs({ initial, email }: { initial: Prefs; email: string }
       <div className="border-b border-rule px-6 py-4">
         <p className="label-caps text-muted">Email alerts</p>
         <p className="mt-1 text-sm text-muted">
-          Sent to <span className="text-ink">{email}</span> after our daily check or a Recheck. Not real-time.
+          Sent to <span className="text-ink">{email}</span> {alertsSentWhen()}
         </p>
       </div>
       <ul className="divide-y divide-rule">

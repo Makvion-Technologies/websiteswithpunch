@@ -152,6 +152,9 @@ model CheckResult {
   latencyMs  Int?
   error      String?
   checkedAt  DateTime @default(now())
+  /// Monitor roll-ups: how many checks this row stands for and how many failed (null = one check).
+  samples    Int?
+  failures   Int?
   site       Site     @relation(fields: [siteId], references: [id], onDelete: Cascade)
 
   @@index([siteId, checkedAt])

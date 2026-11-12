@@ -11,6 +11,7 @@ import {
   findSiteByHostKey,
   normalizeSiteUrl,
 } from "@/lib/url";
+import { syncMonitor } from "@/lib/monitor/sync";
 
 const schema = z.object({
   name: z.string().trim().min(1).max(120).optional(),
@@ -125,6 +126,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   // 4) update
   try {
     const updated = await prisma.site.update({ where: { id: site.id }, data });
+    if (data.url) await syncMonitor();
     return NextResponse.json({
       site: updated,
       pathWasStripped,
@@ -154,6 +156,7 @@ export async function DELETE(_: Request, { params }: { params: { id: string } })
   const site = await ownedSite(session.user.id, params.id);
   if (!site) return NextResponse.json({ error: "Not found" }, { status: 404 });
   await prisma.site.delete({ where: { id: site.id } });
+  await syncMonitor();
   return NextResponse.json({ ok: true, freedSlot: !site.locked });
 }
 

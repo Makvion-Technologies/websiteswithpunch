@@ -1,0 +1,33 @@
+# Websites With Punch monitor. Runs on the Cloudflare Workers FREE plan.
+# Setup steps: /workspace/handoff/batch50-setup.md (or the repo README section "Fast checks").
+name = "wwp-monitor"
+main = "src/index.ts"
+compatibility_date = "2026-11-01"
+# The workers.dev URL only answers authenticated POSTs (/sync, /tick); everything else is 404.
+workers_dev = true
+
+[triggers]
+# Every minute. Free sites are checked every 5th minute (spread by site id), paid every minute.
+crons = ["* * * * *"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "wwp-monitor"
+# Paste the id printed by `npx wrangler d1 create wwp-monitor`.
+database_id = "00000000-0000-0000-0000-000000000000"
+
+# The Worker calls itself to split a minute's checks into batches (each call gets its own
+# free-plan budget of 50 outgoing requests).
+[[services]]
+binding = "SELF"
+service = "wwp-monitor"
+
+[vars]
+APP_URL = "https://www.websiteswithpunch.com"
+# Sites per batch. 20 leaves room for redirects and the retry within the free plan's 50
+# outgoing requests per invocation. On Workers Paid you can raise it to ~400.
+CHUNK = "20"
+# Per-site time limit for one check (all redirects included).
+CHECK_TIMEOUT_MS = "15000"
+
+# Secret (not in this file): npx wrangler secret put MONITOR_SECRET

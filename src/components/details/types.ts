@@ -1,5 +1,5 @@
 import type { DomainInfo, SslInfo } from "@/lib/site-info";
-import type { CHECK_SCHEDULE } from "@/lib/check-schedule";
+import type { CheckSchedule } from "@/lib/check-schedule";
 
 export type DetailsSection =
   | "health"
@@ -22,7 +22,7 @@ export type SiteDetails = {
   lastFullCheckAt: string | null;
   lastUpAt: string | null;
   lastIssue: { at: string; status: string; code: number | null; error: string | null } | null;
-  schedule: typeof CHECK_SCHEDULE;
+  schedule: CheckSchedule;
   siteAddedAt: string;
 };
 

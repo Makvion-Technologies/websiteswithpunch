@@ -39,6 +39,11 @@ const securityHeaders = [
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   poweredByHeader: false,
+  // Blog posts are plain markdown files in src/content/blog/posts, imported as strings at build time.
+  webpack(config) {
+    config.module.rules.push({ test: /\.md$/, type: "asset/source" });
+    return config;
+  },
   async headers() {
     return [
       { source: "/:path*", headers: securityHeaders },

@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { readDomainInfo, readSslInfo } from "@/lib/site-info";
-import { CHECK_SCHEDULE } from "@/lib/check-schedule";
+import { checkSchedule } from "@/lib/check-schedule";
+import { getEffectivePlan } from "@/lib/plans";
 
 export const dynamic = "force-dynamic";
 
@@ -38,10 +39,14 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
         const groups = await prisma.checkResult.groupBy({
           by: ["status"],
           where: { ...where, checkedAt: { gte: new Date(now - days * DAY_MS) } },
-          _count: { _all: true },
+          _count: { _all: true, samples: true },
+          _sum: { samples: true },
         });
-        const checks = groups.reduce((s, g) => s + g._count._all, 0);
-        const up = groups.find((g) => g.status === "up")?._count._all ?? 0;
+        // Monitor roll-up rows stand for `samples` checks each; other rows are one check.
+        const weight = (g: (typeof groups)[number]) => g._count._all - g._count.samples + (g._sum.samples ?? 0);
+        const checks = groups.reduce((s, g) => s + weight(g), 0);
+        const upGroup = groups.find((g) => g.status === "up");
+        const up = upGroup ? weight(upGroup) : 0;
         return { key, days, checks, percent: checks ? Math.round((up / checks) * 1000) / 10 : null };
       }),
     ),
@@ -74,7 +79,7 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
             error: lastIssue.error,
           }
         : null,
-      schedule: CHECK_SCHEDULE,
+      schedule: checkSchedule(getEffectivePlan(session.user.plan, session.user.dodoStatus ?? null)),
       siteAddedAt: site.createdAt.toISOString(),
     },
     { headers: { "Cache-Control": "no-store" } },

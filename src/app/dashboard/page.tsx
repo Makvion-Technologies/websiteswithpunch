@@ -18,6 +18,7 @@ import { CheckoutReturn } from "@/components/billing/CheckoutReturn";
 import { loadAccount } from "@/lib/account-load";
 import { toDashboardSite } from "@/lib/dashboard-sites";
 import { RememberLayout } from "@/components/skeleton/shape";
+import { FAST_CHECKS, cadenceText } from "@/lib/monitor/config";
 
 export const dynamic = "force-dynamic";
 
@@ -93,6 +94,7 @@ export default async function DashboardPage({
                 · {lockedSites.length} locked
               </span>
             ) : null}
+            {FAST_CHECKS ? ` · Uptime checked ${cadenceText(plan)}` : null}
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-3">

@@ -21,6 +21,23 @@
 - [Domain expiry checker](https://www.websiteswithpunch.com/tools/domain-expiry-checker): registrar, expiry date and days left via RDAP.
 - [Website down checker](https://www.websiteswithpunch.com/tools/website-down-checker): status code, response time and final URL from our server.
 
+## Guides (blog)
+- [Blog index](https://www.websiteswithpunch.com/blog)
+- [Let's Encrypt Auto-Renewal with Certbot: Setup & Fixes](https://www.websiteswithpunch.com/blog/certbot-auto-renewal)
+- [How to Calculate the Cost of Website Downtime](https://www.websiteswithpunch.com/blog/cost-of-website-downtime)
+- [DNS Propagation: Why DNS Changes Take Time](https://www.websiteswithpunch.com/blog/dns-propagation-explained)
+- [ERR_TOO_MANY_REDIRECTS: Causes and How to Fix It](https://www.websiteswithpunch.com/blog/err-too-many-redirects)
+- [502 vs 503 vs 504 Errors: Causes and Fixes](https://www.websiteswithpunch.com/blog/fix-502-503-504-errors)
+- [SSL Certificate Expired? How to Fix It Fast](https://www.websiteswithpunch.com/blog/ssl-certificate-expired)
+- [47-Day SSL Certificates: The 2026–2029 Timeline](https://www.websiteswithpunch.com/blog/ssl-certificate-validity-47-days)
+- [How to Set Up a Status Page (with Update Templates)](https://www.websiteswithpunch.com/blog/status-page-guide)
+- [How Often Should You Check Website Uptime?](https://www.websiteswithpunch.com/blog/uptime-check-intervals)
+- [99.9% Uptime Explained: Downtime per Month and Year](https://www.websiteswithpunch.com/blog/uptime-percentage-explained)
+- [Client Website Maintenance Checklist: What to Monitor](https://www.websiteswithpunch.com/blog/website-maintenance-checklist)
+- [Website Maintenance Without Hurting SEO: Use a 503](https://www.websiteswithpunch.com/blog/website-maintenance-without-hurting-seo)
+- [What Happens When a Domain Expires? Full Timeline](https://www.websiteswithpunch.com/blog/what-happens-when-a-domain-expires)
+- [Why Is My Website Down? 10 Common Causes and Fixes](https://www.websiteswithpunch.com/blog/why-is-my-website-down)
+
 ## Key pages
 - [Home](https://www.websiteswithpunch.com/)
 - [Uptime monitoring](https://www.websiteswithpunch.com/uptime-monitoring)

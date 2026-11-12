@@ -3,6 +3,7 @@ import { C, escapeHtml, renderEmail, renderText } from "./layout";
 import type { BuiltEmail } from "./templates";
 import type { PlannedAlert } from "@/lib/alerts/plan";
 import { SITE_URL } from "@/lib/site-config";
+import { alertTimingNote } from "@/lib/monitor/config";
 
 const FONT = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
 export const TONE = {
@@ -119,7 +120,7 @@ export function alertEmail(a: PlannedAlert, s: AlertSiteInfo, links: { page: str
       intro: [escapeHtml(c.intro)],
       extra: facts(c.rows),
       button: { label: "Open site details", url },
-      notes: [escapeHtml(c.tip), "We check sites once a day and whenever you press Recheck, so alerts aren't real-time."],
+      notes: [escapeHtml(c.tip), alertTimingNote()],
       reason,
     }),
     text: renderText([
@@ -128,7 +129,7 @@ export function alertEmail(a: PlannedAlert, s: AlertSiteInfo, links: { page: str
       c.rows.map(([k, v]) => `${k}: ${v}`).join("\n"),
       `Open site details: ${url}`,
       c.tip,
-      "We check sites once a day and whenever you press Recheck, so alerts aren't real-time.",
+      alertTimingNote(),
       `Alert settings: ${prefs}\nUnsubscribe: ${links.page}`,
     ]),
   };
