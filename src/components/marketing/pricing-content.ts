@@ -1,5 +1,6 @@
 import { PLANS, SITE_PACKS, type PlanId } from "@/lib/plans";
 import { ANNUAL_PRICES, perMonthPrice, type BillingInterval } from "@/lib/billing-interval";
+import { byCadence, CHECK_EVERY_MIN } from "@/lib/monitor/config";
 
 const packCeiling = (id: "pro" | "business") =>
   PLANS[id].siteLimit + SITE_PACKS[id].maxPacks * SITE_PACKS[id].sitesPerPack;
@@ -38,11 +39,16 @@ export type PricingPlan = {
 
 const freePricing: PlanPricing = { price: PLANS.free.price, note: "No card needed", href: "/signup" };
 
-/** Rows shared word-for-word by every card (row 3 and 4). */
-const shared: PlanFeature[] = [
-  { text: "Uptime, SSL and domain checks" },
-  { text: "Dashboard, analytics and check history" },
-];
+/** Row 3: check cadence per plan from CHECK_EVERY_MIN when fast checks are on; same words on every card otherwise. */
+const checksRow = (id: PlanId): PlanFeature => {
+  const n = CHECK_EVERY_MIN[id];
+  return {
+    text: byCadence(`Uptime every ${n === 1 ? "minute" : `${n} minutes`}, SSL and domain daily`, "Uptime, SSL and domain checks"),
+  };
+};
+
+/** Rows shared by every card (row 3 and 4); row 3 names the plan's check interval. */
+const shared = (id: PlanId): PlanFeature[] => [checksRow(id), { text: "Dashboard, analytics and check history" }];
 
 /** Paid-only, from the code: Dodo customer portal (needs a Dodo customer) and pack add/remove. */
 const paid: PlanFeature[] = [
@@ -61,7 +67,7 @@ export const pricingPlans: PricingPlan[] = [
     audience: "For the one site you can’t afford to lose.",
     cta: "Start monitoring free",
     pricing: { month: freePricing, year: freePricing },
-    features: [{ text: "1 monitored site" }, { text: "No site packs", off: true }, ...shared],
+    features: [{ text: "1 monitored site" }, { text: "No site packs", off: true }, ...shared("free")],
   },
   {
     id: "pro",
@@ -72,7 +78,7 @@ export const pricingPlans: PricingPlan[] = [
     features: [
       { text: `Up to ${PLANS.pro.siteLimit} monitored sites` },
       { text: `Optional +${SITE_PACKS.pro.sitesPerPack}-site packs, up to ${packCeiling("pro")} sites` },
-      ...shared,
+      ...shared("pro"),
       ...paid,
     ],
   },
@@ -85,7 +91,7 @@ export const pricingPlans: PricingPlan[] = [
     features: [
       { text: `Up to ${PLANS.business.siteLimit} monitored sites` },
       { text: `Optional +${SITE_PACKS.business.sitesPerPack}-site packs, up to ${packCeiling("business")} sites` },
-      ...shared,
+      ...shared("business"),
       ...paid,
       { text: "Lowest cost per site" },
     ],

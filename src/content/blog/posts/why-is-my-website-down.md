@@ -6,7 +6,7 @@ This guide goes through the ten most common causes, how to recognise each one, a
 
 Rule out your own connection first. A broken Wi-Fi, a VPN, a corporate firewall or a stale DNS cache on your laptop all look like an outage from where you sit.
 
-- Run the free [website down checker](/tools/website-down-checker). It requests the site from Website Health's server and shows the status code, response time and final URL.
+- Run the free [website down checker](/tools/website-down-checker). It requests the site from the Websites With Punch server and shows the status code, response time and final URL.
 - Try mobile data instead of your usual network.
 - If it loads elsewhere but not for you, flush your DNS cache and try again. The commands are in [DNS propagation explained](/blog/dns-propagation-explained).
 

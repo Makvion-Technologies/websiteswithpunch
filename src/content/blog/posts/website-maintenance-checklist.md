@@ -27,7 +27,7 @@ Nobody should do these by hand. Set them up once and let alerts come to you.
 - **Domain expiry date:** registrar emails go to whoever registered the domain, which may be someone who left the client's company years ago.
 - **Backups ran:** your backup tool should alert on failure, not just log it.
 
-[Website Health](/uptime-monitoring) puts uptime, SSL days left and domain days left for every client site on one dashboard. It emails you when a site goes down or comes back, and at 30, 7 and 1 days before a certificate or domain expires.
+[Websites With Punch](/uptime-monitoring) puts uptime, SSL days left and domain days left for every client site on one dashboard. It emails you when a site goes down or comes back, and at 30, 7 and 1 days before a certificate or domain expires.
 
 ## Weekly
 

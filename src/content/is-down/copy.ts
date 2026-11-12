@@ -3,6 +3,7 @@ import { CAT_A, type CatCopy } from "./cats-a";
 import { CAT_B } from "./cats-b";
 import type { DownSite } from "./index";
 import type { SiteCat } from "./sites";
+import { byCadence, UPTIME_EVERY } from "@/lib/monitor/config";
 
 const CAT = { ...CAT_A, ...CAT_B } as Record<SiteCat, CatCopy>;
 
@@ -30,7 +31,7 @@ export function siteCopy(site: DownSite) {
       h: "How this check works",
       p: [
         `Press Check now and we load the homepage of ${host} over HTTPS, follow a few redirects, and show the HTTP status code and response time. 2xx and 3xx answers count as up. The result is cached for about a minute. For any other address, use the [website down checker](/tools/website-down-checker).`,
-        `If you look after your own site, you can [monitor it daily for free](/signup) — uptime, SSL and domain expiry on one dashboard, with email alerts when a check finds it down. No card needed for one site.`,
+        `If you look after your own site, you can [monitor it ${byCadence("around the clock", "daily")} for free](/signup) — uptime, SSL and domain expiry on one dashboard, with email alerts when a check finds it down. No card needed for one site.`,
       ],
     },
   ];
@@ -49,7 +50,10 @@ export function siteCopy(site: DownSite) {
     },
     {
       q: `Can I get an alert if my own site goes down, like this ${catLabel.toLowerCase()} check?`,
-      a: "Yes. Add your site to Websites With Punch and we check it once a day, with on-demand rechecks and optional auto refresh while the dashboard is open. We email you if a check finds it down, and again when it's back. Free for one site, no card needed.",
+      a: byCadence(
+        `Yes. Add your site to Websites With Punch and we check its uptime ${UPTIME_EVERY}, confirm a failure from a second location, and email you if it's down and again when it's back. SSL and domain expiry are checked daily. Free for one site, no card needed.`,
+        "Yes. Add your site to Websites With Punch and we check it once a day, with on-demand rechecks and optional auto refresh while the dashboard is open. We email you if a check finds it down, and again when it's back. Free for one site, no card needed.",
+      ),
     },
   ];
   return {
@@ -59,6 +63,6 @@ export function siteCopy(site: DownSite) {
     intro: `Check whether ${name} is down for everyone or just for you. We'll request ${host} from our server and show the status code and response time. Free, no signup — and we don't invent live outage counts.`,
     sections,
     faqs,
-    cta: `Want this kind of check on your own website, every day? Add it to Websites With Punch. We record uptime, SSL and domain expiry, and email you if a check finds it down. Free for one site, no card needed.`,
+    cta: `Want this kind of check on your own website, ${byCadence("every few minutes", "every day")}? Add it to Websites With Punch. We record uptime, SSL and domain expiry, and email you if a check finds it down. Free for one site, no card needed.`,
   };
 }

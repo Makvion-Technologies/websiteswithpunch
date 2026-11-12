@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import type { BlogPost } from "@/content/blog/types";
-import { PRODUCT_NAME, SITE_NAME, SITE_URL } from "@/lib/site-config";
+import { SITE_NAME, SITE_URL } from "@/lib/site-config";
 
 /** Posts are written and reviewed by the project, not an individual. */
-export const AUTHOR = { name: `${PRODUCT_NAME} team`, role: SITE_NAME } as const;
+export const AUTHOR = { name: `${SITE_NAME} team` } as const;
 
 /** Share image for a post: a static PNG in /public/og/blog (made by the OG script, same look as the site's). */
 export const postImage = (slug: string) => `/og/blog/${slug}.png`;

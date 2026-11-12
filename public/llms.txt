@@ -1,14 +1,15 @@
 # Websites With Punch
 
-> Websites With Punch is a website health monitor for freelancers, agencies and small businesses. It checks each website you add once a day for uptime and response time, SSL certificate expiry and domain expiry, and shows all three on one dashboard. It is a product by Makvion Technologies.
+> Websites With Punch is a website monitor for freelancers, agencies and small businesses. It checks each website you add for uptime and response time every minute (Pro and Business) or every 5 minutes (Free), checks SSL certificate expiry and domain expiry once a day, and shows all three on one dashboard. It is a product by Makvion Technologies.
 
 ## What it does
-- Uptime: a daily HTTPS request to each site's homepage (following up to 5 redirects) records up/down status, the HTTP status code and the response time. 2xx and 3xx count as up; 4xx and 5xx count as down.
+- Uptime: an HTTPS request to each site's homepage every minute on Pro and Business and every 5 minutes on Free (following up to 5 redirects) records up/down status, the HTTP status code and the response time. 2xx and 3xx count as up; 4xx and 5xx count as down. A failed check is retried and confirmed from a second location before it is recorded as an outage.
 - SSL certificate expiry: reads the live certificate on port 443 daily and shows the days left (amber at 30 days, red at 7).
 - Domain expiry: looks up the registrable domain's expiry date daily over RDAP, with a WHOIS fallback, and shows the days left (amber at 30 days, red at 7). Best effort: some country-code registries don't publish expiry dates.
 - On demand: any site can be rechecked from its page (once a minute per site), and an opt-in auto refresh rechecks every 60 seconds while the page is open.
 - History: up to 90 days of checks per site, with response-time charts (24 hours, 7 days, 30 days, all), uptime percentage, last downtime and a Health Score.
-- Not included: no email, SMS or chat alerts, no public status pages, and checks run from a single location (not multi-region).
+- Alerts: an email when a confirmed check finds a site down and again when it recovers, and 30, 7 and 1 day before an SSL certificate or domain expires.
+- Not included: no SMS or chat alerts, no public status pages, and no multi-region monitoring (a second location is only used to confirm a failure).
 
 ## Pricing (USD)
 - Free: 1 site, $0.

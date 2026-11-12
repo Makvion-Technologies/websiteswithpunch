@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { DIALOG_SCROLL, ModalPortal } from "@/components/ModalPortal";
 import { rememberPendingSite } from "@/lib/pending-site";
+import { byCadence } from "@/lib/monitor/config";
 
 export type PromptKind = "analytics" | "edit" | "delete";
 
@@ -88,7 +89,7 @@ export function AccountPrompt({
               Create a free account to save <span className="font-medium text-ink">{site.name}</span> and get:
             </p>
             <ul className="mt-2 space-y-1.5">
-              {["The site on your dashboard, with analytics and history", "Uptime, SSL and domain checks every day", "Free for one site, no card needed"].map((t) => (
+              {["The site on your dashboard, with analytics and history", byCadence("Uptime checked every 5 minutes, SSL and domain daily", "Uptime, SSL and domain checks every day"), "Free for one site, no card needed"].map((t) => (
                 <li key={t} className="flex gap-2">
                   <span aria-hidden className="mt-[7px] h-1.5 w-1.5 shrink-0 bg-accent" />
                   {t}

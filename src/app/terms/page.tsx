@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { A, H2, LegalContact, LegalPage, P } from "@/components/legal/LegalPage";
 import { ReferralTerms } from "@/components/legal/ReferralTerms";
+import { byCadence } from "@/lib/monitor/config";
 
 export const metadata: Metadata = {
   title: "Terms of Service",
@@ -24,7 +25,7 @@ export default function TermsPage() {
 
       <H2>About the Service</H2>
       <P>
-        Websites With Punch is a software-as-a-service (SaaS) subscription for website health
+        Websites With Punch is a software-as-a-service (SaaS) subscription for website
         monitoring: uptime checks, SSL certificate expiry checks and best-effort domain expiry
         lookups, shown on an online dashboard, with email alerts when a check finds a site down
         or back up and as SSL certificates and domains approach expiry. It is a digital service you use in your browser
@@ -33,8 +34,10 @@ export default function TermsPage() {
       <P>
         Monitoring is informational and may be delayed, incomplete, or unavailable. Domain expiry
         information relies on public RDAP/WHOIS sources and is not guaranteed to be accurate or
-        continuously available. Sites are checked about once a day and when you press Recheck, so
-        alert emails are not real-time and may be delayed or not delivered. You can turn alerts off
+        continuously available. {byCadence(
+          "Uptime is checked at intervals (about every 5 minutes on Free and every minute on paid plans) and SSL and domain expiry about once a day, so problems between checks can be missed and alert emails may be delayed or not delivered.",
+          "Sites are checked about once a day and when you press Recheck, so alert emails are not real-time and may be delayed or not delivered.",
+        )} You can turn alerts off
         on your profile or with the unsubscribe link in any alert email.
       </P>
 

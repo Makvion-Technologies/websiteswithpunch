@@ -11,7 +11,7 @@ export const metadata = pageMeta({
   path: "/tools",
   title: "Free Website Tools: SSL, Domain Expiry & Down Checker",
   description:
-    "Free website health tools: check SSL certificate expiry, look up a domain's expiry date over RDAP and test whether a website is down. No signup.",
+    "Free website tools: check SSL certificate expiry, look up a domain's expiry date over RDAP and test whether a website is down. No signup.",
   og: "tools",
 });
 export const dynamic = "force-static";
@@ -19,7 +19,7 @@ export const dynamic = "force-static";
 const itemList = {
   "@context": "https://schema.org",
   "@type": "ItemList",
-  name: "Free website health tools",
+  name: "Free website tools",
   itemListElement: TOOL_LINKS.map((t, i) => ({
     "@type": "ListItem",
     position: i + 1,

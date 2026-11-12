@@ -3,6 +3,7 @@
  * by invisible stand-in text (see skeleton/Sk.tsx), so the swap to real content doesn't shift.
  */
 import { FULL_FRAME, Sk, SkBtn, SkInput, SkStatus } from "./skeleton/Sk";
+import { alertsSentWhen } from "@/lib/monitor/config";
 
 export { DashboardSkeleton } from "./skeleton/DashboardSkeleton";
 export { PlanSkeleton } from "./skeleton/PlanSkeleton";
@@ -58,7 +59,7 @@ export function ProfileSkeleton() {
         <div className="h-full min-w-0 border border-rule bg-surface">
           <div className="border-b border-rule px-6 py-4">
             <p className="label-caps"><Sk>Email alerts</Sk></p>
-            <p className="mt-1 text-sm"><Sk>Sent after our daily check or a Recheck. Not real-time.</Sk></p>
+            <p className="mt-1 text-sm"><Sk>Sent {alertsSentWhen()}</Sk></p>
           </div>
           {["Site down and recovered", "SSL certificate", "Domain expiry"].map((t) => (
             <div key={t} className="flex items-start justify-between gap-4 border-t border-rule px-6 py-4 first:border-t-0">
@@ -158,7 +159,7 @@ export function ContactSkeleton() {
 /** Terms and privacy: title, date line, then headings and paragraphs. */
 export function DocSkeleton() {
   const para =
-    "Websites With Punch provides website health monitoring, including uptime checks, SSL expiry lookups and best-effort domain expiry lookups for the sites you add.";
+    "Websites With Punch provides website monitoring, including uptime checks, SSL expiry lookups and best-effort domain expiry lookups for the sites you add.";
   return (
     <div className="relative mx-auto w-full max-w-6xl px-4 py-16 sm:px-6" role="status" aria-busy="true">
       <div className="max-w-[720px]">

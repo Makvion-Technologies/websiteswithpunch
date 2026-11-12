@@ -59,7 +59,7 @@ export function GuestNav() {
 
   return (
     <>
-      <div data-guest-nav className="hidden items-center gap-1 lg:flex">
+      <div data-guest-nav className="hidden items-center gap-1 lg:absolute lg:left-1/2 lg:top-1/2 lg:flex lg:-translate-x-1/2 lg:-translate-y-1/2">
         {NAV_MENUS.map((m) => (
           <NavDropdown
             key={m.id}

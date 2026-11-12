@@ -39,7 +39,7 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-rule bg-bg/90 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl min-w-0 items-center justify-between gap-2 px-4 py-4 sm:px-6">
+      <div className="relative mx-auto flex max-w-6xl min-w-0 items-center justify-between gap-2 px-4 py-4 sm:px-6">
         <Link
           href={unverified ? "/verify-email" : admin ? "/admin" : session ? "/dashboard" : "/"}
           className="flex min-w-0 items-center gap-2 font-display text-sm font-medium text-ink sm:gap-2.5 sm:text-base"
@@ -56,7 +56,7 @@ export function Navbar() {
           <span className="truncate">Websites With Punch</span>
         </Link>
         {guest ? (
-          <nav aria-label="Main" className="flex min-w-0 flex-1 items-center justify-end gap-2 text-sm lg:justify-between lg:pl-8">
+          <nav aria-label="Main" className="flex min-w-0 flex-1 items-center justify-end gap-2 text-sm lg:justify-end">
             <div className={pending ? "nav-pending-guest" : "contents"}>
               <GuestNav />
             </div>

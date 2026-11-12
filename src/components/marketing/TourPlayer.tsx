@@ -46,7 +46,7 @@ export function TourPlayer() {
             <span className="h-2 w-2 bg-rule" />
           </span>
           <span className="truncate font-display text-sm font-medium text-ink">
-            <span className="hidden sm:inline">Website Health · </span>Product tour
+            <span className="hidden sm:inline">Websites With Punch · </span>Product tour
           </span>
           <span className="ml-auto shrink-0 text-[11px] tabular-nums text-muted">{clock(TOUR.seconds)}</span>
         </div>

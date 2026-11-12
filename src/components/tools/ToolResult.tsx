@@ -1,10 +1,11 @@
 import { AlertsCta } from "@/components/marketing/AlertsCta";
 import { DomainResultView, DownResultView, SslResultView } from "./result-views";
+import { byCadence } from "@/lib/monitor/config";
 
 export type ToolKind = "ssl" | "domain" | "down";
 type Data = Record<string, unknown>;
 
-/** Result card for the public checkers, with a soft "monitor it daily" link under every answer. */
+/** Result card for the public checkers, with a soft "monitor it" link under every answer. */
 export function ToolResult({ kind, data }: { kind: ToolKind; data: Data }) {
   const host = String(data.host ?? "");
   return (
@@ -14,7 +15,7 @@ export function ToolResult({ kind, data }: { kind: ToolKind; data: Data }) {
       {kind === "down" && <DownResultView d={data} />}
       {host ? (
         <div className="mt-6">
-          <AlertsCta host={host} lead={`Monitor ${host} every day and get an email when something needs attention.`} />
+          <AlertsCta host={host} lead={`Monitor ${host} ${byCadence("around the clock", "every day")} and get an email when something needs attention.`} />
         </div>
       ) : null}
     </div>

@@ -14,11 +14,15 @@ import { HeroSection } from "@/components/marketing/sections-hero";
 import { IntroLine, ProofStrip } from "@/components/marketing/sections-top";
 import { HomeToolsStrip } from "@/components/marketing/HomeToolsStrip";
 import { HomeJsonLd } from "@/components/marketing/HomeJsonLd";
+import { byCadence } from "@/lib/monitor/config";
 
 export const metadata: Metadata = {
   title: { absolute: "Uptime, SSL & Domain Expiry Monitoring | Websites With Punch" },
   description:
-    "Website monitoring for freelancers, agencies and small businesses: daily uptime, SSL certificate and domain expiry checks on one dashboard. Free for one site.",
+    byCadence(
+      "Website monitoring for freelancers, agencies and small businesses: uptime checked every minute (every 5 on Free), plus SSL and domain expiry, on one dashboard. Free for one site.",
+      "Website monitoring for freelancers, agencies and small businesses: daily uptime, SSL certificate and domain expiry checks on one dashboard. Free for one site.",
+    ),
   alternates: { canonical: "/" },
 };
 
@@ -35,7 +39,7 @@ export default function HomePage() {
       <HowItWorksSection />
       <FeaturesSection />
       <HomeToolsStrip />
-      <CtaBand line="Uptime, SSL and domain expiry for your site, checked every day." />
+      <CtaBand line={byCadence("Uptime checked every few minutes, SSL and domain expiry every day, all on one dashboard.", "Uptime, SSL and domain expiry for your site, checked every day.")} />
       <WhyItMattersSection />
       <ProductPreviewSection />
       <CtaBand line="Add your site and see it on this dashboard." />

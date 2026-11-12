@@ -153,6 +153,6 @@ Google's guidance gives the limit plainly: a day or two of 503s is fine, and lon
 
 ## Monitoring during planned maintenance
 
-Any honest uptime monitor will report a 503 as down, because it *is* down for visitors. In Website Health, any 4xx or 5xx answer is recorded as down, so planned maintenance shows up in the history and the uptime percentage. That's accurate. Note the window in your own records so you can explain the dip, or exclude it if your SLA leaves out scheduled maintenance. [What 99.9% uptime really means](/blog/uptime-percentage-explained) explains how SLAs treat it.
+Any honest uptime monitor will report a 503 as down, because it *is* down for visitors. In Websites With Punch, any 4xx or 5xx answer is recorded as down, so planned maintenance shows up in the history and the uptime percentage. That's accurate. Note the window in your own records so you can explain the dip, or exclude it if your SLA leaves out scheduled maintenance. [What 99.9% uptime really means](/blog/uptime-percentage-explained) explains how SLAs treat it.
 
 When you switch maintenance off, press **Recheck** on the site in your dashboard to confirm it's back straight away rather than waiting for the next scheduled check. Or run the free [website down checker](/tools/website-down-checker) on any URL. If something else breaks along the way, [502 vs 503 vs 504 errors](/blog/fix-502-503-504-errors) explains how to tell a deliberate 503 from a real failure.

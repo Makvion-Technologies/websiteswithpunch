@@ -37,7 +37,7 @@ export function HomeJsonLd() {
       },
       {
         "@type": "SoftwareApplication",
-        name: `${SITE_NAME} Website Health`,
+        name: SITE_NAME,
         url: SITE_URL,
         description: SITE_DESCRIPTION,
         applicationCategory: "BusinessApplication",

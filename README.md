@@ -5,7 +5,7 @@
   Websites With Punch
 </h1>
 
-**Website health monitoring — uptime, SSL certificate and domain expiry alerts on one dashboard.**
+**Website monitoring — uptime, SSL certificate and domain expiry alerts on one dashboard.**
 
 [websiteswithpunch.com](https://websiteswithpunch.com)
 

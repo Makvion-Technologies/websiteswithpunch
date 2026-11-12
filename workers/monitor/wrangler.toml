@@ -14,7 +14,7 @@ crons = ["* * * * *"]
 binding = "DB"
 database_name = "wwp-monitor"
 # Paste the id printed by `npx wrangler d1 create wwp-monitor`.
-database_id = "00000000-0000-0000-0000-000000000000"
+database_id = "c342be0f-54e2-4171-a3e0-e154565d2df6"
 
 # The Worker calls itself to split a minute's checks into batches (each call gets its own
 # free-plan budget of 50 outgoing requests).

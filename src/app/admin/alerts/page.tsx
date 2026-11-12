@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/admin/guard";
 import { alertsWhere, rangeOf } from "@/lib/admin/filters";
 import { NewDot, AdminHeader, Badge, Filters, PAGE_SIZE, Pager, Panel, Table, fmtDate, pageOf, td } from "@/components/admin/ui";
+import { byCadence } from "@/lib/monitor/config";
 
 export const metadata = { title: "Alerts" };
 
@@ -33,7 +34,7 @@ export default async function AdminAlerts({ searchParams: sp }: { searchParams: 
         <Filters path="/admin/alerts" q={base} name="range" options={[["", "All time"], ["7d", "Last 7 days"], ["30d", "Last 30 days"]]} />
       </div>
       <Panel>
-        <Table head={["When", "Kind", "Site", "User", "Email"]} empty={rows.length === 0} emptyText={filtered ? "No alerts match these filters." : <>No alert emails sent yet. Alerts are logged when a daily check or Recheck finds a change (site down or back up, SSL or domain expiring). See <a href="/admin/sites?status=down" className="text-accent hover:underline">down sites</a> for why one hasn&apos;t alerted.</>}>
+        <Table head={["When", "Kind", "Site", "User", "Email"]} empty={rows.length === 0} emptyText={filtered ? "No alerts match these filters." : <>No alert emails sent yet. Alerts are logged when a {byCadence("background check (confirmed from a second location)", "daily check")} or Recheck finds a change (site down or back up, SSL or domain expiring). See <a href="/admin/sites?status=down" className="text-accent hover:underline">down sites</a> for why one hasn&apos;t alerted.</>}>
           {rows.map((a) => (
             <tr key={a.id}>
               <td className={`${td} text-muted`}><NewDot on={isNew(a.createdAt)} />{fmtDate(a.createdAt)}</td>

@@ -1,4 +1,5 @@
 import { PLANS, SITE_PACKS } from "@/lib/plans";
+import { byCadence, UPTIME_EVERY } from "@/lib/monitor/config";
 
 export const howSteps = [
   {
@@ -46,7 +47,10 @@ export const faqs = [
   },
   {
     q: "How often do checks run?",
-    a: "Every site is checked once a day in the background: uptime and response time, SSL certificate expiry and domain expiry. Open a site to recheck it on demand (once a minute), or turn on auto refresh to recheck every 60 seconds while the page is open.",
+    a: byCadence(
+      `Uptime and response time are checked in the background ${UPTIME_EVERY}, and a failure is confirmed from a second location before it counts. SSL certificate expiry and domain expiry are checked once a day. Open a site to recheck it on demand (once a minute), or turn on auto refresh to recheck every 60 seconds while the page is open.`,
+      "Every site is checked once a day in the background: uptime and response time, SSL certificate expiry and domain expiry. Open a site to recheck it on demand (once a minute), or turn on auto refresh to recheck every 60 seconds while the page is open.",
+    ),
   },
   {
     q: "What’s free vs Pro vs Business?",
@@ -70,7 +74,10 @@ export const faqs = [
   },
   {
     q: "Do you send alerts?",
-    a: "Yes, by email. When a check finds a site down we email you once (and again when it recovers), and we email 30, 7 and 1 day before an SSL certificate or domain expires. Checks run daily and whenever you press Recheck, so alerts aren't real-time. Turn any of them off on your profile.",
+    a: byCadence(
+      "Yes, by email. When a confirmed check finds a site down we email you once (and again when it recovers), usually within a few minutes, and we email 30, 7 and 1 day before an SSL certificate or domain expires. Turn any of them off on your profile.",
+      "Yes, by email. When a check finds a site down we email you once (and again when it recovers), and we email 30, 7 and 1 day before an SSL certificate or domain expires. Checks run daily and whenever you press Recheck, so alerts aren't real-time. Turn any of them off on your profile.",
+    ),
   },
   {
     q: "What happens to my sites if I downgrade or cancel?",

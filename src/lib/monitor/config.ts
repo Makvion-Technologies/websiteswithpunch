@@ -7,6 +7,12 @@ import type { PlanId } from "@/lib/plans";
  */
 export const FAST_CHECKS = process.env.NEXT_PUBLIC_FAST_CHECKS === "1";
 
+/** Pick marketing copy for the live schedule: fast checks on → first argument, daily fallback → second. */
+export const byCadence = <T,>(fast: T, daily: T): T => (FAST_CHECKS ? fast : daily);
+
+/** Uptime interval sentence fragment used across marketing copy while fast checks are on. */
+export const UPTIME_EVERY = "every 5 minutes on Free and every minute on Pro and Business";
+
 /** Minutes between background uptime checks per plan while fast checks are on. */
 export const CHECK_EVERY_MIN: Record<PlanId, number> = { free: 5, pro: 1, business: 1 };
 

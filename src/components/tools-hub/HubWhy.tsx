@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { FEATURE_LINKS } from "@/content/links";
+import { byCadence } from "@/lib/monitor/config";
 
 const REASONS = [
   { n: "01", title: "No signup, nothing to install", body: "Type a domain and get the answer. No account, no browser extension, no command line." },
@@ -8,7 +9,7 @@ const REASONS = [
   { n: "04", title: "Safe for everyone", body: "Only public domains are checked: IP addresses, localhost and private networks are refused, every redirect included." },
 ];
 
-/** Why use the tools, then a soft CTA to have the same checks run daily. */
+/** Why use the tools, then a soft CTA to have the same checks run on a schedule. */
 export function HubWhy() {
   return (
     <>
@@ -37,11 +38,12 @@ export function HubWhy() {
       <section className="border-b border-rule bg-bg">
         <div className="mx-auto grid max-w-6xl gap-10 px-4 py-20 sm:px-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-16">
           <div>
-            <h2 className="font-display text-3xl font-medium text-ink sm:text-4xl">Monitor it daily for free</h2>
+            <h2 className="font-display text-3xl font-medium text-ink sm:text-4xl">{byCadence("Monitor it around the clock for free", "Monitor it daily for free")}</h2>
             <p className="mt-4 max-w-lg text-muted">
-              The tools answer once. Add a site to Websites With Punch and the same three checks run every day,
-              with uptime, SSL days left and domain days left side by side on one dashboard. Free for one site,
-              no card needed. We don&apos;t send alerts: the dashboard is where you look.
+              {byCadence(
+                "The tools answer once. Add a site to Websites With Punch and uptime is checked every few minutes (every minute on Pro and Business), with SSL and domain expiry checked daily, side by side on one dashboard. We email you when a confirmed check finds it down. Free for one site, no card needed.",
+                "The tools answer once. Add a site to Websites With Punch and the same three checks run every day, with uptime, SSL days left and domain days left side by side on one dashboard. We email you when a check finds it down. Free for one site, no card needed.",
+              )}
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Link href="/signup" className="bg-accent px-6 py-3 text-sm font-semibold text-white hover:bg-accent-hover">

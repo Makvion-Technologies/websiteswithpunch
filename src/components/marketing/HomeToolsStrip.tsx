@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { byCadence } from "@/lib/monitor/config";
 
 const ITEMS = [
   { href: "/tools/website-down-checker", title: "Website down checker", body: "Check if a site is down for everyone or just you." },
@@ -17,7 +18,7 @@ export function HomeToolsStrip() {
           <h2 id="home-tools-title" className="mt-3 font-display text-3xl font-medium text-ink sm:text-4xl">
             Check a site right now
           </h2>
-          <p className="mt-3 text-muted">No account needed. Save daily monitoring for the sites you look after.</p>
+          <p className="mt-3 text-muted">No account needed. Save {byCadence("ongoing", "daily")} monitoring for the sites you look after.</p>
         </div>
         <ul className="mt-10 grid gap-px border border-rule bg-rule sm:grid-cols-2 lg:grid-cols-4">
           {ITEMS.map((l) => (

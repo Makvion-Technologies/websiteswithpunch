@@ -1,11 +1,12 @@
 import { ratePercent } from "@/lib/referrals/config";
 import type { NavIconName } from "./nav-icons";
+import { byCadence } from "@/lib/monitor/config";
 
 export type NavItem = { href: string; title: string; desc: string; icon: NavIconName };
 export type NavMenu = { id: string; label: string; items: NavItem[]; footer?: { href: string; label: string } };
 
 /**
- * Guest navbar menus. Only pages that exist today, with honest one-liners (checks run daily).
+ * Guest navbar menus. Only pages that exist today, with honest one-liners (check cadence follows FAST_CHECKS).
  * Add comparison pages and status pages here once they ship. Billing help lives in the footer.
  */
 export const NAV_MENUS: NavMenu[] = [
@@ -13,7 +14,7 @@ export const NAV_MENUS: NavMenu[] = [
     id: "product",
     label: "Product",
     items: [
-      { href: "/uptime-monitoring", title: "Uptime monitoring", desc: "Daily checks, rechecks on demand and 90 days of history.", icon: "pulse" },
+      { href: "/uptime-monitoring", title: "Uptime monitoring", desc: byCadence("Checks every 1–5 minutes, confirmed alerts and 90 days of history.", "Daily checks, rechecks on demand and 90 days of history."), icon: "pulse" },
       { href: "/ssl-certificate-monitoring", title: "SSL monitoring", desc: "Days left on every certificate, with alerts before expiry.", icon: "lock" },
       { href: "/domain-expiry-monitoring", title: "Domain expiry monitoring", desc: "Renewal dates for your own and your clients' domains.", icon: "globe" },
       { href: "/#how-it-works", title: "How it works", desc: "Add a site, get a health score and the top fixes.", icon: "chart" },

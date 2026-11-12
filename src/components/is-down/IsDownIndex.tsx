@@ -4,9 +4,12 @@ import { SplitLayout } from "@/components/layout/SplitLayout";
 import { ToolRail } from "@/components/layout/ToolRail";
 import { CATS, SITES, sitesIn } from "@/content/is-down";
 import { SiteGrid } from "./SiteGrid";
+import { byCadence } from "@/lib/monitor/config";
 
-const CTA =
-  "Add your website and we check it every day: uptime, SSL certificate expiry and domain expiry, with email alerts when a check finds it down. Free for one site, no card needed.";
+const CTA = byCadence(
+  "Add your website and we check its uptime every few minutes (every minute on Pro and Business), plus SSL certificate and domain expiry daily, with email alerts when a confirmed check finds it down. Free for one site, no card needed.",
+  "Add your website and we check it every day: uptime, SSL certificate expiry and domain expiry, with email alerts when a check finds it down. Free for one site, no card needed.",
+);
 
 /** Directory of every static “Is X down?” page, grouped by category; tools + CTA in the sidebar. */
 export function IsDownIndex() {

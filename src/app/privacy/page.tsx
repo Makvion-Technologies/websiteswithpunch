@@ -17,7 +17,7 @@ export default function PrivacyPage() {
         <a className="text-accent underline underline-offset-2 hover:no-underline" href="https://websiteswithpunch.com">
           websiteswithpunch.com
         </a>{" "}
-        and our website health monitoring service.
+        and our website monitoring service.
       </p>
 
       <H2>Information We Collect</H2>

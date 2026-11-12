@@ -83,10 +83,10 @@ Here's how you might set up monitoring for three different sites, using the reas
 
 The interval follows from the cost, not the other way round. Three sites, three different setups, and each one spends its effort where an outage would actually hurt.
 
-## How Website Health handles this today
+## How Websites With Punch handles this today
 
 Here is exactly what it checks, so you can compare it with the intervals above. {{checks}}
 
-The daily check also reads each site's SSL certificate and domain expiry date, with email alerts at 30, 7 and 1 days before either one expires. That covers the slow failures: a site that broke after an update, a host that quietly went away, a certificate or domain about to lapse. Plans and limits are on the [pricing page](/pricing), and [uptime monitoring](/uptime-monitoring) explains the checks in detail.
+A once-a-day check also reads each site's SSL certificate and domain expiry date, with email alerts at 30, 7 and 1 days before either one expires. That covers the slow failures: a site that broke after an update, a host that quietly went away, a certificate or domain about to lapse. Plans and limits are on the [pricing page](/pricing), and [uptime monitoring](/uptime-monitoring) explains the checks in detail.
 
-If you need an answer right now, the [website down checker](/tools/website-down-checker) runs a one-off check from Website Health's server, no account needed.
+If you need an answer right now, the [website down checker](/tools/website-down-checker) runs a one-off check from the Websites With Punch server, no account needed.

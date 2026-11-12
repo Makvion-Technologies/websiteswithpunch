@@ -21,7 +21,6 @@ export function PostHeader({ p, minutes }: { p: BlogPost; minutes: number }) {
         <div className="min-w-0 text-sm">
           <p className="font-medium text-ink">
             {AUTHOR.name}
-            <span className="font-normal text-muted"> · {AUTHOR.role}</span>
           </p>
           <p className="mt-0.5 text-xs text-muted">
             Published <time dateTime={p.published}>{formatDate(p.published)}</time>

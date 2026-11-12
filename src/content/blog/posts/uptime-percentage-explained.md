@@ -87,10 +87,10 @@ If you look after client sites, agree a target in writing. Say what's excluded (
 
 The number on the dashboard improves for two reasons: outages happen less often, or they end sooner. Most small teams get more from the second.
 
-- **Detect faster.** An outage nobody notices for six hours burns six hours of budget. Monitoring from outside, with alerts, is the cheapest uptime improvement there is. [Website uptime monitoring](/uptime-monitoring) shows what Website Health checks.
+- **Detect faster.** An outage nobody notices for six hours burns six hours of budget. Monitoring from outside, with alerts, is the cheapest uptime improvement there is. [Website uptime monitoring](/uptime-monitoring) shows what Websites With Punch checks.
 - **Remove the boring causes.** Expired SSL certificates and lapsed domains cause outages that are completely avoidable. Track their expiry dates as well as uptime.
 - **Make deploys reversible.** Most self-inflicted downtime comes from changes. Keep a quick rollback path and deploy when someone is watching.
 - **Plan maintenance properly.** Serve a 503 status with a `Retry-After` header during maintenance, and tell people in advance. See [website maintenance without hurting SEO](/blog/website-maintenance-without-hurting-seo).
 - **Communicate.** A clear status update doesn't change the percentage, but it changes how customers remember the outage.
 
-If you're unsure whether a site is up right now, the free [website down checker](/tools/website-down-checker) gives you the status code and response time from Website Health's server in a few seconds.
+If you're unsure whether a site is up right now, the free [website down checker](/tools/website-down-checker) gives you the status code and response time from the Websites With Punch server in a few seconds.

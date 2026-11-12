@@ -1,3 +1,5 @@
+import { FAST_CHECKS } from "@/lib/monitor/config";
+
 /** Why a site that's down has no alert logged. Pure, so the admin drawer and tests agree. */
 export type ReasonSite = { status: string; locked: boolean; alertDownAt: Date | null; lastCheckedAt: Date | null };
 export type ReasonUser = { verified: boolean; alertDown: boolean };
@@ -13,5 +15,5 @@ export function noAlertReason(site: ReasonSite, user: ReasonUser, logs: ReasonLo
   if (!user.verified) return "Owner hasn't verified their email. Alerts only go to verified accounts.";
   if (!user.alertDown) return "Owner turned off down alerts.";
   if (site.alertDownAt) return "Marked as alerted, but no log row exists (logged before alert history was kept).";
-  return "No check with alerts on has run since it went down (for example it was last checked before alerts were deployed). The next daily check or a Recheck will email the owner if it's still down.";
+  return "No check with alerts on has run since it went down (for example it was last checked before alerts were deployed). The next " + (FAST_CHECKS ? "background check" : "daily check") + " or a Recheck will email the owner if it's still down.";
 }

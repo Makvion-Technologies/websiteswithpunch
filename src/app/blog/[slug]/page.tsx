@@ -26,10 +26,10 @@ export function generateMetadata({ params }: Props) {
 }
 
 const CTA = {
-  uptime: "Website Health checks every site you add, keeps 90 days of history and emails you when a site goes down and comes back.",
-  ssl: "Website Health reads each site's live certificate and emails you 30, 7 and 1 days before it expires.",
-  domains: "Website Health tracks every domain's expiry date over RDAP and emails you 30, 7 and 1 days before it lapses.",
-  fixes: "Website Health checks uptime, SSL and domain expiry for every site you add, so the next outage reaches you before your visitors.",
+  uptime: "Websites With Punch checks every site you add, keeps 90 days of history and emails you when a site goes down and comes back.",
+  ssl: "Websites With Punch reads each site's live certificate and emails you 30, 7 and 1 days before it expires.",
+  domains: "Websites With Punch tracks every domain's expiry date over RDAP and emails you 30, 7 and 1 days before it lapses.",
+  fixes: "Websites With Punch checks uptime, SSL and domain expiry for every site you add, so the next outage reaches you before your visitors.",
 } as const;
 
 /** One blog post: 720px article with FAQ and author box; contents and a small CTA in the sticky rail. */

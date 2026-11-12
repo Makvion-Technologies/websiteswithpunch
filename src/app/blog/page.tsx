@@ -69,7 +69,7 @@ export default function BlogPage() {
       <div className="mt-16">
         <SoftCta
           title="Catch these problems before your visitors do"
-          body="Website Health tracks uptime, SSL certificate expiry and domain expiry for every site you look after, on one dashboard. Free for one site, no card needed."
+          body="Websites With Punch tracks uptime, SSL certificate expiry and domain expiry for every site you look after, on one dashboard. Free for one site, no card needed."
         />
       </div>
     </div>
