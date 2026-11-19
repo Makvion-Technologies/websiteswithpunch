@@ -21,7 +21,8 @@ export const metadata: Metadata = {
 };
 
 /** Logged out: public program page. Logged in: the dashboard, with a skeleton while it loads. */
-export default async function ReferralsPage({ searchParams }: { searchParams: { ref?: string } }) {
+export default async function ReferralsPage(props: { searchParams: Promise<{ ref?: string }> }) {
+  const searchParams = await props.searchParams;
   const session = await getSession();
   if (!session?.user?.id) return <ReferralLanding refCode={cleanCode(searchParams.ref)} />;
   return (

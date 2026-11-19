@@ -10,7 +10,8 @@ import { NewDot, AdminHeader, Badge, Filters, PAGE_SIZE, Pager, Panel, Table, fm
 
 export const metadata = { title: "Referrals" };
 
-export default async function AdminReferrals({ searchParams: sp }: { searchParams: { status?: string; page?: string } }) {
+export default async function AdminReferrals(props: { searchParams: Promise<{ status?: string; page?: string }> }) {
+  const sp = await props.searchParams;
   const admin = await requireAdmin();
   const status = COMMISSION_STATUSES.includes(sp.status ?? "") ? sp.status : undefined;
   // Legacy "pending" rows count as available (the hold was removed).

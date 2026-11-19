@@ -33,7 +33,7 @@ Websites With Punch watches the sites you care about and tells you before someth
 
 | Layer | Stack |
 | --- | --- |
-| Web app | Next.js 14 (App Router), React 18, TypeScript, Tailwind CSS |
+| Web app | Next.js 16 (App Router, Turbopack), React 19, TypeScript, Tailwind CSS |
 | Database | Prisma + PostgreSQL (e.g. Neon) |
 | Auth | NextAuth.js (credentials) |
 | Payments | Dodo Payments |
@@ -45,7 +45,7 @@ Websites With Punch watches the sites you care about and tells you before someth
 
 ### Prerequisites
 
-- Node.js 20+
+- Node.js 20.9+ (24 LTS recommended)
 - npm
 - A PostgreSQL database (Neon or local)
 

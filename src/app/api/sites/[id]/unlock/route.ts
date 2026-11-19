@@ -4,7 +4,8 @@ import { applyDuePendingAndEnforce, unlockSiteIfSlot } from "@/lib/site-limits";
 
 export const dynamic = "force-dynamic";
 
-export async function POST(_: Request, { params }: { params: { id: string } }) {
+export async function POST(_: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const session = await getSession();
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

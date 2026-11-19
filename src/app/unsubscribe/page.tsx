@@ -14,7 +14,8 @@ const LABEL: Record<AlertScope, string> = {
   all: "all alert emails",
 };
 
-export default function UnsubscribePage({ searchParams }: { searchParams: { t?: string } }) {
+export default async function UnsubscribePage(props: { searchParams: Promise<{ t?: string }> }) {
+  const searchParams = await props.searchParams;
   const token = typeof searchParams.t === "string" ? searchParams.t : "";
   const parsed = readUnsubscribeToken(token);
   return (

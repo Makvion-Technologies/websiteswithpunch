@@ -19,7 +19,7 @@ const OPEN_API = /^\/api\/(auth|contact|tools|cron|webhooks\/dodo|me|alerts\/uns
  *   app APIs answer 403. Tokens from before verification existed have no flag and pass.
  * - Signed-in visitors to the homepage go to their dashboard (keeps the homepage static).
  */
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const res = await route(req);
   // ?ref=CODE on a public page: first-touch referral cookie (signup checks the code exists).
   const ref = req.nextUrl.searchParams.get("ref")?.trim().toUpperCase();

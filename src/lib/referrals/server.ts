@@ -10,7 +10,7 @@ export async function audit(action: string, o: { actorId?: string | null; target
     .catch((e) => console.error("[audit] write failed", action, e));
 }
 
-/** ADMIN_EMAILS allowlist (lives in lib/admin/access so middleware can share it). */
+/** ADMIN_EMAILS allowlist (lives in lib/admin/access so proxy.ts can share it). */
 export { isAdminEmail } from "@/lib/admin/access";
 
 export async function ensureReferralCode(userId: string): Promise<string> {

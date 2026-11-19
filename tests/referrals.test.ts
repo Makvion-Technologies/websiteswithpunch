@@ -7,6 +7,7 @@ import {
 import { paymentBasis } from "../src/lib/referrals/dodo";
 import { cleanCode, maskAddress, newReferralCode, normalizeEmail, selfReferralReason, validatePayout } from "../src/lib/referrals/attribution";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- loose rows for the in-memory fake
 type Row = Record<string, any>;
 
 /** Tiny in-memory stand-in for the two Prisma models the ledger uses. */

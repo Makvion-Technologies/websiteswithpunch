@@ -39,10 +39,10 @@ const securityHeaders = [
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   poweredByHeader: false,
-  // Blog posts are plain markdown files in src/content/blog/posts, imported as strings at build time.
-  webpack(config) {
-    config.module.rules.push({ test: /\.md$/, type: "asset/source" });
-    return config;
+  // Blog posts are plain markdown files in src/content/blog/posts, imported as strings at build time
+  // (Turbopack's "raw" module type, the same as webpack's asset/source).
+  turbopack: {
+    rules: { "*.md": { type: "raw" } },
   },
   async headers() {
     return [

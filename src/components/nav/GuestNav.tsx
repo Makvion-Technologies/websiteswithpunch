@@ -16,7 +16,7 @@ const CLOSE_DELAY = 160;
 export function GuestNav() {
   const pathname = usePathname();
   const [open, setOpen] = useState<{ id: string; via: Via } | null>(null);
-  const timer = useRef<ReturnType<typeof setTimeout>>();
+  const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const clear = () => timer.current && clearTimeout(timer.current);
 

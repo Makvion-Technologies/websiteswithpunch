@@ -9,7 +9,7 @@ import { hbPatchSchema } from "@/lib/heartbeats/schema";
 
 export const dynamic = "force-dynamic";
 
-type Ctx = { params: { id: string } };
+type Ctx = { params: Promise<{ id: string }> };
 
 async function owned(id: string) {
   const session = await getSession();
@@ -20,7 +20,8 @@ async function owned(id: string) {
 }
 
 /** Rename, change period / grace, or pause and resume. */
-export async function PATCH(req: Request, { params }: Ctx) {
+export async function PATCH(req: Request, props: Ctx) {
+  const params = await props.params;
   if (!HEARTBEATS) return NextResponse.json({ error: "Not found" }, { status: 404 });
   const blocked = crossSiteBlocked(req);
   if (blocked) return blocked;
@@ -40,7 +41,8 @@ export async function PATCH(req: Request, { params }: Ctx) {
   return NextResponse.json({ ok: true, ready });
 }
 
-export async function DELETE(req: Request, { params }: Ctx) {
+export async function DELETE(req: Request, props: Ctx) {
+  const params = await props.params;
   if (!HEARTBEATS) return NextResponse.json({ error: "Not found" }, { status: 404 });
   const origin = req.headers.get("origin");
   const host = req.headers.get("x-forwarded-host") || req.headers.get("host");

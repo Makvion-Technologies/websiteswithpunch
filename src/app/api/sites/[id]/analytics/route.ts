@@ -20,7 +20,8 @@ import { analyticsExtras } from "@/lib/analytics-extras";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const session = await getSession();
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

@@ -50,7 +50,7 @@ export async function POST(req: Request) {
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  // Belt and braces with middleware: admin accounts never monitor sites.
+  // Belt and braces with proxy.ts: admin accounts never monitor sites.
   if (session.user.admin) return NextResponse.json({ error: "Admin accounts can't add sites." }, { status: 403 });
 
   const limited = await rateLimit([

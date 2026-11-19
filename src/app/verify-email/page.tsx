@@ -15,11 +15,12 @@ export const metadata: Metadata = {
 };
 export const dynamic = "force-dynamic";
 
-export default async function VerifyEmailPage({
-  searchParams,
-}: {
-  searchParams: { plan?: string; interval?: string };
-}) {
+export default async function VerifyEmailPage(
+  props: {
+    searchParams: Promise<{ plan?: string; interval?: string }>;
+  }
+) {
+  const searchParams = await props.searchParams;
   const session = await getSession();
   if (!session?.user?.id) redirect("/login");
   const user = await prisma.user.findUnique({

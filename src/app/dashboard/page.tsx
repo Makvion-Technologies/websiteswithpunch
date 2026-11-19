@@ -24,11 +24,12 @@ import { HeartbeatsSection } from "@/components/heartbeats/HeartbeatsSection";
 
 export const dynamic = "force-dynamic";
 
-export default async function DashboardPage({
-  searchParams,
-}: {
-  searchParams: { checkout?: string; subscription_id?: string; status?: string };
-}) {
+export default async function DashboardPage(
+  props: {
+    searchParams: Promise<{ checkout?: string; subscription_id?: string; status?: string }>;
+  }
+) {
+  const searchParams = await props.searchParams;
   const session = await getSession();
   if (!session?.user?.id) redirect("/login");
 

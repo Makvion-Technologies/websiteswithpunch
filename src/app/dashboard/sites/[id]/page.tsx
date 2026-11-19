@@ -9,7 +9,8 @@ import { toClientSite } from "@/lib/client-site";
 
 export const dynamic = "force-dynamic";
 
-export default async function SiteAnalyticsPage({ params }: { params: { id: string } }) {
+export default async function SiteAnalyticsPage(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const session = await getSession();
   if (!session?.user?.id) redirect("/login");
 

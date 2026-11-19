@@ -32,8 +32,8 @@ test("no-alert reason", () => {
   assert.equal(noAlertReason(site({ status: "up" }), ok, []), null);
   assert.match(noAlertReason(site(), { verified: false, alertDown: true }, [])!, /verified/);
   assert.match(noAlertReason(site(), { verified: true, alertDown: false }, [])!, /turned off/);
-  assert.match(noAlertReason(site(), ok, [])!, /next daily check or a Recheck/);
-  assert.match(noAlertReason(site({ status: "error" }), ok, [])!, /next daily check/);
+  assert.match(noAlertReason(site(), ok, [])!, /next (daily|background) check or a Recheck/);
+  assert.match(noAlertReason(site({ status: "error" }), ok, [])!, /next (daily|background) check/);
   const t = new Date();
   assert.equal(noAlertReason(site({ alertDownAt: t }), ok, [{ kind: "down", sent: true, createdAt: t }]), null);
   assert.match(noAlertReason(site({ alertDownAt: t }), ok, [{ kind: "down", sent: false, createdAt: t }])!, /didn't go out/);

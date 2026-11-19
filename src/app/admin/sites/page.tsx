@@ -12,7 +12,10 @@ import { SiteDrawer } from "@/components/admin/SiteDrawer";
 export const metadata: Metadata = { title: "Sites · Admin", robots: { index: false } };
 export const dynamic = "force-dynamic";
 
-export default async function AdminSites({ searchParams: sp }: { searchParams: { q?: string; status?: string; page?: string; s?: string } }) {
+export default async function AdminSites(
+  props: { searchParams: Promise<{ q?: string; status?: string; page?: string; s?: string }> }
+) {
+  const sp = await props.searchParams;
   const admin = await requireAdmin();
   const q = sp.q?.trim().slice(0, 100) || undefined;
   const status = siteFilterOf(sp.status);
