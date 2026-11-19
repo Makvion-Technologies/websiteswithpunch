@@ -1,6 +1,7 @@
 import { PLANS, SITE_PACKS, type PlanId } from "@/lib/plans";
 import { ANNUAL_PRICES, perMonthPrice, type BillingInterval } from "@/lib/billing-interval";
 import { byCadence, CHECK_EVERY_MIN } from "@/lib/monitor/config";
+import { HEARTBEATS, HEARTBEAT_LIMIT } from "@/lib/heartbeats/config";
 
 const packCeiling = (id: "pro" | "business") =>
   PLANS[id].siteLimit + SITE_PACKS[id].maxPacks * SITE_PACKS[id].sitesPerPack;
@@ -47,8 +48,15 @@ const checksRow = (id: PlanId): PlanFeature => {
   };
 };
 
-/** Rows shared by every card (row 3 and 4); row 3 names the plan's check interval. */
-const shared = (id: PlanId): PlanFeature[] => [checksRow(id), { text: "Dashboard, analytics and check history" }];
+/** Heartbeat (cron job) monitors per plan; only listed once heartbeats are live. */
+const hbRow = (id: PlanId): PlanFeature[] => {
+  if (!HEARTBEATS) return [];
+  const n = HEARTBEAT_LIMIT[id];
+  return [{ text: id === "free" ? "1 cron job heartbeat (hourly or slower)" : `${n} cron job heartbeats, from every 5 minutes` }];
+};
+
+/** Rows shared by every card (row 3 onward); row 3 names the plan's check interval. */
+const shared = (id: PlanId): PlanFeature[] => [checksRow(id), ...hbRow(id), { text: "Dashboard, analytics and check history" }];
 
 /** Paid-only, from the code: Dodo customer portal (needs a Dodo customer) and pack add/remove. */
 const paid: PlanFeature[] = [

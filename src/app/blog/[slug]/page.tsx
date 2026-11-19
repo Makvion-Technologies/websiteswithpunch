@@ -14,13 +14,14 @@ import { POSTS, getPost } from "@/content/blog";
 import { formatDate, headings, parseMarkdown, readingMinutes, wordCount } from "@/lib/blog/markdown";
 import { postJsonLd, postMeta } from "@/lib/blog/meta";
 
-type Props = { params: { slug: string } };
+type Props = { params: Promise<{ slug: string }> };
 
 export const dynamic = "force-static";
 export const dynamicParams = false;
 export const generateStaticParams = () => POSTS.map((p) => ({ slug: p.slug }));
 
-export function generateMetadata({ params }: Props) {
+export async function generateMetadata(props: Props) {
+  const params = await props.params;
   const p = getPost(params.slug);
   return p ? postMeta(p) : {};
 }
@@ -33,7 +34,8 @@ const CTA = {
 } as const;
 
 /** One blog post: 720px article with FAQ and author box; contents and a small CTA in the sticky rail. */
-export default function BlogPostPage({ params }: Props) {
+export default async function BlogPostPage(props: Props) {
+  const params = await props.params;
   const p = getPost(params.slug);
   if (!p) notFound();
   const blocks = parseMarkdown(p.body);

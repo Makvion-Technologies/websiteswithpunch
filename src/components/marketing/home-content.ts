@@ -1,5 +1,6 @@
 import { PLANS, SITE_PACKS } from "@/lib/plans";
 import { byCadence, UPTIME_EVERY } from "@/lib/monitor/config";
+import { HEARTBEATS, HEARTBEAT_LIMIT } from "@/lib/heartbeats/config";
 
 export const howSteps = [
   {
@@ -60,6 +61,14 @@ export const faqs = [
     q: "What if I need more than 10 or 50 sites?",
     a: `On Pro, add optional +${SITE_PACKS.pro.sitesPerPack} site packs (up to ${PLANS.pro.siteLimit + SITE_PACKS.pro.maxPacks * SITE_PACKS.pro.sitesPerPack} sites), then upgrade to Business. On Business, add +${SITE_PACKS.business.sitesPerPack} packs (up to ${PLANS.business.siteLimit + SITE_PACKS.business.maxPacks * SITE_PACKS.business.sitesPerPack} sites). Packs join your existing subscription and bill the same way, monthly or yearly. When you add a pack, the unused part of your current period is credited, the new total is charged right away, and your billing date moves to that day. You can remove packs anytime, and the removal takes effect at your next renewal. You keep the additional capacity until the end of the period you've paid for. Need more than that? Send us a message from the Contact page for a custom limit.`,
   },
+  ...(HEARTBEATS
+    ? [
+        {
+          q: "Can you monitor cron jobs and scheduled tasks?",
+          a: `Yes, with heartbeats. Each one gets a secret ping URL; add one curl or wget line to the end of your job and we expect a ping every 5 minutes, 15 minutes, hour, day or week, plus a grace time you choose. If a ping doesn't arrive in time we email you, and again when pings resume. We look for missed pings every minute. Free includes ${HEARTBEAT_LIMIT.free} heartbeat (hourly or slower), Pro ${HEARTBEAT_LIMIT.pro} and Business ${HEARTBEAT_LIMIT.business}.`,
+        },
+      ]
+    : []),
   {
     q: "What exactly am I paying for?",
     a: "A subscription to our online website monitoring software (SaaS). There's nothing to install or ship: you sign in and use the dashboard in your browser, right after you sign up.",

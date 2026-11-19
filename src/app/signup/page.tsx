@@ -22,11 +22,12 @@ function parsePlan(raw: string | string[] | undefined): PlanId {
   return "free";
 }
 
-export default async function SignupPage({
-  searchParams,
-}: {
-  searchParams: { plan?: string; interval?: string; canceled?: string; site?: string };
-}) {
+export default async function SignupPage(
+  props: {
+    searchParams: Promise<{ plan?: string; interval?: string; canceled?: string; site?: string }>;
+  }
+) {
+  const searchParams = await props.searchParams;
   const session = await getSession();
   if (session?.user) redirect("/dashboard");
 

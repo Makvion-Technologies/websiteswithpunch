@@ -16,7 +16,8 @@ const schema = z.discriminatedUnion("action", [
 ]);
 
 /** Admins only (ADMIN_EMAILS allowlist + verified session). Non-admins get a 404, not a hint. */
-export async function POST(req: Request, { params }: { params: { id: string } }) {
+export async function POST(req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const blocked = crossSiteBlocked(req);
   if (blocked) return blocked;
   const session = await getSession();

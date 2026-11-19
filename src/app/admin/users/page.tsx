@@ -12,7 +12,8 @@ import { UserDrawer } from "@/components/admin/UserDrawer";
 export const metadata = { title: "Users" };
 type Search = { q?: string; plan?: string; page?: string; u?: string };
 
-export default async function AdminUsers({ searchParams: sp }: { searchParams: Search }) {
+export default async function AdminUsers(props: { searchParams: Promise<Search> }) {
+  const sp = await props.searchParams;
   const admin = await requireAdmin();
   const q = (sp.q ?? "").trim().slice(0, 100);
   const plan = (USER_PLANS as readonly string[]).includes(sp.plan ?? "") ? sp.plan : undefined;

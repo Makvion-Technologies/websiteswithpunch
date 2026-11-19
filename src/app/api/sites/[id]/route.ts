@@ -22,7 +22,8 @@ async function ownedSite(userId: string, id: string) {
   return prisma.site.findFirst({ where: { id, userId } });
 }
 
-export async function GET(_: Request, { params }: { params: { id: string } }) {
+export async function GET(_: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const session = await getSession();
   if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   await applyDuePendingAndEnforce(session.user.id);
@@ -46,7 +47,8 @@ export async function GET(_: Request, { params }: { params: { id: string } }) {
   return NextResponse.json({ site, history });
 }
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const session = await getSession();
   if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const site = await ownedSite(session.user.id, params.id);
@@ -150,7 +152,8 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   }
 }
 
-export async function DELETE(_: Request, { params }: { params: { id: string } }) {
+export async function DELETE(_: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const session = await getSession();
   if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const site = await ownedSite(session.user.id, params.id);
@@ -160,7 +163,8 @@ export async function DELETE(_: Request, { params }: { params: { id: string } })
   return NextResponse.json({ ok: true, freedSlot: !site.locked });
 }
 
-export async function POST(req: Request, { params }: { params: { id: string } }) {
+export async function POST(req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const session = await getSession();
   if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const site = await ownedSite(session.user.id, params.id);

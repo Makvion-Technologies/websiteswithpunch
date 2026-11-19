@@ -10,7 +10,10 @@ import { MessageHandled } from "@/components/admin/MessageHandled";
 
 export const metadata = { title: "Messages" };
 
-export default async function AdminMessages({ searchParams: sp }: { searchParams: { topic?: string; state?: string; range?: string; page?: string; m?: string } }) {
+export default async function AdminMessages(
+  props: { searchParams: Promise<{ topic?: string; state?: string; range?: string; page?: string; m?: string }> }
+) {
+  const sp = await props.searchParams;
   const admin = await requireAdmin();
   const topic = MESSAGE_TOPICS.includes(sp.topic ?? "") ? sp.topic : undefined;
   const state = sp.state === "handled" || sp.state === "all" ? sp.state : undefined; // default: open

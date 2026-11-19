@@ -10,7 +10,8 @@ export const dynamic = "force-dynamic";
  * /r/CODE: first-touch attribution. Sets a 30-day httpOnly cookie only if none is set yet and the
  * code exists, then sends the visitor to the homepage. Unknown codes just redirect.
  */
-export async function GET(req: Request, { params }: { params: { code: string } }) {
+export async function GET(req: Request, props: { params: Promise<{ code: string }> }) {
+  const params = await props.params;
   const res = NextResponse.redirect(new URL("/", req.url), 307);
   res.headers.set("Cache-Control", "no-store");
   res.headers.set("X-Robots-Tag", "noindex");

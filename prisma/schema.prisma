@@ -68,6 +68,7 @@ model User {
   commissionsEarned     Commission[]            @relation("Earned")
   commissionsPaidFor    Commission[]            @relation("Payer")
   payouts               Payout[]
+  heartbeats            Heartbeat[]
 
   @@index([emailVerified, createdAt])
   @@index([referredById])
@@ -329,4 +330,56 @@ model AdminSeen {
   prevAt     DateTime?
 
   @@unique([adminEmail, key])
+}
+
+/// Heartbeat (cron job) monitor: the job calls its secret ping URL, which is answered by the
+/// monitor Worker (D1), never by this database. The Worker reports missed pings and recoveries.
+model Heartbeat {
+  id          String           @id @default(cuid())
+  userId      String
+  name        String
+  /// Secret part of the ping URL (random, URL-safe).
+  token       String           @unique
+  /// Expected time between pings, and extra time allowed before it counts as missed.
+  periodSec   Int
+  graceSec    Int
+  paused      Boolean          @default(false)
+  status      String           @default("new") // new | up | down
+  lastPingAt  DateTime?
+  /// Set when a "missed" alert went out; cleared (with a recovery email) when pings resume.
+  alertDownAt DateTime?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  events      HeartbeatEvent[]
+  days        HeartbeatDay[]
+
+  @@index([userId])
+}
+
+/// Missed / resumed history (90 days). key is unique per heartbeat, so each email sends once.
+model HeartbeatEvent {
+  id          String    @id @default(cuid())
+  heartbeatId String
+  kind        String // down | up
+  key         String
+  at          DateTime
+  lastPingAt  DateTime?
+  sent        Boolean   @default(false)
+  heartbeat   Heartbeat @relation(fields: [heartbeatId], references: [id], onDelete: Cascade)
+
+  @@unique([heartbeatId, key])
+  @@index([heartbeatId, at])
+  @@index([at])
+}
+
+/// Pings recorded per heartbeat per UTC day (90 days), sent by the Worker once an hour.
+model HeartbeatDay {
+  heartbeatId String
+  day         DateTime  @db.Date
+  pings       Int       @default(0)
+  heartbeat   Heartbeat @relation(fields: [heartbeatId], references: [id], onDelete: Cascade)
+
+  @@id([heartbeatId, day])
+  @@index([day])
 }

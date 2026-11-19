@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { BillingInterval } from "@/lib/billing-interval";
 import type { PricingPlan } from "./pricing-content";
+import { HEARTBEATS } from "@/lib/heartbeats/config";
 
 function Dash({ className = "" }: { className?: string }) {
   return (
@@ -46,16 +47,19 @@ const cta = {
  * One plan: name + tag, who it's for, price + billing note, CTA, divider, feature list.
  * Price, note and CTA link follow the Monthly / Annual toggle; everything else is fixed.
  * lg: each card is a subgrid spanning the parent's rows (6 blocks + 7 feature rows, the longest
- * list; update span_13 / row-span-7 if the lists grow),
+ * list, or 8 with the heartbeat row; update SPAN / ROWS if the lists grow),
  * so every block and every feature row sits at the same height across the three cards.
  */
+const SPAN = HEARTBEATS ? "lg:[grid-row:span_14]" : "lg:[grid-row:span_13]";
+const ROWS = HEARTBEATS ? "lg:row-span-8" : "lg:row-span-7";
+
 export function PricingCard({ plan, interval }: { plan: PricingPlan; interval: BillingInterval }) {
   const dark = plan.id === "pro";
   const { price, note, href } = plan.pricing[interval];
   const soft = dark ? "text-solid-fg/60" : "text-muted";
   return (
     <div
-      className={`relative flex min-w-0 flex-col p-6 sm:p-8 lg:[grid-row:span_13] lg:grid lg:grid-rows-subgrid lg:gap-y-0 ${
+      className={`relative flex min-w-0 flex-col p-6 sm:p-8 ${SPAN} lg:grid lg:grid-rows-subgrid lg:gap-y-0 ${
         dark ? "border border-solid bg-solid text-solid-fg max-lg:mt-3" : "border border-rule bg-surface text-ink"
       }`}
     >
@@ -79,7 +83,7 @@ export function PricingCard({ plan, interval }: { plan: PricingPlan; interval: B
       <div className={`mt-8 border-t pb-4 pt-6 ${dark ? "border-solid-fg/15" : "border-rule"}`}>
         <p className={`label-caps ${dark ? "!text-solid-fg/55" : ""}`}>Includes</p>
       </div>
-      <ul className="space-y-3 text-sm lg:row-span-7 lg:grid lg:grid-rows-subgrid lg:gap-y-0">
+      <ul className={`space-y-3 text-sm ${ROWS} lg:grid lg:grid-rows-subgrid lg:gap-y-0`}>
         {plan.features.map((f) => (
           <li key={f.text} className="flex gap-3">
             {f.off ? <Dash className={`mt-0.5 ${soft}`} /> : <Check className="mt-0.5 text-accent" />}

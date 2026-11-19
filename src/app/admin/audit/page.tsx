@@ -6,7 +6,8 @@ import { AdminHeader, Filters, NewDot, PAGE_SIZE, Pager, Panel, Table, fmtDate, 
 
 export const metadata = { title: "Audit log" };
 
-export default async function AdminAudit({ searchParams: sp }: { searchParams: { area?: string; page?: string } }) {
+export default async function AdminAudit(props: { searchParams: Promise<{ area?: string; page?: string }> }) {
+  const sp = await props.searchParams;
   const admin = await requireAdmin();
   const actions = await prisma.auditLog.findMany({ distinct: ["action"], select: { action: true }, take: 50 });
   const areas = [...new Set(actions.map((a) => a.action.split(".")[0]))].sort();

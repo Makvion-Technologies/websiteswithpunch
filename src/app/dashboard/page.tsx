@@ -19,14 +19,17 @@ import { loadAccount } from "@/lib/account-load";
 import { toDashboardSite } from "@/lib/dashboard-sites";
 import { RememberLayout } from "@/components/skeleton/shape";
 import { FAST_CHECKS, cadenceText } from "@/lib/monitor/config";
+import { HEARTBEATS } from "@/lib/heartbeats/config";
+import { HeartbeatsSection } from "@/components/heartbeats/HeartbeatsSection";
 
 export const dynamic = "force-dynamic";
 
-export default async function DashboardPage({
-  searchParams,
-}: {
-  searchParams: { checkout?: string; subscription_id?: string; status?: string };
-}) {
+export default async function DashboardPage(
+  props: {
+    searchParams: Promise<{ checkout?: string; subscription_id?: string; status?: string }>;
+  }
+) {
+  const searchParams = await props.searchParams;
   const session = await getSession();
   if (!session?.user?.id) redirect("/login");
 
@@ -193,6 +196,8 @@ export default async function DashboardPage({
           </div>
         </SiteRecheckScope>
       )}
+
+      {HEARTBEATS && <HeartbeatsSection userId={user.id} plan={plan} />}
     </div>
   );
 }

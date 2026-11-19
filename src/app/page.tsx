@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
-// Static: signed-in visitors are sent to /dashboard by middleware.ts before this page is served.
+// Static: signed-in visitors are sent to /dashboard by proxy.ts before this page is served.
 export const dynamic = "force-static";
 
 export default function HomePage() {

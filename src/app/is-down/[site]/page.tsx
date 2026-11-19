@@ -14,7 +14,8 @@ export function generateStaticParams() {
 
 type Params = { site: string };
 
-export function generateMetadata({ params }: { params: Params }): Metadata {
+export async function generateMetadata(props: { params: Promise<Params> }): Promise<Metadata> {
+  const params = await props.params;
   const site = getSite(params.site);
   if (!site) return { title: "Not found" };
   const c = siteCopy(site);
@@ -26,7 +27,8 @@ export function generateMetadata({ params }: { params: Params }): Metadata {
   });
 }
 
-export default function Page({ params }: { params: Params }) {
+export default async function Page(props: { params: Promise<Params> }) {
+  const params = await props.params;
   const site = getSite(params.site);
   if (!site) notFound();
   if (params.site !== site.host) redirect(`/is-down/${site.host}`);

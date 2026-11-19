@@ -13,11 +13,12 @@ export const metadata: Metadata = {
   referrer: "no-referrer",
 };
 
-export default async function ResetPasswordPage({
-  searchParams,
-}: {
-  searchParams: { token?: string | string[] };
-}) {
+export default async function ResetPasswordPage(
+  props: {
+    searchParams: Promise<{ token?: string | string[] }>;
+  }
+) {
+  const searchParams = await props.searchParams;
   const raw = searchParams.token;
   const token = Array.isArray(raw) ? raw[0] : raw;
   const { state } = await checkResetToken(token);

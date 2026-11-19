@@ -15,3 +15,21 @@ CREATE TABLE IF NOT EXISTS slots (
   shard INTEGER NOT NULL,
   data TEXT NOT NULL
 );
+-- Heartbeat (cron job) monitors. Config is copied from the app; pings land here, never in the
+-- app's database. A ping is stored at most once per 30 s per heartbeat (5 min after 300 in a day).
+-- state: 0 waiting for the first ping, 1 up, 2 missed (reported to the app).
+CREATE TABLE IF NOT EXISTS hb (
+  id TEXT PRIMARY KEY,
+  token TEXT NOT NULL UNIQUE,
+  period INTEGER NOT NULL,
+  grace INTEGER NOT NULL,
+  paused INTEGER NOT NULL DEFAULT 0,
+  state INTEGER NOT NULL DEFAULT 0,
+  since INTEGER NOT NULL DEFAULT 0,
+  last_ping INTEGER NOT NULL DEFAULT 0,
+  due_at INTEGER NOT NULL DEFAULT 0,
+  day INTEGER NOT NULL DEFAULT 0,
+  n INTEGER NOT NULL DEFAULT 0,
+  cnt INTEGER NOT NULL DEFAULT 0
+);
+CREATE INDEX IF NOT EXISTS hb_due ON hb (state, due_at);

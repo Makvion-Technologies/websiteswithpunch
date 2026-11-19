@@ -12,7 +12,8 @@ export const dynamic = "force-dynamic";
 const schema = z.object({ handled: z.boolean() });
 
 /** Mark a contact message handled / open again. Admins only; everyone else gets a 404. */
-export async function POST(req: Request, { params }: { params: { id: string } }) {
+export async function POST(req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const blocked = crossSiteBlocked(req);
   if (blocked) return blocked;
   const admin = await adminOrNull();

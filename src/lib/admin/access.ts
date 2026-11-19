@@ -1,5 +1,5 @@
 /**
- * Edge-safe admin rules (no Prisma/Node imports): used by middleware, server pages and tests.
+ * Edge-safe admin rules (no Prisma/Node imports): used by the proxy (proxy.ts), server pages and tests.
  * ADMIN_EMAILS is a comma separated allowlist; matching is trimmed and case-insensitive.
  */
 export function isAdminEmail(email: string | null | undefined, list = process.env.ADMIN_EMAILS || ""): boolean {
@@ -11,12 +11,12 @@ export function isAdminEmail(email: string | null | undefined, list = process.en
 /** Customer-only pages: admins are sent to /admin instead. */
 const CUSTOMER_PAGE = /^\/(dashboard|plan|referrals|checkout|onboarding)(\/|$)/;
 /** Customer APIs that create or change sites, billing or referral state: 403 for admins. */
-const CUSTOMER_API = /^\/api\/(sites|billing|referrals)(\/|$)/;
+const CUSTOMER_API = /^\/api\/(sites|heartbeats|billing|referrals)(\/|$)/;
 const ADMIN_AREA = /^\/(admin|api\/admin)(\/|$)/;
 
 export type AdminDecision = "next" | "to-admin" | "not-found" | "forbidden";
 
-/** What middleware does with a request, given whether a session exists and whether it is an admin. */
+/** What the proxy (proxy.ts) does with a request, given whether a session exists and whether it is an admin. */
 export function adminDecision(pathname: string, method: string, signedIn: boolean, admin: boolean): AdminDecision {
   if (ADMIN_AREA.test(pathname)) return admin ? "next" : "not-found";
   if (!admin || !signedIn) return "next";

@@ -13,7 +13,7 @@ type HeroCheckCtx = {
   result: HeroCheck | null;
   formError: string | null;
   ui: Ui | null;
-  inputRef: RefObject<HTMLInputElement>;
+  inputRef: RefObject<HTMLInputElement | null>;
   submit: (raw: string) => void;
   close: () => void;
   clearError: () => void;

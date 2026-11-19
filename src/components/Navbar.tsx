@@ -49,7 +49,8 @@ export function Navbar() {
             alt=""
             width={32}
             height={32}
-            priority
+            preload
+            fetchPriority="high"
             unoptimized
             className="h-7 w-7 shrink-0 object-contain md:h-8 md:w-8"
           />

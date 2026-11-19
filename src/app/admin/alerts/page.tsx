@@ -8,7 +8,10 @@ import { byCadence } from "@/lib/monitor/config";
 
 export const metadata = { title: "Alerts" };
 
-export default async function AdminAlerts({ searchParams: sp }: { searchParams: { kind?: string; sent?: string; range?: string; page?: string } }) {
+export default async function AdminAlerts(
+  props: { searchParams: Promise<{ kind?: string; sent?: string; range?: string; page?: string }> }
+) {
+  const sp = await props.searchParams;
   const admin = await requireAdmin();
   const where = alertsWhere({ kind: sp.kind, sent: sp.sent, range: rangeOf(sp.range) });
   const kind = where.kind as string | undefined;

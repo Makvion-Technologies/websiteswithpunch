@@ -15,7 +15,8 @@ const DAY_MS = 86_400_000;
  * certificate/domain details, uptime over fixed windows, and first/last check times. Loaded once
  * in the background after the analytics, so panels usually open with no wait.
  */
-export async function GET(_req: Request, { params }: { params: { id: string } }) {
+export async function GET(_req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const session = await getSession();
   if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 

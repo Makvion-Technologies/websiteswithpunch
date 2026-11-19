@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @next/next/no-html-link-for-pages -- plain <a> on purpose: a full load, since the app shell itself failed. */
 
 import "./globals.css";
 

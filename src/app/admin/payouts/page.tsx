@@ -17,7 +17,8 @@ const TABS = [["requested", "Requested"], ["paid", "Paid"], ["rejected", "Reject
 type Search = { tab?: string; q?: string; sort?: string; page?: string; p?: string };
 
 /** ADMIN_EMAILS only; everyone else gets a plain 404. Opened by ?p=ID for the detail drawer. */
-export default async function AdminPayoutsPage({ searchParams: sp }: { searchParams: Search }) {
+export default async function AdminPayoutsPage(props: { searchParams: Promise<Search> }) {
+  const sp = await props.searchParams;
   const admin = await requireAdmin();
   const tab = TABS.some(([t]) => t === sp.tab) ? sp.tab! : "requested";
   const q = (sp.q ?? "").trim().slice(0, 100);
