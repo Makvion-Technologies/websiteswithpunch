@@ -6,7 +6,7 @@ export const post: BlogPost = {
   title: "How to Calculate the Cost of Website Downtime",
   h1: "How to calculate the cost of website downtime (with a worked example)",
   description:
-    "A simple formula for the real cost of a website outage: lost revenue, staff time, recovery and hidden costs, with a worked example for a small shop.",
+    "A simple formula for the real cost of a website outage: lost revenue, staff time, recovery work and hidden costs, with a worked example for a small shop.",
   category: "uptime",
   query: "cost of website downtime calculator",
   published: "2026-11-11",

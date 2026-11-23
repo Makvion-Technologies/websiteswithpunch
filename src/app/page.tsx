@@ -16,14 +16,18 @@ import { HomeToolsStrip } from "@/components/marketing/HomeToolsStrip";
 import { HomeJsonLd } from "@/components/marketing/HomeJsonLd";
 import { byCadence } from "@/lib/monitor/config";
 
+const title = "Website Uptime Monitoring – SSL & Domain Expiry";
+const description = byCadence(
+  "Uptime checks every minute on Pro and Business, every 5 minutes on Free, plus SSL and domain expiry, on one dashboard. Free for one site, no card needed.",
+  "Monitor website uptime, SSL certificates and domain expiry on one dashboard. Daily checks, with email alerts when a site is down. Free for one site.",
+);
+
 export const metadata: Metadata = {
-  title: { absolute: "Uptime, SSL & Domain Expiry Monitoring | Websites With Punch" },
-  description:
-    byCadence(
-      "Website monitoring for freelancers, agencies and small businesses: uptime checked every minute (every 5 on Free), plus SSL and domain expiry, on one dashboard. Free for one site.",
-      "Website monitoring for freelancers, agencies and small businesses: daily uptime, SSL certificate and domain expiry checks on one dashboard. Free for one site.",
-    ),
+  title: { absolute: title },
+  description,
   alternates: { canonical: "/" },
+  openGraph: { title, description, url: "/" },
+  twitter: { title, description },
 };
 
 // Static: signed-in visitors are sent to /dashboard by proxy.ts before this page is served.

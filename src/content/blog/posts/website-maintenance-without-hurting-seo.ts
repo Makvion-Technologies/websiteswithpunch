@@ -6,11 +6,11 @@ export const post: BlogPost = {
   title: "Website Maintenance Without Hurting SEO: Use a 503",
   h1: "Website maintenance without hurting SEO: 503, Retry-After and a checklist",
   description:
-    "Take a site down for maintenance the way Google recommends: a 503 with Retry-After, robots.txt left alone, ready-made Nginx, Apache and Next.js configs.",
+    "Take a site down for maintenance as Google recommends: a 503 with Retry-After, robots.txt left alone, and ready-made Nginx, Apache and Next.js configs.",
   category: "fixes",
   query: "website maintenance mode seo 503",
   published: "2026-11-11",
-  updated: "2026-11-11",
+  updated: "2026-11-23",
   body,
   related: ["fix-502-503-504-errors", "status-page-guide", "uptime-percentage-explained"],
   faqs: [

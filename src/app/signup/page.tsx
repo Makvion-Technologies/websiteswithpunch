@@ -10,8 +10,9 @@ import { PendingSiteNote } from "./PendingSiteNote";
 import { cleanSiteParam } from "@/lib/signup-link";
 
 export const metadata: Metadata = {
-  title: "Create your account",
-  description: "Start monitoring uptime, SSL and domain expiry. Free for one site.",
+  title: "Create Your Free Account",
+  description:
+    "Create a free Websites With Punch account to monitor website uptime, SSL certificates and domain expiry. One site is free, and no card is required.",
   alternates: { canonical: "/signup" },
   robots: NO_INDEX,
 };

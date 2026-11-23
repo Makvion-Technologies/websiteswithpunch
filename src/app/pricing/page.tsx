@@ -7,10 +7,15 @@ import { ANNUAL_PRICES } from "@/lib/billing-interval";
 
 const price = (id: "pro" | "business") => `$${PLANS[id].price}/month or $${ANNUAL_PRICES[id]}/year`;
 
+const title = "Website Monitoring Pricing – Free, Pro and Business";
+const description = `Website monitoring prices: Free for 1 site, Pro ${price("pro")}, Business ${price("business")}, plus site packs. Prices in USD. Cancel anytime.`;
+
 export const metadata: Metadata = {
-  title: { absolute: "Website Monitoring Pricing: Free, Pro & Business Plans" },
-  description: `Website monitoring pricing: Free for 1 site, Pro ${price("pro")}, Business ${price("business")}, plus optional site packs. Prices in USD. Cancel anytime.`,
+  title: { absolute: title },
+  description,
   alternates: { canonical: "/pricing" },
+  openGraph: { title, description, url: "/pricing" },
+  twitter: { title, description },
 };
 
 const link = "text-accent underline underline-offset-2 hover:no-underline";

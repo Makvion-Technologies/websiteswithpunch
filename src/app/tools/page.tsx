@@ -9,9 +9,9 @@ import { SITE_URL } from "@/lib/site-config";
 
 export const metadata = pageMeta({
   path: "/tools",
-  title: "Free Website Tools: SSL, Domain Expiry & Down Checker",
+  title: "Free Website Tools: Check Status, SSL & Expiry",
   description:
-    "Free website tools: check SSL certificate expiry, look up a domain's expiry date over RDAP and test whether a website is down. No signup.",
+    "Free tools to check if a website is down, look up a domain's expiry date and inspect an SSL certificate. Instant results, and you don't need an account.",
   og: "tools",
 });
 export const dynamic = "force-static";

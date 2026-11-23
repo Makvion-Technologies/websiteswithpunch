@@ -2,9 +2,9 @@ import type { ArticleSection, Faq } from "@/components/seo/types";
 
 export const sslChecker = {
   path: "/tools/ssl-checker",
-  title: "SSL Checker: Check SSL Certificate Expiry Date (Free)",
+  title: "SSL Checker – Check a Certificate's Expiry Date Free",
   description:
-    "Free SSL checker: see who issued a site's certificate, the exact expiry date, days left, the hostnames it covers and whether browsers trust it. No signup.",
+    "Check any site's SSL certificate: issuer, expiry date, days left, the hostnames it covers and whether browsers trust it. Free, instant, no signup.",
   h1: "SSL certificate checker",
   intro:
     "Enter a domain to read the SSL/TLS certificate it serves on port 443: the issuer, the expiry date, how many days are left, the hostnames it covers and whether browsers will trust it. Free, no signup.",

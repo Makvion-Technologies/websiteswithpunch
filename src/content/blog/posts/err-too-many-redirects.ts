@@ -6,7 +6,7 @@ export const post: BlogPost = {
   title: "ERR_TOO_MANY_REDIRECTS: Causes and How to Fix It",
   h1: "ERR_TOO_MANY_REDIRECTS: what causes a redirect loop and how to fix it",
   description:
-    "Find and fix a redirect loop: trace it with curl, then fix CDN Flexible SSL, www mismatches, WordPress site URLs, proxy headers and cached redirects.",
+    "Find and fix a redirect loop: trace it with curl, then repair CDN Flexible SSL, www mismatches, WordPress site URLs, proxy headers and cached redirects.",
   category: "fixes",
   query: "err_too_many_redirects fix",
   published: "2026-11-11",

@@ -2,9 +2,9 @@ import type { ArticleSection, Faq } from "@/components/seo/types";
 
 export const domainFeature = {
   path: "/domain-expiry-monitoring",
-  title: "Domain Expiry Monitoring: Never Miss a Domain Renewal",
+  title: "Domain Expiry Monitoring – Track Renewal Dates Daily",
   description:
-    "Domain expiry monitoring for your own and your clients' sites: renewal dates looked up daily via RDAP, with days left on one dashboard next to uptime and SSL.",
+    "Domain expiry monitoring for your sites and your clients': renewal dates looked up daily via RDAP, with days left beside uptime and SSL. Free for one site.",
   eyebrow: "Domain expiry monitoring",
   h1: "Domain expiry monitoring that keeps renewals in sight",
   intro:

@@ -4,10 +4,16 @@ import { InAppBackLink } from "@/components/InAppBackLink";
 import { SUPPORT_EMAIL } from "@/components/legal/LegalPage";
 import { ContactForm } from "./contact-form";
 
+const title = "Contact Us";
+const description =
+  "Questions about website monitoring, billing or custom site limits? Send a message to the Websites With Punch team. We read every enquiry we receive.";
+
 export const metadata: Metadata = {
-  title: "Contact",
-  description: "Questions about monitoring, billing or custom site limits? Send us a message.",
+  title,
+  description,
   alternates: { canonical: "/contact" },
+  openGraph: { title: `${title} · Websites With Punch`, description, url: "/contact" },
+  twitter: { title: `${title} · Websites With Punch`, description },
 };
 
 const notes = [

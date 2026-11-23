@@ -8,12 +8,12 @@ import { ReferralsSkeleton } from "@/components/skeleton/ReferralsSkeleton";
 
 export const dynamic = "force-dynamic";
 
-const title = "Referral program: earn 20% when friends you refer pay";
+const title = "Referral Program – Earn 20% When Friends Subscribe";
 const description =
-  "Share your link. You get 20% on Pro and Business plan payments from people you refer (site packs excluded). Withdraw from $20 via PayPal or UPI.";
+  "Share your Websites With Punch link. You earn 20% on Pro and Business plan payments from people you refer, excluding site packs. Withdraw from $20.";
 
 export const metadata: Metadata = {
-  title: "Referral program",
+  title: { absolute: title },
   description,
   alternates: { canonical: "/referrals" },
   openGraph: { title, description, url: "/referrals" },

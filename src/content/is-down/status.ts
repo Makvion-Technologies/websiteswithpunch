@@ -62,4 +62,7 @@ export const STATUS_PAGES: Record<string, string> = {
   "canva.com": "https://www.canvastatus.com",
   "adobe.com": "https://status.adobe.com",
   "netflix.com": "https://help.netflix.com/is-netflix-down",
+  "coinbase.com": "https://status.coinbase.com",
+  "robinhood.com": "https://status.robinhood.com",
+  "instructure.com": "https://status.instructure.com",
 };

@@ -3,10 +3,16 @@ import { A, H2, LegalContact, LegalPage, P } from "@/components/legal/LegalPage"
 import { ReferralTerms } from "@/components/legal/ReferralTerms";
 import { byCadence } from "@/lib/monitor/config";
 
+const title = "Terms of Service";
+const description =
+  "Terms that apply when you use Websites With Punch, a website monitoring subscription by Makvion Technologies, including accounts, plans and acceptable use.";
+
 export const metadata: Metadata = {
-  title: "Terms of Service",
-  description: "The terms that apply when you use Websites With Punch, a website monitoring software subscription by Makvion Technologies.",
+  title,
+  description,
   alternates: { canonical: "/terms" },
+  openGraph: { title: `${title} · Websites With Punch`, description, url: "/terms" },
+  twitter: { title: `${title} · Websites With Punch`, description },
 };
 
 export default function TermsPage() {

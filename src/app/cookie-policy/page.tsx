@@ -1,11 +1,16 @@
 import type { Metadata } from "next";
 import { A, H2, LegalContact, LegalPage, P, UL } from "@/components/legal/LegalPage";
 
+const title = "Cookie Policy";
+const description =
+  "How Websites With Punch uses essential session cookies and privacy-friendly, cookieless analytics. No advertising or third-party marketing cookies.";
+
 export const metadata: Metadata = {
-  title: "Cookie Policy",
-  description:
-    "How Websites With Punch uses essential session cookies and privacy-friendly, cookieless analytics. No advertising cookies.",
+  title,
+  description,
   alternates: { canonical: "/cookie-policy" },
+  openGraph: { title: `${title} · Websites With Punch`, description, url: "/cookie-policy" },
+  twitter: { title: `${title} · Websites With Punch`, description },
 };
 
 export default function CookiePolicyPage() {

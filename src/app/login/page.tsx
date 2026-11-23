@@ -8,7 +8,8 @@ import { LoginForm } from "./login-form";
 
 export const metadata: Metadata = {
   title: "Log in",
-  description: "Log in to your Websites With Punch dashboard.",
+  description:
+    "Log in to your Websites With Punch dashboard to check uptime, SSL certificate expiry and domain expiry across the sites you already monitor.",
   alternates: { canonical: "/login" },
   robots: NO_INDEX,
 };

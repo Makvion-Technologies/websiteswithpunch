@@ -2,9 +2,9 @@ import type { ArticleSection, Faq } from "@/components/seo/types";
 
 export const domainChecker = {
   path: "/tools/domain-expiry-checker",
-  title: "Domain Expiry Check: Free Domain Expiration Date Lookup",
+  title: "Domain Expiry Checker – Find When a Domain Expires",
   description:
-    "Free domain expiry check. See when any domain expires, how many days are left and which registrar manages it, read live from the registry over RDAP.",
+    "Find out when a domain expires, how many days are left and which registrar manages it. Live registry lookup over RDAP. Free, instant, no signup.",
   h1: "Domain expiry check",
   intro:
     "Enter a domain to see its registration expiry date, the days left and the registrar of record, read live from the registry using RDAP (the official successor to WHOIS). Free, no signup.",

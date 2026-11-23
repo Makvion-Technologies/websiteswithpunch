@@ -3,10 +3,10 @@ import body from "./dns-propagation-explained.md";
 
 export const post: BlogPost = {
   slug: "dns-propagation-explained",
-  title: "DNS Propagation: Why DNS Changes Take Time",
+  title: "DNS Propagation Explained: Why Changes Take Time",
   h1: "DNS propagation explained: why changes take time and how to speed them up",
   description:
-    "DNS changes don't spread, caches expire. How TTLs work, why nameserver changes take up to 48 hours, how to plan a fast change and how to check it with dig.",
+    "DNS changes don't spread around the world; caches expire. How TTLs work, why nameserver changes can take 48 hours, and how to check a change with dig.",
   category: "domains",
   query: "dns propagation time",
   published: "2026-11-11",

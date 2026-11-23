@@ -3,10 +3,10 @@ import body from "./fix-502-503-504-errors.md";
 
 export const post: BlogPost = {
   slug: "fix-502-503-504-errors",
-  title: "502 vs 503 vs 504 Errors: Causes and Fixes",
+  title: "Fix 502, 503 and 504 Errors: Causes and Solutions",
   h1: "502, 503 and 504 errors: what each one means and how to fix it",
   description:
-    "502 Bad Gateway, 503 Service Unavailable and 504 Gateway Timeout explained: which part of your stack sends each, what the logs say and how to fix it.",
+    "502 Bad Gateway, 503 Service Unavailable and 504 Gateway Timeout explained: which part of the stack sends each, what the logs say, and how to fix them.",
   category: "fixes",
   query: "502 503 504 error difference",
   published: "2026-11-11",

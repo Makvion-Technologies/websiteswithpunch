@@ -6,7 +6,7 @@ export const post: BlogPost = {
   title: "SSL Certificate Expired? How to Fix It Fast",
   h1: "SSL certificate expired? How to fix it fast and stop it happening again",
   description:
-    "Fix an expired SSL certificate on Certbot, cPanel, managed hosts or a paid CA, solve \"renewed but still expired\", and stop it happening again.",
+    "Fix an expired SSL certificate on Certbot, cPanel, a managed host or a paid CA. Solve \"renewed but still expired\", and stop it happening again.",
   category: "ssl",
   query: "ssl certificate expired how to fix",
   published: "2026-11-11",

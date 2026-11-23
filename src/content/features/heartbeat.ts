@@ -3,9 +3,9 @@ import { HEARTBEAT_LIMIT } from "@/lib/heartbeats/config";
 
 export const heartbeatFeature = {
   path: "/cron-job-monitoring",
-  title: "Cron Job Monitoring with Heartbeat URLs",
+  title: "Cron Job Monitoring – Heartbeat Alerts for Missed Jobs",
   description:
-    "Cron job and scheduled task monitoring: your job pings a secret URL each run, and we email you when a ping is missed and again when it resumes. Free plan included.",
+    "Cron job monitoring with heartbeat URLs: your job pings a secret URL each run, and we email you when a ping is missed and again when it resumes.",
   eyebrow: "Cron job monitoring",
   h1: "Cron job monitoring that tells you when a run goes missing",
   intro:

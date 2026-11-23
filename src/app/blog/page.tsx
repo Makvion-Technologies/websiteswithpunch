@@ -12,9 +12,9 @@ import { SITE_NAME, SITE_URL } from "@/lib/site-config";
 
 export const metadata = pageMeta({
   path: "/blog",
-  title: "Website Monitoring Blog: Uptime, SSL & Domain Guides",
+  title: "Website Monitoring Guides: Uptime, SSL, Domains and Fixes",
   description:
-    "Practical guides to keeping websites online: uptime targets, SSL certificate renewal, domain expiry, DNS changes and fixing 5xx errors and redirect loops.",
+    "Practical guides to keeping websites online: uptime targets, SSL renewal, domain expiry and redemption, DNS changes, and fixes for 5xx and redirect loops.",
   og: "blog",
 });
 export const dynamic = "force-static";

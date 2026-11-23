@@ -3,9 +3,9 @@ import { byCadence, UPTIME_EVERY } from "@/lib/monitor/config";
 
 export const downChecker = {
   path: "/tools/website-down-checker",
-  title: "Website Down Checker: Check If a Site Is Down (Free)",
+  title: "Check If a Website Is Down Right Now – Free Status Checker",
   description:
-    "Free site down checker: check if a website is down for everyone or just you. See the HTTP status, response time and where redirects end up. No signup.",
+    "Check if a website is down for everyone or just you. See the live HTTP status, response time and where redirects end up. Free, instant, no signup.",
   h1: "Check if a website is down",
   intro:
     "Enter a website to load it from our server, not your device. You'll see whether it answered, the HTTP status code, how long it took and where any redirects ended up, so you know if it's down for everyone or just for you. Free, no signup.",

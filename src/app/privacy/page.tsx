@@ -1,10 +1,16 @@
 import type { Metadata } from "next";
 import { A, H2, LegalContact, LegalPage, P, UL } from "@/components/legal/LegalPage";
 
+const title = "Privacy Policy";
+const description =
+  "How Websites With Punch collects, uses and protects your information, including account details, the sites you monitor and payment data from billing.";
+
 export const metadata: Metadata = {
-  title: "Privacy Policy",
-  description: "How Websites With Punch collects, uses and protects your information.",
+  title,
+  description,
   alternates: { canonical: "/privacy" },
+  openGraph: { title: `${title} · Websites With Punch`, description, url: "/privacy" },
+  twitter: { title: `${title} · Websites With Punch`, description },
 };
 
 export default function PrivacyPage() {

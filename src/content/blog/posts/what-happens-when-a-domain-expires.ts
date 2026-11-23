@@ -3,10 +3,10 @@ import body from "./what-happens-when-a-domain-expires.md";
 
 export const post: BlogPost = {
   slug: "what-happens-when-a-domain-expires",
-  title: "What Happens When a Domain Expires? Full Timeline",
+  title: "What Happens When a Domain Expires? Redemption Period",
   h1: "What happens when a domain expires? The full timeline, stage by stage",
   description:
-    "From expiry to release: the grace period, 30-day redemption and 5-day pending delete, what stops working at each stage and how to get a domain back.",
+    "From expiry to release: grace period, 30-day redemption period and 5-day pending delete, what stops working at each stage, and how to get a domain back.",
   category: "domains",
   query: "what happens when a domain expires",
   published: "2026-11-11",

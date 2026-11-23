@@ -7,6 +7,36 @@ import { byCadence, UPTIME_EVERY } from "@/lib/monitor/config";
 
 const CAT = { ...CAT_A, ...CAT_B } as Record<SiteCat, CatCopy>;
 
+/** Title stays at or under 60 characters; longer names drop the second mention. */
+function siteTitle(name: string): string {
+  const full = `Is ${name} Down Right Now? Live ${name} Status Check`;
+  return full.length <= 60 ? full : `Is ${name} Down Right Now? Live Status Check`;
+}
+
+/** Pick the longest description that still sits between 140 and 155 characters. */
+function siteDescription(name: string, host: string): string {
+  const variants = [
+    `Is ${name} (${host}) down right now, or is it just you? We request it from our server and show the HTTP status and response time. Free, no account needed.`,
+    `Is ${name} (${host}) down right now, or is it just you? Check live from our server for HTTP status and response time. Free, no account needed.`,
+    `Is ${name} (${host}) down right now, or is it just you? Check live from our server — HTTP status and response time. Free, no signup.`,
+    `Is ${name} (${host}) down right now, or just you? We check it from our server and show HTTP status and response time. Free, no signup.`,
+    `Is ${name} (${host}) down right now, or is it just you? Live HTTP status and response time from our server. Free, no signup.`,
+    `Is ${name} (${host}) down right now, or just you? Check live from our server — HTTP status and response time. Free, no signup.`,
+    `Is ${name} (${host}) down right now, or just you? Live check from our server: HTTP status and response time. Free, no signup.`,
+    `Is ${name} (${host}) down right now, or just you? Live HTTP status and response time from our server. Free, no signup.`,
+    `Is ${name} (${host}) down right now, or is it just you? Live HTTP status and response time, free, no signup.`,
+    `Is ${name} (${host}) down right now? We request it from our server and show HTTP status and response time. Free, no signup.`,
+    `Is ${name} (${host}) down right now? Check live from our server — HTTP status and response time. Free, no signup.`,
+    `Is ${name} (${host}) down right now? Live check from our server for HTTP status and response time. Free, no signup.`,
+    `Is ${name} (${host}) down right now, or is it just you? Check live: HTTP status and response time. Free, no signup.`,
+  ];
+  const fit = variants.filter((d) => d.length >= 140 && d.length <= 155);
+  if (!fit.length) {
+    throw new Error(`No 140–155 character description for ${name} (${host})`);
+  }
+  return fit.reduce((best, d) => (d.length > best.length ? d : best));
+}
+
 /** Unique-enough copy for one site, built from its name, host and category. No invented outage data. */
 export function siteCopy(site: DownSite) {
   const { name, host, cat, catLabel, statusUrl } = site;
@@ -57,8 +87,8 @@ export function siteCopy(site: DownSite) {
     },
   ];
   return {
-    title: `Is ${name} down right now? Live status check`,
-    description: `Is ${name} (${host}) down right now, or is it just you? Check live from our server — HTTP status and response time, free, no signup. No invented outage reports.`,
+    title: siteTitle(name),
+    description: siteDescription(name, host),
     h1: `Is ${name} down?`,
     intro: `Check whether ${name} is down for everyone or just for you. We'll request ${host} from our server and show the status code and response time. Free, no signup — and we don't invent live outage counts.`,
     sections,

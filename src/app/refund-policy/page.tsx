@@ -1,11 +1,16 @@
 import type { Metadata } from "next";
 import { A, H2, LegalContact, LegalPage, P, UL } from "@/components/legal/LegalPage";
 
+const title = "Refund & Cancellation Policy";
+const description =
+  "How cancellations and refunds work for Websites With Punch: cancel anytime, keep your plan to the end of the paid period, refunds only for billing errors.";
+
 export const metadata: Metadata = {
-  title: "Refund & Cancellation Policy",
-  description:
-    "How cancelling and refunds work for Websites With Punch subscriptions: cancel anytime, keep your plan to the end of the paid period, no refunds except billing errors.",
+  title,
+  description,
   alternates: { canonical: "/refund-policy" },
+  openGraph: { title: `${title} · Websites With Punch`, description, url: "/refund-policy" },
+  twitter: { title: `${title} · Websites With Punch`, description },
 };
 
 export default function RefundPolicyPage() {

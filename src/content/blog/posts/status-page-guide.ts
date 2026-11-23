@@ -6,7 +6,7 @@ export const post: BlogPost = {
   title: "How to Set Up a Status Page (with Update Templates)",
   h1: "How to set up a status page, with incident update templates",
   description:
-    "What a status page should show, where to host it so it survives an outage, the four incident stages and copy-ready update templates for every stage.",
+    "What a status page should show, where to host it so it stays up during an outage, the four incident stages, and ready-to-use update templates for each.",
   category: "uptime",
   query: "how to create a status page",
   published: "2026-11-11",

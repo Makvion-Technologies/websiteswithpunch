@@ -74,13 +74,15 @@ ErrorDocument 503 /maintenance.html
 Header always set Retry-After "3600" "expr=%{REQUEST_STATUS} == 503"
 ```
 
-### Next.js (middleware)
+### Next.js (proxy.ts)
+
+On Next.js 16, put this in `proxy.ts` (earlier versions used `middleware.ts` and `export function middleware`).
 
 ```ts
-// middleware.ts — set MAINTENANCE=1 in the environment and redeploy to switch on
+// proxy.ts — set MAINTENANCE=1 in the environment and redeploy to switch on
 import { NextResponse, type NextRequest } from "next/server";
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   if (process.env.MAINTENANCE !== "1" || req.nextUrl.pathname === "/robots.txt") return;
   return new NextResponse("<h1>Back soon</h1><p>Planned maintenance until 14:00 UTC.</p>", {
     status: 503,

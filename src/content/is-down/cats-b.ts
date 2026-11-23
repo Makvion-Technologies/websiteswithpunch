@@ -57,6 +57,16 @@ export const CAT_B: Partial<Record<SiteCat, CatCopy>> = {
     ],
     extra: "A public homepage check can't see your tenant, SSO or a private meeting room.",
   },
+  telecom: {
+    justYou: "Phone and internet providers often have regional outages: your street can be down while the company's homepage still loads, and the other way round. The official app, a bill-pay page or TV service can also fail separately from the marketing site.",
+    ifDown: [
+      "Try mobile data if your home broadband is the service you think is down, or another network if the website itself won't load.",
+      "Open the official app or your account page; those sometimes stay up when the public site is busy.",
+      "If the homepage loads but calls, texts or TV aren't working, the website is up and the network may be the part that's failing.",
+      "Use the company's own outage or status page if it has one, not a text or call that asks you to 'confirm your account'.",
+    ],
+    extra: "This check only loads the public website. It can't see your local cabinet, cell tower or set-top box.",
+  },
   news: {
     justYou: "News and reference sites sometimes fail under a big breaking story, or only in one region because of a CDN issue. An ad blocker, a privacy extension or a strict browser can also make the page look blank when the site itself is up.",
     ifDown: [

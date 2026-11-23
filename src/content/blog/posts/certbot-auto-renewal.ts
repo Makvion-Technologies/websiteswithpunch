@@ -3,10 +3,10 @@ import body from "./certbot-auto-renewal.md";
 
 export const post: BlogPost = {
   slug: "certbot-auto-renewal",
-  title: "Let's Encrypt Auto-Renewal with Certbot: Setup & Fixes",
+  title: "Let's Encrypt Certbot Auto-Renewal: Setup and Fixes",
   h1: "Let's Encrypt auto-renewal with Certbot: check it, test it, fix it",
   description:
-    "Make sure Certbot really renews your Let's Encrypt certificates: check the timer, run a dry run, reload with deploy hooks and fix common failures.",
+    "Make sure Certbot really renews your Let's Encrypt certificates: check the timer, run a dry run, reload with deploy hooks and fix the usual failures.",
   category: "ssl",
   query: "certbot auto renew",
   published: "2026-11-11",

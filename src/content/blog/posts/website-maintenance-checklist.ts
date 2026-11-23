@@ -3,10 +3,10 @@ import body from "./website-maintenance-checklist.md";
 
 export const post: BlogPost = {
   slug: "website-maintenance-checklist",
-  title: "Client Website Maintenance Checklist: What to Monitor",
+  title: "Website Maintenance Checklist for Client Sites",
   h1: "Website maintenance checklist for client sites: daily to yearly",
   description:
-    "A practical maintenance checklist for agencies and freelancers: what to check daily, weekly, monthly, quarterly and yearly on every client website.",
+    "A practical website maintenance checklist for agencies and freelancers: what to check daily, weekly, monthly, quarterly and yearly on every client site.",
   category: "uptime",
   query: "website maintenance checklist",
   published: "2026-11-11",

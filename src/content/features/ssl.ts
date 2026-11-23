@@ -2,9 +2,9 @@ import type { ArticleSection, Faq } from "@/components/seo/types";
 
 export const sslFeature = {
   path: "/ssl-certificate-monitoring",
-  title: "SSL Certificate Monitoring: Track SSL Expiry for Every Site",
+  title: "SSL Certificate Monitoring – Track Expiry on Every Site",
   description:
-    "Track SSL certificate expiry for every site you run: days left read daily from the live certificate, amber at 30 and red at 7, next to uptime and domain expiry.",
+    "Track SSL certificate expiry for every site you run: days left, read daily from the live certificate, amber at 30 days and red at 7. Free for one site.",
   eyebrow: "SSL certificate monitoring",
   h1: "SSL certificate monitoring for every site you look after",
   intro:

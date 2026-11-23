@@ -3,11 +3,11 @@ import { byCadence, UPTIME_EVERY } from "@/lib/monitor/config";
 
 export const uptimeFeature = {
   path: "/uptime-monitoring",
-  title: "Website Uptime Monitoring for Freelancers & Agencies",
+  title: "Website Uptime Monitoring – Email Alerts If a Site Is Down",
   description:
     byCadence(
-      "Website uptime monitoring every minute on Pro and Business, every 5 minutes on Free, with confirmed email alerts and 90 days of history. Free for one site.",
-      "Website uptime monitoring with a daily check of every site, on-demand rechecks, auto refresh and 90 days of response-time history. Free for one site.",
+      "Website uptime monitoring every minute on Pro and Business, every 5 minutes on Free, with confirmed email alerts and 90-day history. Free for one site.",
+      "Website uptime monitoring with a daily check of every site, on-demand rechecks, auto refresh and 90 days of history. Free for one site, no card needed.",
     ),
   eyebrow: "Uptime monitoring",
   h1: "Website uptime monitoring without the noise",
