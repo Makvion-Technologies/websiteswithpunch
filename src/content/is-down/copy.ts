@@ -60,7 +60,7 @@ export function siteCopy(site: DownSite) {
     {
       h: "How this check works",
       p: [
-        `Press Check now and we load the homepage of ${host} over HTTPS, follow a few redirects, and show the HTTP status code and response time. 2xx and 3xx answers count as up. The result is cached for about a minute. For any other address, use the [website down checker](/tools/website-down-checker).`,
+        `We load the homepage of ${host} over HTTPS when you open this page, follow a few redirects, and show the HTTP status code and response time. 2xx and 3xx answers count as up. The result is cached for about a minute. You can run it again with Check again. For any other address, use the [website down checker](/tools/website-down-checker).`,
         `If you look after your own site, you can [monitor it ${byCadence("around the clock", "daily")} for free](/signup) — uptime, SSL and domain expiry on one dashboard, with email alerts when a check finds it down. No card needed for one site.`,
       ],
     },
@@ -68,7 +68,7 @@ export function siteCopy(site: DownSite) {
   const faqs: Faq[] = [
     {
       q: `How do I check if ${name} is down?`,
-      a: `Press Check now above. We request ${host} from our server and show whether it answered, the status code and the response time. You don't need an account.`,
+      a: `We request ${host} from our server when you open this page and show whether it answered, the status code and the response time. You can run it again with Check again. You don't need an account.`,
     },
     {
       q: `Why does ${name} work for me but show as down here, or the other way round?`,
@@ -76,7 +76,7 @@ export function siteCopy(site: DownSite) {
     },
     {
       q: `Does this show live user reports for ${name}?`,
-      a: "No. We only show the result of one request from our server when you press the button. We don't publish visitor counts, outage maps or crowdsourced reports.",
+      a: "No. We only show the result of one request from our server when you open this page. We don't publish visitor counts, outage maps or crowdsourced reports.",
     },
     {
       q: `Can I get an alert if my own site goes down, like this ${catLabel.toLowerCase()} check?`,

@@ -2,16 +2,36 @@
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { ToolResult, ToolResultSkeleton, type ToolKind } from "./ToolResult";
+import { isAutomatedBrowser, queryFromSearch, sharedToolGet } from "@/lib/tools/auto-check";
 
 const API: Record<ToolKind, string> = { ssl: "/api/tools/ssl", domain: "/api/tools/domain", down: "/api/tools/down" };
 
-type Props = { kind: ToolKind; label: string; placeholder: string; button: string; initial?: string; locked?: boolean };
+type Props = {
+  kind: ToolKind;
+  label: string;
+  placeholder: string;
+  button: string;
+  initial?: string;
+  locked?: boolean;
+  /** Run the initial (or locked) value once after mount, e.g. /is-down/<site>. */
+  autorun?: boolean;
+  checkingLabel?: string;
+};
 
 /**
  * Public checker: one field, one button. The request is a GET so a repeat lookup can be served
- * from cache; ?q= in the address bar pre-fills and runs the check (shareable links).
+ * from cache; ?q= (or ?url=) in the address bar pre-fills and runs the check (shareable links).
  */
-export function ToolForm({ kind, label, placeholder, button, initial, locked }: Props) {
+export function ToolForm({
+  kind,
+  label,
+  placeholder,
+  button,
+  initial,
+  locked,
+  autorun,
+  checkingLabel,
+}: Props) {
   const [value, setValue] = useState(initial ?? "");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -21,20 +41,23 @@ export function ToolForm({ kind, label, placeholder, button, initial, locked }: 
   async function run(q: string) {
     const v = q.trim();
     if (!v) return setError("Enter a domain, e.g. example.com.");
+    setValue(v);
     const id = ++seq.current;
     setError(null);
     setLoading(true);
     setResult(null);
     try {
-      const res = await fetch(`${API[kind]}?q=${encodeURIComponent(v)}`);
-      const data = await res.json().catch(() => ({}));
+      const res = await sharedToolGet(`${API[kind]}?q=${encodeURIComponent(v)}`);
       if (id !== seq.current) return;
-      if (!res.ok) setError(typeof data.error === "string" ? data.error : "The check failed. Please try again.");
+      if (!res.ok) setError(typeof res.data.error === "string" ? res.data.error : "The check failed. Please try again.");
       else {
-        setResult(data);
-        const url = new URL(window.location.href);
-        url.searchParams.set("q", v);
-        window.history.replaceState(null, "", url);
+        setResult(res.data);
+        if (!locked) {
+          const url = new URL(window.location.href);
+          url.searchParams.delete("url");
+          url.searchParams.set("q", v);
+          window.history.replaceState(null, "", url);
+        }
       }
     } catch {
       if (id === seq.current) setError("Network error. Check your connection and try again.");
@@ -44,11 +67,14 @@ export function ToolForm({ kind, label, placeholder, button, initial, locked }: 
   }
 
   useEffect(() => {
-    const q = new URLSearchParams(window.location.search).get("q");
-    if (q) {
-      setValue(q.slice(0, 300));
-      void run(q);
-    }
+    if (isAutomatedBrowser(navigator.userAgent, navigator.webdriver)) return;
+    const fromBar = locked ? "" : queryFromSearch(window.location.search);
+    const start = fromBar || (autorun ? (initial ?? "").trim() : "");
+    if (!start) return;
+    // After paint so SSR / first client HTML stay identical; rAF also drops the
+    // Strict Mode setup effect before it can start a second check.
+    const frame = requestAnimationFrame(() => { void run(start); });
+    return () => cancelAnimationFrame(frame);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -58,6 +84,7 @@ export function ToolForm({ kind, label, placeholder, button, initial, locked }: 
   }
 
   const id = `tool-${kind}`;
+  const pending = checkingLabel ?? "Checking…";
   return (
     <div>
       <form onSubmit={submit} noValidate>
@@ -91,7 +118,7 @@ export function ToolForm({ kind, label, placeholder, button, initial, locked }: 
             className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 bg-accent px-6 text-sm font-medium text-white hover:bg-accent-hover disabled:opacity-80"
           >
             {loading && <span aria-hidden className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />}
-            {loading ? "Checking…" : button}
+            {loading ? "Checking…" : result ? "Check again" : button}
           </button>
         </div>
         {error && (
@@ -99,7 +126,7 @@ export function ToolForm({ kind, label, placeholder, button, initial, locked }: 
         )}
       </form>
       <div aria-live="polite">
-        {loading && <ToolResultSkeleton />}
+        {loading && <ToolResultSkeleton label={pending} />}
         {result && <ToolResult kind={kind} data={result} />}
       </div>
     </div>

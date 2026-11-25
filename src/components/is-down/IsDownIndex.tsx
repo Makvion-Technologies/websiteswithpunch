@@ -3,6 +3,7 @@ import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { SplitLayout } from "@/components/layout/SplitLayout";
 import { ToolRail } from "@/components/layout/ToolRail";
 import { CATS, SITES, sitesIn } from "@/content/is-down";
+import { IsDownSearch } from "./IsDownSearch";
 import { SiteGrid } from "./SiteGrid";
 import { byCadence } from "@/lib/monitor/config";
 
@@ -29,7 +30,8 @@ export function IsDownIndex() {
         </Link>
         .
       </p>
-      <p className="mt-3 text-sm text-muted">{SITES.length} sites, checked only when you press the button.</p>
+      <p className="mt-3 text-sm text-muted">{SITES.length} sites. Opening a page checks it from our server — you can run it again anytime.</p>
+      <IsDownSearch />
       <div className="mt-14 space-y-14">
         {CATS.map(([id, label]) => (
           <SiteGrid key={id} title={label} sites={sitesIn(id)} />

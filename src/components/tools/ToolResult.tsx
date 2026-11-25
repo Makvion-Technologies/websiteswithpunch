@@ -1,5 +1,6 @@
 import { AlertsCta } from "@/components/marketing/AlertsCta";
 import { DomainResultView, DownResultView, SslResultView } from "./result-views";
+import { CheckPulse } from "./CheckPulse";
 import { byCadence } from "@/lib/monitor/config";
 
 export type ToolKind = "ssl" | "domain" | "down";
@@ -22,15 +23,16 @@ export function ToolResult({ kind, data }: { kind: ToolKind; data: Data }) {
   );
 }
 
-export function ToolResultSkeleton() {
+export function ToolResultSkeleton({ label = "Checking…" }: { label?: string }) {
   return (
-    <div className="mt-6 animate-pulse border-t border-rule pt-6" aria-busy="true" aria-label="Checking">
-      <div className="h-10 w-40 bg-rule/70" />
-      <div className="mt-5 grid gap-3 sm:grid-cols-2">
-        {[0, 1, 2, 3].map((i) => (
-          <div key={i} className="h-12 bg-rule/50" />
-        ))}
-      </div>
+    <div
+      className="mt-6 flex min-h-[11.5rem] flex-col justify-center border-t border-rule pt-6"
+      aria-busy="true"
+      aria-live="polite"
+      aria-label={label}
+    >
+      <CheckPulse />
+      <p className="ecg-loader-label mt-3 text-center text-sm font-medium text-ink">{label}</p>
     </div>
   );
 }
