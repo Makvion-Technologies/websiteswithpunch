@@ -296,3 +296,27 @@ html[data-nav="a"] .nav-shell-avatar {
   body:has(.dash-mobile-nav) { padding-bottom: calc(56px + env(safe-area-inset-bottom)); }
   body:has(.dash-mobile-nav) .fixed.bottom-4.right-4 { bottom: calc(72px + env(safe-area-inset-bottom)); }
 }
+
+/* App shells (dashboard, admin): fluid width with a ceiling on ultra-wide screens. The navbar and
+   app footer follow the shell so their edges line up with the sidebar and content. */
+@layer components {
+  .app-shell { max-width: 1760px; }
+  @media (min-width: 1024px) {
+    body:has([data-app-shell]) .nav-inner { max-width: 1760px; padding-left: 2rem; padding-right: 2rem; }
+  }
+  @media (min-width: 1536px) {
+    body:has([data-app-shell]) .nav-inner { padding-left: 2.5rem; padding-right: 2.5rem; }
+  }
+  /* Readable line length for prose and forms inside wide pages. */
+  .measure { max-width: 72ch; }
+}
+
+/* Admin tables (components/admin/ui.tsx Table): stacked cards on phones. */
+@media (max-width: 767px) {
+  .rtable thead { display: none; }
+  .rtable tbody > tr { display: block; padding: 0.5rem 0; }
+  .rtable tbody > tr > td { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; white-space: normal; padding: 0.3rem 1rem; max-width: none; text-align: right; }
+  .rtable tbody > tr > td > * { min-width: 0; overflow-wrap: anywhere; }
+  .rtable tbody > tr > td[data-label]::before { content: attr(data-label); flex-shrink: 0; text-align: left; font-size: 0.75rem; color: hsl(var(--muted)); }
+  .rtable tbody > tr > td[colspan] { display: block; text-align: center; }
+}

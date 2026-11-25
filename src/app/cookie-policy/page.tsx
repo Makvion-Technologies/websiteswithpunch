@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 export default function CookiePolicyPage() {
   return (
-    <LegalPage title="Cookie Policy" updated="October 5, 2026" path="/cookie-policy">
+    <LegalPage title="Cookie Policy" updated="November 25, 2026" path="/cookie-policy">
       <P>
         This Cookie Policy explains how Websites With Punch, operated by{" "}
         <strong>Makvion Technologies</strong>, based in India, uses cookies and similar storage when
@@ -59,6 +59,16 @@ export default function CookiePolicyPage() {
           <strong>__Secure-next-auth.callback-url</strong> (or{" "}
           <code className="text-sm">next-auth.callback-url</code>): remembers where to send you after
           you sign in (for example, back to the page you were trying to open).
+        </li>
+        <li>
+          <strong>wwp_s</strong>: marks that this browser session has opened the dashboard, so we
+          record your last active time once per session instead of on every page. Ends when you
+          close the browser.
+        </li>
+        <li>
+          <strong>wwp_src</strong>: set only when you arrive from another website or a link with
+          campaign tags. It keeps that first source (for example a search engine or newsletter
+          name) for up to 30 days and is removed when you create an account.
         </li>
       </UL>
       <P>

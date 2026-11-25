@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { markRun } from "@/lib/admin/jobs";
 import { prisma } from "@/lib/prisma";
 import { getEffectivePlan } from "@/lib/plans";
 import { isVerified } from "@/lib/email-verify";
@@ -37,5 +38,6 @@ export async function GET(req: Request) {
       // Down in the app (daily check or Recheck): when it went down, so the Worker reports a recovery.
       d: s.status === "down" || s.status === "error" ? (s.lastCheckedAt?.getTime() ?? 1) : 0,
     }));
+  markRun("worker:sites", true, undefined, `${out.length} sites`);
   return NextResponse.json({ enabled: true, sites: out }, { headers: { "Cache-Control": "no-store" } });
 }

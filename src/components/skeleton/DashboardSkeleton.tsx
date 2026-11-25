@@ -67,7 +67,7 @@ export function MonitorsSkeleton() {
           </div>
         </div>
       ) : (
-        <div className="mt-8 space-y-5">
+        <div className={inline ? "mt-8 space-y-5" : "mt-8 grid grid-cols-[repeat(auto-fill,minmax(min(100%,560px),1fr))] items-start gap-5"}>
           {cards.map(([nameLen, urlLen, isLocked], i) =>
             isLocked ? (
               <LockedSiteCardSkeleton key={i} nameLen={nameLen} urlLen={urlLen} />
@@ -77,7 +77,7 @@ export function MonitorsSkeleton() {
           )}
           {inline && <AnalyticsSectionSkeleton />}
           {!inline && active > 1 && (
-            <p className="text-center text-sm">
+            <p className="col-span-full text-center text-sm">
               <Sk>
                 Open <span className="font-medium">Analytics →</span> on any active site for the
                 full breakdown with range filters.

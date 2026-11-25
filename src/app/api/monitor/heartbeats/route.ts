@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { markRun } from "@/lib/admin/jobs";
 import { prisma } from "@/lib/prisma";
 import { getEffectivePlan } from "@/lib/plans";
 import { isVerified } from "@/lib/email-verify";
@@ -34,5 +35,6 @@ export async function GET(req: Request) {
     const over = overLimitIds(list, plan);
     for (const h of list) hbs.push(toWorker(h, plan, over.has(h.id)));
   }
+  markRun("worker:heartbeats", true, undefined, `${hbs.length} heartbeats`);
   return NextResponse.json({ enabled: true, hbs }, { headers: { "Cache-Control": "no-store" } });
 }

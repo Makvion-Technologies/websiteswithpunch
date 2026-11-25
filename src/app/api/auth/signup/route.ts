@@ -10,6 +10,8 @@ import { issueCode } from "@/lib/email-verify";
 import { hashIp } from "@/lib/referrals/attribution";
 import { REFERRAL } from "@/lib/referrals/config";
 import { attributeSignup } from "@/lib/referrals/server";
+import { recordSignup } from "@/lib/activity/record";
+import { SOURCE_COOKIE } from "@/lib/activity/source";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -60,10 +62,13 @@ export async function POST(req: Request) {
     // Referral: first-touch cookie (from /r/CODE or ?ref=) wins over a ?ref passed by the form.
     const refCookie = req.headers.get("cookie")?.match(new RegExp(`(?:^|;\\s*)${REFERRAL.cookie}=([^;]+)`))?.[1];
     await attributeSignup(user, refCookie || body.ref, ipHash).catch((e) => console.warn("[referral] attribution failed", e));
+    // Coarse location, device and first-touch source for the admin panel.
+    await recordSignup(user.id, req).catch((e) => console.warn("[activity] signup record failed", e));
     // The account stays limited to /verify-email until this code is entered.
     await issueCode(user, clientIp(req)).catch((e) => console.warn("[verify] signup code failed", e));
     const res = NextResponse.json({ user, verify: true }, { status: 201 });
     res.cookies.delete(REFERRAL.cookie);
+    res.cookies.delete(SOURCE_COOKIE);
     return res;
   } catch (err) {
     const code = (err as { code?: string })?.code;
