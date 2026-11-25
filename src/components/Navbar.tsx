@@ -37,6 +37,9 @@ export function Navbar() {
     if (rawStatus !== "loading") writeNavHint(navHintValue(data ?? null));
   }, [rawStatus, data]);
 
+  // Public status pages carry their owner's name, not our navigation.
+  if (pathname.startsWith("/status/")) return null;
+
   return (
     <header className="sticky top-0 z-50 border-b border-rule bg-bg/90 backdrop-blur">
       <div className="relative mx-auto flex max-w-6xl min-w-0 items-center justify-between gap-2 px-4 py-4 sm:px-6">

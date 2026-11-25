@@ -4,6 +4,8 @@ import { sendEmail } from "@/lib/email/send";
 import { heartbeatEmail } from "@/lib/email/heartbeat";
 import { HOUR, rateLimit } from "@/lib/rate-limit";
 import { unsubscribeHeaders, unsubscribeLinks } from "@/lib/alerts/unsubscribe";
+import { dispatchToChannels } from "@/lib/channels/dispatch";
+import { heartbeatMessage } from "@/lib/channels/messages";
 
 export type HbEvent = { i: string; k: "down" | "up"; at: number; l: number };
 
@@ -41,6 +43,9 @@ export async function applyHeartbeatEvent(ev: HbEvent): Promise<"applied" | "mis
     skipDuplicates: true,
   });
   const u = hb.user;
+  if (claim.count > 0 && !hb.paused && isVerified(u)) {
+    await dispatchToChannels(u.id, heartbeatMessage(ev.k, { id: hb.id, name: hb.name, lastPingAt }, at));
+  }
   if (claim.count === 0 || !u.alertDown || !isVerified(u) || hb.paused) return "applied";
   const limited = await rateLimit([
     { key: `alert:user:${u.id}`, limit: PER_USER_DAY, windowMs: 24 * HOUR },

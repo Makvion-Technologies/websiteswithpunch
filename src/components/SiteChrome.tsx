@@ -19,7 +19,7 @@ export const CENTRED_ROUTES = [...AUTH_ROUTES, "/plan", "/profile", "/referrals"
  * knows the session on the server: the right footer is there on first paint, so the centred
  * content never jumps when the footer appears.
  */
-export const OWN_CHROME_ROUTES = ["/contact"];
+export const OWN_CHROME_ROUTES = ["/contact", "/status"];
 
 const matches = (routes: string[], pathname: string | null) =>
   !!pathname && routes.some((r) => pathname === r || pathname.startsWith(`${r}/`));

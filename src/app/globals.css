@@ -290,3 +290,9 @@ html[data-nav="a"] .nav-shell-avatar {
     display: flex;
   }
 }
+
+/* Dashboard: room under the page for the fixed bottom tab bar on phones and tablets. */
+@media (max-width: 1023.98px) {
+  body:has(.dash-mobile-nav) { padding-bottom: calc(56px + env(safe-area-inset-bottom)); }
+  body:has(.dash-mobile-nav) .fixed.bottom-4.right-4 { bottom: calc(72px + env(safe-area-inset-bottom)); }
+}

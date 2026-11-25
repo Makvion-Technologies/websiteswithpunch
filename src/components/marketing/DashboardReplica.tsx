@@ -16,7 +16,7 @@ function WindowBar() {
           <rect x="5" y="11" width="14" height="10" />
           <path d="M8 11V8a4 4 0 0 1 8 0v3" />
         </svg>
-        <span className="truncate">websiteswithpunch.com/dashboard</span>
+        <span className="truncate">websiteswithpunch.com/dashboard/monitors</span>
       </div>
       <span className="hidden w-[42px] shrink-0 sm:block" aria-hidden />
     </div>
@@ -56,14 +56,11 @@ function ReplicaNav() {
   );
 }
 
-const box = "border border-rule bg-surface p-4";
 /** Two full cards, then only the top of the third (its title row) fading into the page; the 4th only counts. */
 const cardClass = ["", "", "max-h-[52px] overflow-hidden [mask-image:linear-gradient(black_55%,transparent)]", "hidden"];
 
-/** Static, inert replica of /dashboard with example data (same classes as the real page). */
+/** Static, inert replica of /dashboard/monitors with example data (same classes as the real page). */
 export function DashboardReplica() {
-  const down = previewSites.filter((s) => s.status === "down").length;
-  const sslSoon = Math.min(...previewSites.map((s) => s.sslDays));
   return (
     <div
       data-preview-frame
@@ -77,12 +74,13 @@ export function DashboardReplica() {
         <div className="mx-auto max-w-6xl px-4 pt-10 sm:px-6 lg:pt-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div>
-              <p className="font-display text-2xl font-medium text-ink">Welcome, {u.name}</p>
-              <p className="mt-1 text-sm text-muted">
-                Current plan: <span className="font-medium text-ink">{u.plan}</span> · {previewSites.length}/{u.limit} active
+              <p className="font-display text-2xl font-medium text-ink">Monitors</p>
+              <p className="mt-1 max-w-2xl text-sm text-muted">
+                <span className="font-medium text-ink">{u.plan}</span> · {previewSites.length}/{u.limit} active. Each site gets
+                uptime, SSL and domain checks.
               </p>
             </div>
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex shrink-0 flex-wrap items-center gap-2">
               <span className="rounded-none bg-solid px-4 py-2 text-sm font-medium text-solid-fg hover:opacity-90">Add site</span>
               <span className="rounded-none border border-rule bg-surface px-4 py-2 text-sm font-medium text-ink hover:bg-accent-soft">
                 Buy +{u.packSites} site slots
@@ -90,22 +88,7 @@ export function DashboardReplica() {
             </div>
           </div>
 
-          <div className="mt-6 grid gap-3 sm:grid-cols-3">
-            <div className={box}>
-              <p className="label-caps text-muted">Sites monitored</p>
-              <p className="mt-1 font-display text-2xl font-medium text-ink">{previewSites.length}</p>
-            </div>
-            <div className={box}>
-              <p className="label-caps text-muted">Down / error now</p>
-              <p className={`mt-1 font-display text-2xl font-medium ${down > 0 ? "text-rose-700 dark:text-rose-300" : "text-ink"}`}>{down}</p>
-            </div>
-            <div className={box}>
-              <p className="label-caps text-muted">Nearest SSL expiry</p>
-              <p className="mt-1 font-display text-2xl font-medium text-ink">{sslSoon}d</p>
-            </div>
-          </div>
-
-          <div className="mt-8 space-y-5">
+          <div className="mt-6 space-y-5">
             {previewSites.map((s, i) => (
               <ReplicaSiteCard key={s.url} site={s} callouts={i === 0} className={cardClass[i] ?? "hidden"} />
             ))}

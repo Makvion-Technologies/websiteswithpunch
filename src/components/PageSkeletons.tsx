@@ -5,7 +5,7 @@
 import { FULL_FRAME, Sk, SkBtn, SkInput, SkStatus } from "./skeleton/Sk";
 import { alertsSentWhen } from "@/lib/monitor/config";
 
-export { DashboardSkeleton } from "./skeleton/DashboardSkeleton";
+export { DashLoading as DashboardSkeleton } from "./skeleton/DashLoading";
 export { PlanSkeleton } from "./skeleton/PlanSkeleton";
 export { SiteSkeleton } from "./skeleton/SiteSkeleton";
 

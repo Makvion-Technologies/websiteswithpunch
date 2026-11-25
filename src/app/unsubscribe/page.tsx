@@ -12,6 +12,7 @@ const LABEL: Record<AlertScope, string> = {
   ssl: "SSL certificate alerts",
   domain: "domain expiry alerts",
   all: "all alert emails",
+  report: "the weekly report email",
 };
 
 export default async function UnsubscribePage(props: { searchParams: Promise<{ t?: string }> }) {
@@ -26,7 +27,7 @@ export default async function UnsubscribePage(props: { searchParams: Promise<{ t
           <>
             <h1 className="mt-2 font-display text-2xl font-medium text-ink">Unsubscribe</h1>
             <p className="mt-2 text-sm text-muted">
-              Stop {LABEL[parsed.scope]} for this account? You can turn them back on any time in your profile.
+              Stop {LABEL[parsed.scope]} for this account? You can turn them back on any time in your dashboard.
             </p>
             <UnsubscribeButton token={token} label={LABEL[parsed.scope]} />
           </>
@@ -34,7 +35,7 @@ export default async function UnsubscribePage(props: { searchParams: Promise<{ t
           <>
             <h1 className="mt-2 font-display text-2xl font-medium text-ink">Link not valid</h1>
             <p className="mt-2 text-sm text-danger">This unsubscribe link is broken or incomplete.</p>
-            <p className="mt-2 text-sm text-muted">Log in and change alerts on your profile instead.</p>
+            <p className="mt-2 text-sm text-muted">Log in and change alerts under Alerts &amp; integrations in your dashboard instead.</p>
           </>
         )}
         <Link href="/profile#alerts" className="mt-5 inline-block text-sm text-accent hover:underline">

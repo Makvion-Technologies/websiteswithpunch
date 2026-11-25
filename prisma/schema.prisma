@@ -69,6 +69,13 @@ model User {
   commissionsPaidFor    Commission[]            @relation("Payer")
   payouts               Payout[]
   heartbeats            Heartbeat[]
+  /// Weekly email report (opt-in). Sent on the user's weekday bucket (lib/reports), at most once in 6 days.
+  weeklyReport          Boolean                 @default(false)
+  weeklyReportSentAt    DateTime?
+  /// Getting-started checklist on the dashboard overview was dismissed.
+  onboardingDismissedAt DateTime?
+  alertChannels         AlertChannel[]
+  statusPages           StatusPage[]
 
   @@index([emailVerified, createdAt])
   @@index([referredById])
@@ -382,4 +389,45 @@ model HeartbeatDay {
 
   @@id([heartbeatId, day])
   @@index([day])
+}
+
+/// Slack / Discord / Telegram / generic webhook alert destination. config is AES-256-GCM encrypted
+/// JSON (lib/channels/secret-box.ts): webhook URL, or Telegram bot token + chat id, plus the webhook
+/// signing secret. Only a short, non-secret hint is stored in clear text for the list.
+model AlertChannel {
+  id         String    @id @default(cuid())
+  userId     String
+  kind       String // slack | discord | telegram | webhook
+  name       String
+  config     String
+  hint       String
+  /// Events this channel receives: down, recovered, ssl, domain, heartbeat.
+  events     String[]
+  /// true = every site; false = only siteIds (ownership re-checked when sending).
+  allSites   Boolean   @default(true)
+  siteIds    String[]
+  enabled    Boolean   @default(true)
+  lastSentAt DateTime?
+  lastError  String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+/// Public status page at /status/[slug] showing the chosen sites (ISR-cached, 60 s).
+model StatusPage {
+  id          String   @id @default(cuid())
+  userId      String
+  slug        String   @unique
+  title       String
+  description String?
+  siteIds     String[]
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }

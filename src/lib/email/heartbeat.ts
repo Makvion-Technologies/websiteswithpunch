@@ -35,7 +35,7 @@ export function heartbeatEmail(kind: "down" | "up", h: HbMailInfo, links: { page
         ] as [string, string][],
         tip: "Missed time is counted from when we marked it missed, so the real gap was a little longer.",
       };
-  const url = `${SITE_URL}/dashboard#heartbeats`;
+  const url = `${SITE_URL}/dashboard/cron-jobs`;
   const prefs = `${SITE_URL}/profile#alerts`;
   const note = "We look for missed pings every minute. Down alerts cover sites and heartbeats.";
   const reason = `You're receiving this because down alerts are on for your account. <a class="wwp-link" href="${escapeHtml(prefs)}" style="color:${C.accent}">Alert settings</a> · <a class="wwp-link" href="${escapeHtml(links.page)}" style="color:${C.accent}">Unsubscribe</a>`;

@@ -42,7 +42,7 @@ export const heartbeatFeature = {
     {
       h: "What it doesn't do",
       p: [
-        "We don't run your jobs, read their output or store logs. A ping only says \"this run happened\". Alerts are by email; there are no SMS or chat alerts yet. To keep the service free of surprises, a heartbeat records at most two pings a minute; extra pings are accepted but not stored.",
+        "We don't run your jobs, read their output or store logs. A ping only says \"this run happened\". Alerts go by email, and to any Slack, Discord, Telegram or webhook channels you connect; there are no SMS or phone-call alerts. To keep the service free of surprises, a heartbeat records at most two pings a minute; extra pings are accepted but not stored.",
       ],
     },
   ] satisfies ArticleSection[],

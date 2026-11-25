@@ -6,6 +6,7 @@ import type { PlanId } from "@/lib/plans";
 import { HeartbeatCard } from "./HeartbeatCard";
 import { HeartbeatForm } from "./HeartbeatForm";
 import { useNow } from "./parts";
+import { BTN_PRIMARY, EmptyState } from "@/components/dash/ui";
 
 /** Client half of the Heartbeats section: the New button, the cards and one shared clock. */
 export function HeartbeatList({ list, plan, limit, serverNow }: { list: ClientHb[]; plan: PlanId; limit: number; serverNow: number }) {
@@ -21,21 +22,23 @@ export function HeartbeatList({ list, plan, limit, serverNow }: { list: ClientHb
   );
   return (
     <>
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h2 className="font-display text-xl font-medium text-ink">Heartbeats</h2>
+          <h1 className="font-display text-2xl font-medium text-ink">Cron jobs</h1>
           <p className="mt-1 text-sm text-muted">
-            Cron jobs and scheduled tasks · {list.length}/{limit} used
+            Heartbeat monitoring for backups and scheduled tasks · {list.length}/{limit} used
           </p>
         </div>
         <div>{button}</div>
       </div>
       {list.length === 0 ? (
-        <div className="mt-5 border border-dashed border-rule bg-bg p-8 text-center">
-          <h3 className="font-display text-lg font-medium text-ink">Know when a scheduled job stops running</h3>
-          <p className="mx-auto mt-2 max-w-md text-sm text-muted">
-            Backups, invoices, imports: create a heartbeat, add one curl line to the job, and we email you if a run is missed.
-          </p>
+        <div className="mt-6">
+          <EmptyState
+            icon="cron"
+            title="Know when a scheduled job stops running"
+            text="Backups, invoices, imports: create a heartbeat, add one curl line to the job, and we alert you if a run is missed."
+            action={full ? undefined : <button type="button" onClick={() => setOpen(true)} className={BTN_PRIMARY}>Create your first heartbeat</button>}
+          />
         </div>
       ) : (
         <div className="mt-5 grid gap-4 lg:grid-cols-2">
