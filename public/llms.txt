@@ -45,9 +45,15 @@
 
 ## Key pages
 - [Home](https://www.websiteswithpunch.com/)
+- [Features](https://www.websiteswithpunch.com/features)
 - [Uptime monitoring](https://www.websiteswithpunch.com/uptime-monitoring)
 - [SSL certificate monitoring](https://www.websiteswithpunch.com/ssl-certificate-monitoring)
 - [Domain expiry monitoring](https://www.websiteswithpunch.com/domain-expiry-monitoring)
+- [Website alerts](https://www.websiteswithpunch.com/website-alerts)
+- [Status pages](https://www.websiteswithpunch.com/status-pages)
+- [Weekly reports](https://www.websiteswithpunch.com/weekly-reports)
+- [Expiry calendar](https://www.websiteswithpunch.com/expiry-calendar)
+- [Uptime badges](https://www.websiteswithpunch.com/uptime-badges)
 - [Cron job monitoring (heartbeats)](https://www.websiteswithpunch.com/cron-job-monitoring)
 - [Pricing](https://www.websiteswithpunch.com/pricing)
 - [FAQ](https://www.websiteswithpunch.com/#faq)

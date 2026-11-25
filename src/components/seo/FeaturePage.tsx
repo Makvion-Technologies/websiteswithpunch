@@ -27,7 +27,7 @@ type Props = { content: FeatureContent; Visual: ComponentType; tool: { href: str
 export function FeaturePage({ content: c, Visual, tool }: Props) {
   return (
     <div className="mx-auto max-w-6xl px-4 pb-20 pt-8 sm:px-6 sm:pt-12">
-      <Breadcrumbs items={[{ name: c.eyebrow, href: c.path }]} />
+      <Breadcrumbs items={[{ name: "Features", href: "/features" }, { name: c.eyebrow, href: c.path }]} />
       <div className="mt-8 grid min-w-0 items-center gap-10 md:grid-cols-2 md:gap-14">
         <div className="min-w-0">
           <p className="label-caps text-accent">{c.eyebrow}</p>

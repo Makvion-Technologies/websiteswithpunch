@@ -54,6 +54,12 @@ export const uptimeFeature = {
       ],
     },
     {
+      h: "Also on the dashboard",
+      p: [
+        "Opening a site shows a Health Score, response-time charts, incidents and details for SSL and the domain, plus tips on what to improve. Across all your sites you can [send alerts](/website-alerts) to email, Slack, Discord, Telegram or a webhook, [publish a status page](/status-pages), opt in to a [weekly report](/weekly-reports), keep renewals on an [expiry calendar](/expiry-calendar), and [embed an uptime badge](/uptime-badges).",
+      ],
+    },
+    {
       h: "Who it's for",
       p: [
         `Freelancers and small agencies who look after a handful of client sites, owners of a business site or online shop, and developers with side projects. If you need 30-second checks from a dozen regions, phone-call escalation or on-call rotas, a dedicated incident tool is a better fit. ${byCadence("If you want a quiet, steady watch on", "If you want a quiet daily look at")} whether your sites are up, fast and not about to expire, this is built for that.`,

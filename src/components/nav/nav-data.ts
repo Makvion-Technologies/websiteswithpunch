@@ -8,7 +8,7 @@ export type NavMenu = { id: string; label: string; items: NavItem[]; footer?: { 
 
 /**
  * Guest navbar menus. Only pages that exist today, with honest one-liners (check cadence follows FAST_CHECKS).
- * Add comparison pages and status pages here once they ship. Billing help lives in the footer.
+ * Billing help lives in the footer.
  */
 export const NAV_MENUS: NavMenu[] = [
   {
@@ -21,7 +21,10 @@ export const NAV_MENUS: NavMenu[] = [
       ...(HEARTBEATS
         ? [{ href: "/cron-job-monitoring", title: "Cron job monitoring", desc: "Heartbeat URLs that email you when a scheduled job misses a run.", icon: "bell" as const }]
         : []),
+      { href: "/website-alerts", title: "Website alerts", desc: "Email, plus Slack, Discord, Telegram or a webhook.", icon: "mail" },
+      { href: "/status-pages", title: "Status pages", desc: "A public page with current status and 90-day uptime.", icon: "chart" },
       { href: "/#how-it-works", title: "How it works", desc: "Add a site, get a health score and the top fixes.", icon: "chart" },
+      { href: "/features", title: "All features", desc: "Uptime, SSL, domain, alerts, status pages, reports and badges.", icon: "link" },
     ],
     footer: { href: "/pricing", label: "See plans and pricing" },
   },

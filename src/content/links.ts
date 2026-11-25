@@ -16,6 +16,11 @@ export const FEATURE_LINKS: RelatedLink[] = [
   ...(HEARTBEATS
     ? [{ href: "/cron-job-monitoring", title: "Cron job monitoring", body: "Heartbeat URLs for backups and scheduled tasks, with an email when a run is missed." }]
     : []),
+  { href: "/website-alerts", title: "Website alerts", body: "Email when a site goes down or a certificate is near expiry, plus Slack, Discord, Telegram or a webhook." },
+  { href: "/status-pages", title: "Status pages", body: "A public status page at websiteswithpunch.com/status/your-name, with 90 days of daily uptime." },
+  { href: "/weekly-reports", title: "Weekly reports", body: "An opt-in email once a week with uptime, incidents, response time and upcoming renewals." },
+  { href: "/expiry-calendar", title: "Expiry calendar", body: "Every SSL and domain renewal on one agenda, plus a private calendar feed." },
+  { href: "/uptime-badges", title: "Uptime badges", body: "SVG badges for 30-day uptime and current status, with Markdown and HTML snippets." },
 ];
 
 /** Related links for a page: the other pages first, never the page itself. */
