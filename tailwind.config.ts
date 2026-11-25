@@ -25,6 +25,7 @@ const config: Config = {
           hover: "hsl(var(--accent-hover))",
         },
         danger: "hsl(var(--danger))",
+        ok: "hsl(var(--ok))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         border: "hsl(var(--border))",

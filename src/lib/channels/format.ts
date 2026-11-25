@@ -34,7 +34,9 @@ export function discordPayload(m: AlertMessage) {
   };
 }
 
-const escTg = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+/** Telegram HTML: escape &, <, > and " (needed inside <a href>). */
+const escTg = (s: string) =>
+  s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
 export function telegramPayload(m: AlertMessage, chatId: string) {
   return {

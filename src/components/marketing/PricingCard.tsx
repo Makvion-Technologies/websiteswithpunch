@@ -21,11 +21,15 @@ function Spark() {
 }
 
 /** Straddles the card's top edge; the page-colour ring reads as a notch cut into the border. */
-function PopularTag() {
+function CardTag({ children, tone }: { children: ReactNode; tone: "accent" | "ok" }) {
   return (
-    <span className="absolute left-1/2 top-0 z-10 inline-flex -translate-x-1/2 -translate-y-1/2 items-center gap-1.5 whitespace-nowrap bg-accent px-2.5 py-1.5 text-[11px] font-semibold uppercase leading-none tracking-[0.08em] text-white ring-2 ring-bg">
+    <span
+      className={`absolute left-1/2 top-0 z-10 inline-flex -translate-x-1/2 -translate-y-1/2 items-center gap-1.5 whitespace-nowrap px-2.5 py-1.5 text-[11px] font-semibold uppercase leading-none tracking-[0.08em] text-white ring-2 ring-bg ${
+        tone === "ok" ? "bg-ok" : "bg-accent"
+      }`}
+    >
       <Spark />
-      Most popular
+      {children}
     </span>
   );
 }
@@ -60,15 +64,17 @@ export function PricingCard({
   size?: ReactNode;
 }) {
   const dark = plan.id === "pro";
+  const trial = plan.id === "starter";
   const { price, note, href } = cardPricing(plan.id, interval, blocks);
   const soft = dark ? "text-solid-fg/60" : "text-muted";
   return (
     <div
       className={`relative flex min-w-0 flex-col p-6 xl:p-7 ${SPAN} lg:grid lg:grid-rows-subgrid lg:gap-y-0 ${
-        dark ? "border border-solid bg-solid text-solid-fg max-lg:mt-3" : "border border-rule bg-surface text-ink"
-      }`}
+        dark ? "border border-solid bg-solid text-solid-fg" : "border border-rule bg-surface text-ink"
+      } ${dark || trial ? "max-lg:mt-3" : ""}`}
     >
-      {dark ? <PopularTag /> : null}
+      {dark ? <CardTag tone="accent">Most popular</CardTag> : null}
+      {trial ? <CardTag tone="ok">30-day free trial</CardTag> : null}
       <h3 className="font-display text-xl font-medium">{plan.name}</h3>
       <p className={`mt-2 text-sm leading-relaxed ${soft}`}>{plan.audience}</p>
 

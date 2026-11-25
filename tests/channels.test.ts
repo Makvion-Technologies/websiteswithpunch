@@ -60,6 +60,10 @@ test("payloads carry the alert and the dashboard link", () => {
   assert.match(slackPayload(m).text, /dashboard\/sites\/s1/);
   assert.equal(discordPayload(m).embeds[0].color, 0xd92d20);
   assert.equal(telegramPayload({ ...m, title: "<b>x</b>" }, "42").text.includes("<b>x</b>"), false);
+  assert.match(
+    telegramPayload({ ...m, link: 'https://example.com/dash?q="x"' }, "42").text,
+    /<a href="https:\/\/example\.com\/dash\?q=&quot;x&quot;">/,
+  );
   const w = webhookPayload(m);
   assert.equal(w.event, "down");
   assert.equal(w.subject.id, "s1");

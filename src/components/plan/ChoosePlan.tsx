@@ -56,7 +56,7 @@ export function ChoosePlan({ legacyFree, trialUsed = false }: { legacyFree: bool
                 <div className="flex items-center justify-between gap-2">
                   <p className="font-display text-lg font-medium text-ink">{NAMES[id]}</p>
                   {popular && <span className="bg-accent px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white">Most popular</span>}
-                  {trial && <span className="border border-accent/40 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-accent">30 days free</span>}
+                  {trial && <span className="shrink-0 whitespace-nowrap bg-ok px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white">30-day free trial</span>}
                 </div>
                 <p className="mt-1 text-xs text-muted">{BLURB[id]}</p>
                 <p className="mt-3 tabular-nums text-ink">
