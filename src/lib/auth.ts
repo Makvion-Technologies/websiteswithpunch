@@ -6,6 +6,7 @@ import { prisma } from "./prisma";
 import { MINUTE, clientIp, rateLimit } from "./rate-limit";
 import { isVerified, issueCode } from "./email-verify";
 import { isAdminEmail } from "./admin/access";
+import { recordSessionStart } from "./activity/record";
 
 /** Compared against when the email has no account, so both paths take the same time. */
 const DUMMY_HASH = "$2b$12$r09sNKkp7.i.ZP17a.00aOrsxPh.E3qm/BMw3EiFd6gOb4r09khuO";
@@ -77,6 +78,8 @@ export const authOptions: NextAuthOptions = {
           // Unverified: send a fresh code (skipped inside the resend cooldown / rate limits).
           await issueCode(user, ip).catch((e) => console.warn("[verify] login code failed", e));
         }
+        // Last login time + coarse location for the admin panel (one write per login).
+        if (verified && !isAdminEmail(user.email)) await recordSessionStart(user.id, req?.headers as Record<string, unknown>, "login").catch((e) => console.warn("[activity] login record failed", e));
         return {
           verified,
           id: user.id,

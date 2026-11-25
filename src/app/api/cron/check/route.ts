@@ -1,4 +1,5 @@
 import { timingSafeEqual } from "node:crypto";
+import { markRun } from "@/lib/admin/jobs";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { runFullSiteCheck } from "@/lib/checks";
@@ -134,6 +135,8 @@ export async function GET(req: Request) {
     ]);
     cleanup.heartbeatHistory = hbEvents.count + hbDays.count;
     cleanup.rateLimits = await pruneRateLimits();
+    // Admin timeline rows (sign-up, login, session start) older than 180 days.
+    await prisma.userActivity.deleteMany({ where: { at: { lt: new Date(Date.now() - 180 * DAY_MS) } } });
     cleanup.webhookEvents = (
       await prisma.webhookEvent.deleteMany({ where: { createdAt: { lt: new Date(Date.now() - 30 * DAY_MS) } } })
     ).count;
@@ -144,6 +147,7 @@ export async function GET(req: Request) {
     console.error("[cron] cleanup failed", err);
   }
 
+  markRun("cron:check", counts.failed === 0, Date.now() - started, `${next}/${sites.length} checked`);
   return NextResponse.json({
     ok: true,
     total: sites.length,

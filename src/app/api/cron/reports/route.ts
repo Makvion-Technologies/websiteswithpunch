@@ -1,4 +1,5 @@
 import { timingSafeEqual } from "node:crypto";
+import { markRun } from "@/lib/admin/jobs";
 import { NextResponse } from "next/server";
 import { sendDueReports } from "@/lib/reports/send";
 
@@ -18,5 +19,6 @@ function authorized(req: Request): boolean {
 export async function GET(req: Request) {
   if (!authorized(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const result = await sendDueReports();
+  markRun("cron:reports", true, undefined, JSON.stringify(result).slice(0, 200));
   return NextResponse.json({ ok: true, ...result });
 }

@@ -1,6 +1,6 @@
 import { NewPill } from "./NewPill";
 import Link from "next/link";
-import type { ReactNode } from "react";
+import { Children, cloneElement, isValidElement, type ReactElement, type ReactNode } from "react";
 
 /** Fixed zone + locale: the same string on the server and in any browser. */
 export const fmtDate = (d: Date | null | undefined, time = true) =>
@@ -48,18 +48,29 @@ export function Stat({ label, value, note, href }: { label: string; value: React
     : <div className="min-w-0 bg-surface px-4 py-4">{body}</div>;
 }
 
-/** Horizontal scroll on small screens instead of squashed columns. */
+/**
+ * Table on md+; below md every row becomes a card (CSS in globals.css, .rtable) and each cell is
+ * labelled with its column name, so phones never scroll sideways.
+ */
 export function Table({ head, children, empty, emptyText = "Nothing here yet." }: { head: string[]; children: ReactNode; empty?: boolean; emptyText?: ReactNode }) {
+  const label = (row: ReactNode) => {
+    if (!isValidElement<{ children?: ReactNode }>(row)) return row;
+    let i = 0;
+    const cells = Children.map(row.props.children, (cell) =>
+      isValidElement(cell) ? cloneElement(cell as ReactElement<Record<string, unknown>>, { "data-label": head[i++] ?? "" }) : cell,
+    );
+    return cloneElement(row, undefined, cells);
+  };
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full min-w-[640px] text-left text-sm">
+    <div className="md:overflow-x-auto">
+      <table className="rtable w-full text-left text-sm md:min-w-[640px]">
         <thead>
           <tr className="border-b border-rule">
             {head.map((h) => <th key={h} className="whitespace-nowrap px-4 py-2.5 text-xs font-medium text-muted">{h}</th>)}
           </tr>
         </thead>
         <tbody className="divide-y divide-rule [&>tr:has([aria-label=New])]:bg-emerald-50/60 dark:[&>tr:has([aria-label=New])]:bg-emerald-500/5 [&>tr:has([aria-label=New])>td:first-child]:font-semibold">
-          {empty ? <tr><td colSpan={head.length} className="px-4 py-8 text-center text-sm text-muted">{emptyText}</td></tr> : children}
+          {empty ? <tr><td colSpan={head.length} className="px-4 py-8 text-center text-sm text-muted">{emptyText}</td></tr> : Children.map(children, label)}
         </tbody>
       </table>
     </div>

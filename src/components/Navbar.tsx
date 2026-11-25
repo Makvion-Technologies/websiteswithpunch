@@ -42,7 +42,7 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-rule bg-bg/90 backdrop-blur">
-      <div className="relative mx-auto flex max-w-6xl min-w-0 items-center justify-between gap-2 px-4 py-4 sm:px-6">
+      <div className="nav-inner relative mx-auto flex max-w-6xl min-w-0 items-center justify-between gap-2 px-4 py-4 sm:px-6">
         <Link
           href={unverified ? "/verify-email" : admin ? "/admin" : session ? "/dashboard" : "/"}
           className="flex min-w-0 items-center gap-2 font-display text-sm font-medium text-ink sm:gap-2.5 sm:text-base"

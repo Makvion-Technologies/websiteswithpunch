@@ -41,7 +41,7 @@ export default async function AdminReferrals(props: { searchParams: Promise<{ st
             const b = totals.get(t.referrerId);
             return (
               <tr key={t.referrerId}>
-                <td className={`${td} max-w-[220px] truncate`}><Link href={`/admin/users?u=${t.referrerId}`} className="hover:text-accent">{p?.email ?? "Deleted user"}</Link></td>
+                <td className={`${td} max-w-[220px] truncate`}><Link href={`/admin/users/${t.referrerId}`} className="hover:text-accent">{p?.email ?? "Deleted user"}</Link></td>
                 <td className={`${td} tabular-nums text-muted`}>{p?.referralClicks ?? 0}</td>
                 <td className={`${td} tabular-nums text-muted`}>{p?._count.referrals ?? 0}</td>
                 <td className={`${td} tabular-nums`}>{fmtUsd(b?.earned ?? 0)} <span className="text-xs text-muted">({t._count._all})</span></td>

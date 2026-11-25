@@ -48,7 +48,7 @@ function ListSk({ n = 6 }: { n?: number }) {
 /** Content-area skeletons for /admin pages (the sidebar stays mounted from the layout). */
 export function AdminSkeleton({ kind, title }: { kind: Kind; title: string }) {
   return (
-    <div className="space-y-4" role="status" aria-busy="true">
+    <div className="space-y-6" role="status" aria-busy="true">
       <SkStatus label={`Loading ${title.toLowerCase()}…`} />
       <Header title={title} sub="Live numbers from the database." />
       {kind === "overview" && (
@@ -57,8 +57,8 @@ export function AdminSkeleton({ kind, title }: { kind: Kind; title: string }) {
             <div className="px-4 py-2.5 text-xs"><Sk>Needs attention</Sk></div>
             {rows(3).map((i) => <div key={i} className="px-4 py-3 text-sm"><Sk>2 payout requests · $41.60 to pay</Sk></div>)}
           </SkCard>
-          <div className="grid grid-cols-2 gap-px border border-rule bg-rule lg:grid-cols-4">
-            {rows(8).map((i) => (
+          <div className="grid grid-cols-2 gap-px border border-rule bg-rule md:grid-cols-3 xl:grid-cols-6">
+            {rows(12).map((i) => (
               <div key={i} className="bg-surface px-4 py-4">
                 <p className="text-xs"><Sk>Metric label</Sk></p>
                 <p className="mt-1 font-display text-2xl font-medium"><Sk>1,234</Sk></p>
@@ -66,7 +66,8 @@ export function AdminSkeleton({ kind, title }: { kind: Kind; title: string }) {
               </div>
             ))}
           </div>
-          <div className="grid gap-4 lg:grid-cols-2"><ListSk n={8} /><ListSk n={8} /></div>
+          <div className="grid gap-6 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]"><SkCard className="h-[220px]"><span className="sr-only">Chart</span></SkCard><ListSk n={4} /></div>
+          <div className="grid gap-6 md:grid-cols-2 2xl:grid-cols-3"><ListSk n={5} /><ListSk n={5} /><ListSk n={5} /></div>
         </>
       )}
       {kind === "table" && (

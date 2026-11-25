@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <LegalPage title="Privacy Policy" updated="October 4, 2026" path="/privacy">
+    <LegalPage title="Privacy Policy" updated="November 25, 2026" path="/privacy">
       <p>
         Websites With Punch is a product operated by <strong>Makvion Technologies</strong>, based
         in India (&quot;we&quot;, &quot;us&quot;, or &quot;our&quot;). This Privacy Policy explains
@@ -44,6 +44,14 @@ export default function PrivacyPage() {
           <strong>Technical data:</strong> basic server logs, IP addresses, device/browser
           information, and other technical information needed to operate, secure, and troubleshoot
           the service.
+        </li>
+        <li>
+          <strong>Approximate location and activity:</strong> when you sign up, log in or start a
+          new dashboard session, we record the time, an approximate location (country, region and
+          city) derived from your IP address by our hosting provider, a coarse device type and
+          browser name (for example &quot;Desktop · Chrome&quot;), and the website or campaign that
+          first referred you. We don&apos;t store the IP address for this, and we use it only to
+          understand how the service is used, support you and keep accounts secure.
         </li>
         <li>
           <strong>Communications:</strong> messages you send through our contact form (your name,

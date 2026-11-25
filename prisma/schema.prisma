@@ -76,9 +76,27 @@ model User {
   onboardingDismissedAt DateTime?
   alertChannels         AlertChannel[]
   statusPages           StatusPage[]
+  /// Admin insights (lib/activity). Written only at login and when a new browser session opens
+  /// the dashboard, never per request. Location is coarse (country/region/city from Vercel's
+  /// IP geo headers); the IP itself is not stored.
+  lastLoginAt           DateTime?
+  lastActiveAt          DateTime?
+  lastCountry           String?
+  lastRegion            String?
+  lastCity              String?
+  /// Coarse device class + browser, e.g. "Desktop · Chrome".
+  lastDevice            String?
+  signupCountry         String?
+  signupCity            String?
+  /// First-touch source: external referrer host, "direct", or the utm_source.
+  signupSource          String?
+  /// First-touch UTM + landing path: { source, medium, campaign, landing }.
+  signupUtm             Json?
+  activity              UserActivity[]
 
   @@index([emailVerified, createdAt])
   @@index([referredById])
+  @@index([lastActiveAt])
 }
 
 model Account {
@@ -430,4 +448,29 @@ model StatusPage {
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+}
+
+/// Sign-up, login and session-start events for the admin timeline (pruned after 180 days).
+model UserActivity {
+  id      String   @id @default(cuid())
+  userId  String
+  kind    String // signup | login | session
+  country String?
+  city    String?
+  device  String?
+  at      DateTime @default(now())
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, at])
+  @@index([at])
+}
+
+/// Last run of each scheduled job / Worker sync, for the admin System health page.
+model JobRun {
+  key   String   @id // cron:check | cron:reports | worker:sites | worker:ingest | worker:heartbeats
+  at    DateTime
+  ok    Boolean  @default(true)
+  ms    Int?
+  note  String?
+  runs  Int      @default(1)
 }

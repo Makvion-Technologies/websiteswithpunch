@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { markRun } from "@/lib/admin/jobs";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { FAST_CHECKS } from "@/lib/monitor/config";
@@ -58,5 +59,6 @@ export async function POST(req: Request) {
                    unnest(${withMs.map((r) => r.c)}::int[]) AS code) AS v
       WHERE s.id = v.id AND s.status = 'up'`;
   }
+  markRun("worker:ingest", true, undefined, `${keep.length} saved`);
   return NextResponse.json({ saved: keep.length }, { headers: { "Cache-Control": "no-store" } });
 }

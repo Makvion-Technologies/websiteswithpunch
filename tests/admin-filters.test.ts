@@ -18,7 +18,7 @@ test("filters: paid users, down/monitored sites, available commissions", () => {
 });
 
 test("overview links point at the filtered pages that use the same helpers", () => {
-  const src = readFileSync("src/app/admin/page.tsx", "utf8");
+  const src = readFileSync("src/app/admin/page.tsx", "utf8") + readFileSync("src/components/admin/Attention.tsx", "utf8");
   for (const href of ["/admin/users?plan=paid", "/admin/sites?status=monitored", "/admin/sites?status=down", "/admin/alerts?sent=yes&range=7d", "/admin/messages?state=all&range=7d", "/admin/referrals?status=available", "/admin/payouts?tab=requested"]) {
     assert.ok(src.includes(`"${href}"`), href);
   }

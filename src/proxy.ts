@@ -1,6 +1,10 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { adminDecision, isAdminEmail } from "@/lib/admin/access";
+import { SOURCE_COOKIE, firstTouchFrom } from "@/lib/activity/source";
+
+/** Same as lib/activity/record SESSION_COOKIE (kept inline: no Prisma import on the edge). */
+const SESSION_COOKIE = "wwp_s";
 
 /** Signed-in only (the layouts check again on the server). */
 const APP = /^\/(dashboard|plan|profile|admin)(\/|$)/;
@@ -27,6 +31,17 @@ export async function proxy(req: NextRequest) {
     res.cookies.set(REF_COOKIE, ref, {
       httpOnly: true, sameSite: "lax", path: "/", maxAge: 30 * 86_400, secure: process.env.NODE_ENV === "production",
     });
+  }
+  const { pathname } = req.nextUrl;
+  const page = !pathname.startsWith("/api/");
+  // First-touch source (UTM tags or another site's Referer), kept 30 days until signup reads it.
+  if (page && !req.cookies.has(SOURCE_COOKIE)) {
+    const touch = firstTouchFrom(req.nextUrl, req.headers.get("referer"));
+    if (touch) res.cookies.set(SOURCE_COOKIE, touch, { httpOnly: true, sameSite: "lax", path: "/", maxAge: 30 * 86_400, secure: process.env.NODE_ENV === "production" });
+  }
+  // Browser-session marker: the dashboard records "last active" only when this is missing.
+  if (pathname.startsWith("/dashboard") && !req.cookies.has(SESSION_COOKIE) && res.status === 200) {
+    res.cookies.set(SESSION_COOKIE, "1", { httpOnly: true, sameSite: "lax", path: "/", secure: process.env.NODE_ENV === "production" });
   }
   return res;
 }
@@ -84,5 +99,7 @@ export const config = {
   matcher: [
     "/", "/signup", "/pricing", "/checkout/:path*", "/onboarding/:path*", "/dashboard/:path*", "/plan/:path*", "/profile/:path*", "/referrals/:path*",
     "/admin/:path*", "/verify-email", "/api/:path*",
+    // Any other page only when it carries UTM tags (first-touch source); static pages stay static.
+    { source: "/((?!_next/|api/|.*\\..*).*)", has: [{ type: "query", key: "utm_source" }] },
   ],
 };

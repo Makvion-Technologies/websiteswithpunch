@@ -127,7 +127,8 @@ export default async function MonitorsPage(
             showInlineAnalytics ? (activeSites[0].lastCheckedAt?.toISOString() ?? null) : null
           }
         >
-          <div className="mt-8 space-y-5">
+          {/* Wide screens: cards reflow into columns (≥560px each); one site keeps the full width. */}
+          <div className={showInlineAnalytics ? "mt-8 space-y-5" : "mt-8 grid grid-cols-[repeat(auto-fill,minmax(min(100%,560px),1fr))] items-start gap-5"}>
             {clientSites.map((site) => (
               <SiteCard
                 key={site.id}
@@ -140,7 +141,7 @@ export default async function MonitorsPage(
             ))}
             {showInlineAnalytics && <SiteAnalytics siteId={activeSites[0].id} />}
             {!showInlineAnalytics && activeSites.length > 1 && (
-              <p className="text-center text-sm text-muted">
+              <p className="col-span-full text-center text-sm text-muted">
                 Open <span className="font-medium text-ink">Analytics →</span> on any active site for
                 the full breakdown with range filters.
               </p>

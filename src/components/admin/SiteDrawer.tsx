@@ -56,7 +56,7 @@ export async function SiteDrawer({ id, close }: { id: string; close: string }) {
         <>
             <h3 className="label-caps mt-6 lg:mt-0">Owner</h3>
             <dl className="mt-2 divide-y divide-rule border-y border-rule">
-              {row("Email", <Link href={`/admin/users?u=${s.user.id}`} className="text-accent hover:underline">{s.user.email}</Link>)}
+              {row("Email", <Link href={`/admin/users/${s.user.id}`} className="text-accent hover:underline">{s.user.email}</Link>)}
               {row("Plan", s.user.plan)}
               {row("Verified", verified ? "yes" : <span className="text-danger">no</span>)}
               {row("Alerts", <>down {onOff(s.user.alertDown)} · SSL {onOff(s.user.alertSsl)} · domain {onOff(s.user.alertDomain)}</>)}
