@@ -8,7 +8,10 @@ import { FAST_CHECKS } from "@/lib/monitor/config";
  */
 export const HEARTBEATS = FAST_CHECKS && process.env.NEXT_PUBLIC_HEARTBEATS === "1";
 
-export const HEARTBEAT_LIMIT: Record<PlanId, number> = { free: 1, pro: 10, business: 50 };
+export const HEARTBEAT_LIMIT: Record<PlanId, number> = { free: 1, starter: 5, pro: 30, business: 100 };
+
+/** Heartbeats allowed: "free" gets 1 only on a legacy Free account; no plan gets none. */
+export const heartbeatLimit = (plan: PlanId, legacyFree = true) => (plan === "free" && !legacyFree ? 0 : HEARTBEAT_LIMIT[plan]);
 
 const MIN = 60;
 const HOUR = 60 * MIN;

@@ -9,7 +9,7 @@ export function HowAddSiteVisual() {
       <Panel
         icon={<IconLink className="h-4 w-4" />}
         title="Add site"
-        badge={<span className="shrink-0 text-[11px] text-muted">Free · 1 site</span>}
+        badge={<span className="shrink-0 text-[11px] text-muted">Starter · 10 sites</span>}
       >
         <div className="space-y-3">
           <Field label="Name">

@@ -74,5 +74,5 @@ export const sslChecker = {
       a: "This free tool checks port 443, where public HTTPS sites serve their certificate. IP addresses, localhost and private networks can't be checked.",
     },
   ] satisfies Faq[],
-  cta: "Add the site to Websites With Punch and we read its certificate every day, alongside uptime and domain expiry. Your dashboard shows the days left, turning amber at 30 days and red at 7. Free for one site, no card needed. We also email you 30, 7 and 1 day before it expires.",
+  cta: "Add the site to Websites With Punch and we read its certificate every day, alongside uptime and domain expiry. Your dashboard shows the days left, turning amber at 30 days and red at 7. From $5/month for 10 sites, with a 30-day free trial. We also email you 30, 7 and 1 day before it expires.",
 };

@@ -9,7 +9,7 @@ const CARD = "border border-rule bg-surface";
 export function PlanSkeleton() {
   const { plan, active, limit, billing } = useLayoutShape();
   const paid = plan !== "free";
-  const name = paid ? (plan === "pro" ? "Pro" : "Business") : "Free";
+  const name = paid ? { starter: "Starter", pro: "Pro", business: "Business" }[plan] : "Free";
 
   return (
     <div className={FULL_FRAME} role="status" aria-busy="true">
@@ -24,7 +24,7 @@ export function PlanSkeleton() {
               <div className="px-4 py-5 sm:px-6 sm:py-6">
                 <p className="label-caps"><Sk>Current plan</Sk></p>
                 <p className="mt-3 font-display text-4xl font-medium leading-none sm:text-5xl"><Sk>{name}</Sk></p>
-                <p className="mt-3 text-sm"><Sk>Monitor up to 10 sites, with optional site packs when you need more.</Sk></p>
+                <p className="mt-3 text-sm"><Sk>Monitor up to 30 sites, with alert channels and status pages.</Sk></p>
                 <div className="mt-5 grid gap-px border border-rule bg-rule sm:grid-cols-2">
                   {["You pay per month", "Next payment"].map((k) => (
                     <div key={k} className="bg-surface px-4 py-3">
@@ -41,11 +41,11 @@ export function PlanSkeleton() {
             <div className={`${CARD} lg:col-span-2`}>
               <p className="label-caps border-b border-rule px-4 py-3"><Sk>{paid ? "Manage plan" : "Room to grow"}</Sk></p>
               <div className="px-4 py-4">
-                <p className="text-sm"><Sk>{paid ? "Site packs · +5 sites each" : "One site is a great start."}</Sk></p>
+                <p className="text-sm"><Sk>{paid ? "Plan size · sites included" : "Pick a plan to keep monitoring."}</Sk></p>
                 <div className="sk mt-3 h-1.5" />
-                <SkBtn className="mt-3 px-3 py-1.5 text-sm font-medium">{paid ? "Add +5 sites" : "Upgrade to Pro"}</SkBtn>
+                <SkBtn className="mt-3 px-3 py-1.5 text-sm font-medium">{paid ? "Change size" : "See plans"}</SkBtn>
               </div>
-              {(paid ? ["Switch to annual billing", "Cancel plan"] : ["Pro", "Business"]).map((t) => (
+              {(paid ? ["Switch to annual billing", "Cancel plan"] : ["Starter", "Pro", "Business", "Custom"]).map((t) => (
                 <p key={t} className="border-t border-rule px-4 py-3 text-sm"><Sk>{t}</Sk></p>
               ))}
             </div>

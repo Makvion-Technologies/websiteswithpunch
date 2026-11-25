@@ -27,6 +27,7 @@ export default async function PlanPage() {
     user.sitePackCount,
     user.pendingSitePackCount,
     user.pendingPackChangeAt,
+    user.legacyFree,
   );
   const activeSites = sites.filter((s) => !s.locked);
   const lockedSites = sites.filter((s) => s.locked);
@@ -69,6 +70,8 @@ export default async function PlanPage() {
             pendingPlanAt={user.pendingPlanAt?.toISOString() ?? null}
             lockedCount={lockedSites.length}
             hasBilling={Boolean(user.dodoCustomerId)}
+            legacyFree={user.legacyFree}
+            trialUsed={Boolean(user.trialUsedAt)}
           />
         </div>
       </div>

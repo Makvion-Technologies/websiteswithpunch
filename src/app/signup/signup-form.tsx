@@ -4,8 +4,8 @@ import Link from "next/link";
 import { FormEvent, useRef, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import type { PlanId } from "@/lib/plans";
-import { intervalParam, type BillingInterval } from "@/lib/billing-interval";
+import type { BillingInterval } from "@/lib/billing-interval";
+import { choiceQuery, hasTrial, type PlanChoice } from "@/lib/plan-choice";
 import { PASSWORD_MAX } from "@/lib/password-rules";
 import { AuthNotice } from "@/components/auth/AuthShell";
 import {
@@ -17,16 +17,16 @@ import {
   emailError,
   newPasswordErrors,
 } from "@/components/auth/fields";
-import { SignupConsent, SignupHeader, paidButtonLabel } from "./signup-header";
+import { SignupConsent, SignupHeader, signupButtonLabel } from "./signup-header";
 
 type Errors = { name?: string; email?: string; password?: string; confirm?: string; form?: string };
 
 export function SignupForm({
-  initialPlan = "free",
+  initialChoice = { id: "starter", blocks: 0 },
   initialInterval = "month",
   canceled = false,
 }: {
-  initialPlan?: PlanId;
+  initialChoice?: PlanChoice;
   initialInterval?: BillingInterval;
   canceled?: boolean;
 }) {
@@ -38,11 +38,12 @@ export function SignupForm({
   const [errors, setErrors] = useState<Errors>({});
   const [loading, setLoading] = useState(false);
   const [interval, setBilling] = useState<BillingInterval>(initialInterval);
+  const [choice, setChoice] = useState<PlanChoice>(initialChoice);
   // Spam checks (see lib/spam.ts): a hidden honeypot and how long the form was open.
   const [website, setWebsite] = useState("");
   const openedAt = useRef(Date.now());
 
-  const isPaid = initialPlan === "pro" || initialPlan === "business";
+  const trial = hasTrial(choice);
 
   /** Server errors: a duplicate email (409) is shown on the email field, the rest above the form. */
   function serverError(status: number, message: string) {
@@ -79,26 +80,22 @@ export function SignupForm({
         router.push("/login");
         return;
       }
-      // Next: the emailed code. Paid plans go to checkout right after verifying, so every paying
-      // account has a confirmed address. Full load so no signed-out router-cache entry is reused.
-      const next = isPaid ? `?plan=${initialPlan}&interval=${intervalParam(interval)}` : "";
-      window.location.replace(`/verify-email${next}`);
+      // Next: the emailed code, then checkout for the chosen plan, so every paying account has a
+      // confirmed address. Full load so no signed-out router-cache entry is reused.
+      window.location.replace(`/verify-email?${choiceQuery(choice, interval)}`);
     } catch {
       setErrors({ form: "Network error. Check your connection and try again." });
       setLoading(false);
     }
   }
 
-  const buttonLabel = loading
-    ? "Creating account…"
-    : isPaid
-      ? paidButtonLabel(initialPlan, interval)
-      : "Sign up free";
+  const buttonLabel = loading ? "Creating account…" : signupButtonLabel(choice, interval);
 
   return (
     <div className="flex flex-col">
       <SignupHeader
-        planId={initialPlan}
+        choice={choice}
+        onChoice={setChoice}
         interval={interval}
         onInterval={setBilling}
         loading={loading}
@@ -164,26 +161,20 @@ export function SignupForm({
             onChange={(e) => setWebsite(e.target.value)} />
         </div>
         <SubmitButton loading={loading}>{buttonLabel}</SubmitButton>
-        {isPaid && (
-          <p className="text-center text-xs text-muted">
-            We&apos;ll email you a 6-digit code first, then take you to payment.
-          </p>
-        )}
-        <SignupConsent paid={isPaid} />
+        <p className="text-center text-xs text-muted">
+          We&apos;ll email you a 6-digit code first, then take you to {trial ? "add a card" : "payment"}.
+        </p>
+        <SignupConsent trial={trial} />
       </form>
       <p className="mt-6 text-sm text-muted">
         Already have an account?{" "}
         <Link href="/login" className={authLink}>
           Log in
         </Link>
-        {isPaid && (
-          <>
-            {" · "}
-            <Link href="/signup" className={authLink}>
-              Start free instead
-            </Link>
-          </>
-        )}
+        {" · "}
+        <Link href="/pricing" className={authLink}>
+          Compare plans
+        </Link>
       </p>
     </div>
   );

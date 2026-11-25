@@ -5,7 +5,8 @@ import { signOut, useSession } from "next-auth/react";
 import { AuthHeading, AuthNotice } from "@/components/auth/AuthShell";
 import { SubmitButton, authLink } from "@/components/auth/fields";
 import { CODE_LENGTH, CodeInput } from "@/components/auth/CodeInput";
-import { intervalParam, type BillingInterval } from "@/lib/billing-interval";
+import type { BillingInterval } from "@/lib/billing-interval";
+import { checkoutBody, hasTrial, type PlanChoice } from "@/lib/plan-choice";
 
 const empty = () => Array<string>(CODE_LENGTH).fill("");
 
@@ -13,13 +14,13 @@ export function VerifyForm({
   masked,
   initialCooldown,
   hasCode,
-  plan,
+  choice,
   interval,
 }: {
   masked: string;
   initialCooldown: number;
   hasCode: boolean;
-  plan: "pro" | "business" | null;
+  choice: PlanChoice | null;
   interval: BillingInterval;
 }) {
   const { update } = useSession();
@@ -42,11 +43,11 @@ export function VerifyForm({
   async function finish() {
     setDone(true);
     await update().catch(() => null); // re-issues the session cookie with the verified flag
-    if (plan) {
+    if (choice) {
       const res = await fetch("/api/billing/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ planId: plan, interval: intervalParam(interval) }),
+        body: JSON.stringify(checkoutBody(choice, interval)),
       }).catch(() => null);
       const data = res ? await res.json().catch(() => ({})) : {};
       if (data?.url) return void (window.location.href = data.url);
@@ -130,7 +131,7 @@ export function VerifyForm({
       </AuthHeading>
       {done ? (
         <AuthNotice tone="success">
-          Email verified. {plan ? "Taking you to payment…" : "Opening your dashboard…"}
+          Email verified. {choice ? (hasTrial(choice) ? "Taking you to add a card…" : "Taking you to payment…") : "Opening your dashboard…"}
         </AuthNotice>
       ) : notice ? (
         <AuthNotice tone="success">{notice}</AuthNotice>

@@ -7,8 +7,13 @@ type Props = {
   open: boolean;
   keepOptions: KeepSiteOption[];
   renewsOn: string | null;
-  /** Pro price on the current interval, e.g. "$12/month" or "$120/year". */
+  /** Lower plan's price on the current interval, e.g. "$12/month" or "$120/year". */
   newPrice?: string;
+  /** Current plan name ("Business", "Custom", "Pro") and the plan it moves to. */
+  fromName?: string;
+  toName?: string;
+  /** Sites on the lower plan. */
+  maxKeep?: number;
   loading: boolean;
   onClose: () => void;
   onConfirm: (siteIds: string[]) => void;
@@ -19,6 +24,9 @@ export function DowngradeFlow({
   keepOptions,
   renewsOn,
   newPrice = "$12/month",
+  fromName = "Business",
+  toName = "Pro",
+  maxKeep = 30,
   loading,
   onClose,
   onConfirm,
@@ -27,10 +35,10 @@ export function DowngradeFlow({
   return (
     <KeepSitesPicker
       open={open}
-      title="Switch to Pro"
-      maxKeep={10}
+      title={`Switch to ${toName}`}
+      maxKeep={maxKeep}
       sites={keepOptions}
-      confirmLabel="Switch to Pro"
+      confirmLabel={`Switch to ${toName}`}
       loading={loading}
       onClose={onClose}
       onConfirm={onConfirm}
@@ -39,7 +47,7 @@ export function DowngradeFlow({
         <>
           <p>Nothing is charged today.</p>
           <p className="mt-2">
-            You keep Business until {when}. From {when} you&apos;ll pay {newPrice}.
+            You keep {fromName} until {when}. From {when} you&apos;ll pay {newPrice}.
           </p>
           {locked.length > 0 && (
             <p className="mt-2">

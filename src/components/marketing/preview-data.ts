@@ -11,7 +11,7 @@ export type PreviewSite = {
   domainDays: number;
 };
 
-export const previewUser = { name: "Alex", initial: "A", plan: "Pro", limit: 10, packSites: 5 };
+export const previewUser = { name: "Alex", initial: "A", plan: "Pro", limit: 30 };
 
 export const previewSites: PreviewSite[] = [
   { name: "My shop", url: "https://shop.example.com", status: "up", lastCheck: "1 Oct 2026, 9:41 am", latencyMs: 142, code: 200, sslDays: 62, domainDays: 164 },

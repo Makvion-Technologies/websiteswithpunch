@@ -1,125 +1,117 @@
-import { PLANS, SITE_PACKS, type PlanId } from "@/lib/plans";
-import { ANNUAL_PRICES, perMonthPrice, type BillingInterval } from "@/lib/billing-interval";
-import { byCadence, CHECK_EVERY_MIN } from "@/lib/monitor/config";
+import { CUSTOM, CUSTOM_MAX_SITES, CUSTOM_MIN_SITES, PLANS, customSites } from "@/lib/plans";
+import { blockPrice, sizedPrice, type BillingInterval } from "@/lib/billing-interval";
+import { byCadence, CHECK_EVERY_MIN, CUSTOM_EXTRA_EVERY_MIN } from "@/lib/monitor/config";
 import { HEARTBEATS, HEARTBEAT_LIMIT } from "@/lib/heartbeats/config";
 import { CHANNEL_LIMIT, STATUS_PAGE_LIMIT, planWord } from "@/lib/features/limits";
+import { choiceQuery, type ChoiceId } from "@/lib/plan-choice";
 
-const packCeiling = (id: "pro" | "business") =>
-  PLANS[id].siteLimit + SITE_PACKS[id].maxPacks * SITE_PACKS[id].sitesPerPack;
+export type CardId = ChoiceId;
 
-/** Per-site cost per month on an interval: Pro $1.20 monthly, $1.00 annual. */
-const perSite = (id: "pro" | "business", interval: BillingInterval) =>
-  (perMonthPrice(id, interval) / PLANS[id].siteLimit).toFixed(2);
+/** Monthly-equivalent price, trimmed: 4.17, 10, 20. */
+const money = (n: number) => (Number.isInteger(n) ? String(n) : n.toFixed(2));
 
-/** What a paid card shows per interval. Price is always per month; annual notes the yearly bill. */
-export type PlanPricing = { price: number; note: string; href: string };
+/** What a card shows per interval. Price is per month; annual notes the yearly bill. */
+export type PlanPricing = { price: string; note: string; href: string };
 
-const paidPricing = (id: "pro" | "business"): Record<BillingInterval, PlanPricing> => ({
-  month: {
-    price: PLANS[id].price,
-    note: `Billed monthly · $${perSite(id, "month")} per site · plus tax`,
-    href: `/signup?plan=${id}&interval=monthly`,
-  },
-  year: {
-    price: perMonthPrice(id, "year"),
-    note: `Billed $${ANNUAL_PRICES[id]} yearly · $${perSite(id, "year")} per site · plus tax`,
-    href: `/signup?plan=${id}&interval=annual`,
-  },
-});
+const sitesOf = (id: CardId, blocks: number) => (id === "custom" ? customSites(blocks) : PLANS[id].siteLimit);
+const planOf = (id: CardId) => (id === "custom" ? "business" : id);
+
+/** Card pricing for an interval (and a Custom size). */
+export function cardPricing(id: CardId, interval: BillingInterval, blocks = 0): PlanPricing {
+  const b = id === "custom" ? blocks : 0;
+  const total = sizedPrice(planOf(id), b, interval);
+  const perMonth = interval === "year" ? total / 12 : total;
+  const perSite = (perMonth / sitesOf(id, b)).toFixed(2);
+  const href = `/signup?${choiceQuery({ id, blocks: b }, interval)}`;
+  const billed = interval === "year" ? `$${total} billed yearly` : "billed monthly";
+  const lead = id === "starter" ? `30 days free, then ${billed}` : billed.charAt(0).toUpperCase() + billed.slice(1);
+  return { price: money(perMonth), note: `${lead} · $${perSite}/site/mo · plus tax`, href };
+}
 
 export type PlanFeature = { text: string; off?: boolean };
 
 export type PricingPlan = {
-  id: PlanId;
+  id: CardId;
   name: string;
   audience: string;
   cta: string;
-  /** Free has one entry for both intervals. */
-  pricing: Record<BillingInterval, PlanPricing>;
   features: PlanFeature[];
 };
 
-const freePricing: PlanPricing = { price: PLANS.free.price, note: "No card needed", href: "/signup" };
+const tier = (id: CardId) => (id === "custom" ? "business" : id);
 
-/** Row 3: check cadence per plan from CHECK_EVERY_MIN when fast checks are on; same words on every card otherwise. */
-const checksRow = (id: PlanId): PlanFeature => {
+/** Row 2: check cadence from CHECK_EVERY_MIN when fast checks are on. */
+const checksRow = (id: CardId): PlanFeature => {
+  if (id === "custom") {
+    return {
+      text: byCadence(
+        `Uptime every minute on 100 sites, every ${CUSTOM_EXTRA_EVERY_MIN} minutes on the rest`,
+        "Uptime, SSL and domain checks",
+      ),
+    };
+  }
   const n = CHECK_EVERY_MIN[id];
-  return {
-    text: byCadence(`Uptime every ${n === 1 ? "minute" : `${n} minutes`}, SSL and domain daily`, "Uptime, SSL and domain checks"),
-  };
+  return { text: byCadence(`Uptime every ${n === 1 ? "minute" : `${n} minutes`}, SSL and domain daily`, "Uptime, SSL and domain checks") };
 };
 
 /** Heartbeat (cron job) monitors per plan; only listed once heartbeats are live. */
-const hbRow = (id: PlanId): PlanFeature[] => {
-  if (!HEARTBEATS) return [];
-  const n = HEARTBEAT_LIMIT[id];
-  return [{ text: id === "free" ? "1 cron job heartbeat (hourly or slower)" : `${n} cron job heartbeats, from every 5 minutes` }];
-};
+const hbRow = (id: CardId): PlanFeature[] =>
+  HEARTBEATS ? [{ text: `${HEARTBEAT_LIMIT[tier(id)]} cron job heartbeats, from every 5 minutes` }] : [];
 
-/** Alert channels and status pages per plan, from lib/features/limits. */
-const shareRows = (id: PlanId): PlanFeature[] => [
-  { text: `Email plus ${planWord(CHANNEL_LIMIT[id], "Slack, Discord, Telegram or webhook channel")}` },
-  { text: planWord(STATUS_PAGE_LIMIT[id], "public status page") },
-];
-
-/** Rows shared by every card (row 3 onward); row 3 names the plan's check interval. */
-const shared = (id: PlanId): PlanFeature[] => [
+/** Rows every card shares (row 2 onward), with per-plan limits from lib/features/limits. */
+const shared = (id: CardId): PlanFeature[] => [
   checksRow(id),
   ...hbRow(id),
-  ...shareRows(id),
+  { text: `Email plus ${planWord(CHANNEL_LIMIT[tier(id)], "Slack, Discord, Telegram or webhook channel")}` },
+  { text: planWord(STATUS_PAGE_LIMIT[tier(id)], "public status page") },
   { text: "Dashboard, analytics and check history" },
   { text: "Weekly report, expiry calendar and uptime badges" },
-];
-
-/** Paid-only, from the code: Dodo customer portal (needs a Dodo customer) and pack add/remove. */
-const paid: PlanFeature[] = [
   { text: "Self-serve billing portal" },
-  { text: "Manage packs from the dashboard" },
 ];
 
 /**
- * Homepage pricing cards. Prices and limits come from PLANS / SITE_PACKS; only real features.
- * Rows are parallel across cards: 1 sites, 2 packs, 3–4 shared, then paid-only extras.
+ * Pricing cards. Prices and limits come from PLANS / CUSTOM; only features that exist.
+ * Rows are parallel across cards: 1 sites, 2… shared, last = the plan's own extra.
  */
 export const pricingPlans: PricingPlan[] = [
   {
-    id: "free",
-    name: PLANS.free.name,
-    audience: "For the one site you can’t afford to lose.",
-    cta: "Start monitoring free",
-    pricing: { month: freePricing, year: freePricing },
-    features: [{ text: "1 monitored site" }, { text: "No site packs", off: true }, ...shared("free")],
+    id: "starter",
+    name: PLANS.starter.name,
+    audience: "For a handful of sites you can't afford to lose.",
+    cta: "Start free trial",
+    features: [{ text: `${PLANS.starter.siteLimit} monitored sites` }, ...shared("starter"), { text: "30-day free trial, card required" }],
   },
   {
     id: "pro",
     name: PLANS.pro.name,
     audience: "For freelancers and growing portfolios.",
-    cta: "Start with Pro",
-    pricing: paidPricing("pro"),
-    features: [
-      { text: `Up to ${PLANS.pro.siteLimit} monitored sites` },
-      { text: `Optional +${SITE_PACKS.pro.sitesPerPack}-site packs, up to ${packCeiling("pro")} sites` },
-      ...shared("pro"),
-      ...paid,
-    ],
+    cta: "Get Pro",
+    features: [{ text: `${PLANS.pro.siteLimit} monitored sites` }, ...shared("pro"), { text: "Upgrade or downgrade from the dashboard" }],
   },
   {
     id: "business",
     name: PLANS.business.name,
     audience: "For agencies and larger portfolios.",
-    cta: "Start with Business",
-    pricing: paidPricing("business"),
+    cta: "Get Business",
+    features: [{ text: `${PLANS.business.siteLimit} monitored sites` }, ...shared("business"), { text: `Grow to ${CUSTOM_MAX_SITES} sites anytime` }],
+  },
+  {
+    id: "custom",
+    name: "Custom",
+    audience: "Business, sized to your portfolio.",
+    cta: "Get Custom",
     features: [
-      { text: `Up to ${PLANS.business.siteLimit} monitored sites` },
-      { text: `Optional +${SITE_PACKS.business.sitesPerPack}-site packs, up to ${packCeiling("business")} sites` },
-      ...shared("business"),
-      ...paid,
-      { text: "Lowest cost per site" },
+      { text: `${CUSTOM_MIN_SITES} to ${CUSTOM_MAX_SITES} monitored sites` },
+      ...shared("custom"),
+      { text: `Resize ${CUSTOM.blockSites} sites at a time, $${blockPrice("month")}/mo each` },
     ],
   },
 ];
 
-/** Highest self-serve limit (Business plus every pack); beyond this is a custom plan. */
-export const maxSelfServeSites = packCeiling("business");
+/** Highest self-serve limit; beyond this is a contact-us plan. */
+export const maxSelfServeSites = CUSTOM_MAX_SITES;
 
 export const customPlanHref = "/contact?topic=custom-limits";
+
+/** Sites shown first on the Custom card (server render and first paint). */
+export const DEFAULT_CUSTOM_BLOCKS = 4; // 200 sites

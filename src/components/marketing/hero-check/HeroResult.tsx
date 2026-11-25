@@ -36,7 +36,7 @@ export function HeroResultSkeleton({ query }: { query: string }) {
 /**
  * The dashboard site card, for a one-off check: same head, four boxes and buttons. Recheck
  * re-runs the public checks (once a minute, like the dashboard; a 429 shows its wait time);
- * Analytics, Edit and Delete explain that saving the site needs a free account.
+ * Analytics, Edit and Delete explain that saving the site needs an account.
  */
 export function HeroResult({ result, onResult }: { result: HeroCheck; onResult: (r: HeroCheck) => void }) {
   const cooldown = useRecheckCooldown(result.checkedAt);

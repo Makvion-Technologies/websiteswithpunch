@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { VERIFICATION_STARTED_AT } from "@/lib/email-verify";
-import { PLANS, SITE_PACKS } from "@/lib/plans";
+import { CUSTOM, PLANS } from "@/lib/plans";
 import { alertsWhere, commissionsWhere, messagesWhere, payoutsWhere, sitesWhere, usersWhere } from "./filters";
 
 export const verifiedWhere = { OR: [{ emailVerified: { not: null } }, { createdAt: { lt: VERIFICATION_STARTED_AT } }] };
@@ -18,7 +18,7 @@ export async function overviewStats(now = Date.now()) {
     prisma.commission.aggregate({ where: commissionsWhere({ status: "available" }), _count: { _all: true }, _sum: { amountCents: true } }),
     prisma.alertLog.count({ where: alertsWhere({ sent: "yes", range: "7d" }, now) }),
     prisma.contactMessage.count({ where: messagesWhere({ state: "all", range: "7d" }, now) }),
-    prisma.user.findMany({ orderBy: { createdAt: "desc" }, take: 8, select: { id: true, email: true, plan: true, createdAt: true } }),
+    prisma.user.findMany({ orderBy: { createdAt: "desc" }, take: 8, select: { id: true, email: true, plan: true, createdAt: true, dodoStatus: true, sitePackCount: true, legacyFree: true, trialEndsAt: true, trialConvertedAt: true } }),
     prisma.auditLog.findMany({ orderBy: { createdAt: "desc" }, take: 8 }),
     prisma.payout.findMany({ where: { status: "requested", amountChangedAt: { not: null } }, take: 5, select: { id: true, amountCents: true, requestedCents: true, user: { select: { email: true } } } }),
     prisma.contactMessage.count({ where: messagesWhere({}) }),
@@ -30,7 +30,8 @@ export async function overviewStats(now = Date.now()) {
   const packSum = (p: string) => packs.find((r) => r.plan === p)?._sum.sitePackCount ?? 0;
   const pro = count("pro");
   const business = count("business");
-  const mrr = pro * PLANS.pro.price + business * PLANS.business.price + packSum("pro") * SITE_PACKS.pro.pricePerMonth + packSum("business") * SITE_PACKS.business.pricePerMonth;
+  // Custom = Business + extra 25-site blocks (sitePackCount). Legacy pack holders read 0 blocks.
+  const mrr = count("starter") * PLANS.starter.price + pro * PLANS.pro.price + business * PLANS.business.price + packSum("business") * CUSTOM.blockPrice;
   return {
     users, verified, pro, business, sites, down, mrr,
     openPayouts: open._count._all, openPayoutCents: open._sum.amountCents ?? 0,

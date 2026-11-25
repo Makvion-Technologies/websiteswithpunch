@@ -6,8 +6,9 @@ import { SITE_URL } from "@/lib/site-config";
 
 /** Public, indexable routes only (auth, app and API pages are excluded). */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const updated = new Date("2026-11-10");
+  const updated = new Date("2026-11-25");
   const legal = new Date("2026-10-05");
+  const billingTerms = new Date("2026-11-25"); // terms + refund policy: paid-only plans and the Starter trial
   const page = (
     path: string,
     priority: number,
@@ -31,9 +32,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     page("/referrals", 0.5),
     ...TOOL_LINKS.map((l) => page(l.href, 0.8, "weekly")),
     page("/contact", 0.5, "yearly", legal),
-    page("/terms", 0.3, "yearly", legal),
+    page("/terms", 0.3, "yearly", billingTerms),
     page("/privacy", 0.3, "yearly", legal),
-    page("/refund-policy", 0.3, "yearly", legal),
+    page("/refund-policy", 0.3, "yearly", billingTerms),
     page("/cookie-policy", 0.3, "yearly", legal),
   ];
 }

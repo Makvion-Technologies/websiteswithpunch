@@ -95,5 +95,6 @@ test("pricing cards fit the subgrid row count in PricingCard", async () => {
   const { pricingPlans } = await import("../src/components/marketing/pricing-content");
   const { HEARTBEATS } = await import("../src/lib/heartbeats/config");
   const longest = Math.max(...pricingPlans.map((p) => p.features.length));
-  assert.equal(longest, HEARTBEATS ? 11 : 10);
+  assert.equal(longest, HEARTBEATS ? 9 : 8);
+  assert.equal(new Set(pricingPlans.map((p) => p.features.length)).size, 1, "rows stay parallel across cards");
 });

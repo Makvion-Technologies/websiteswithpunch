@@ -22,7 +22,7 @@ export async function GET(req: Request) {
     orderBy: { createdAt: "asc" },
     select: {
       id: true, token: true, periodSec: true, graceSec: true, paused: true, createdAt: true, userId: true,
-      user: { select: { plan: true, dodoStatus: true, emailVerified: true, createdAt: true, email: true } },
+      user: { select: { plan: true, dodoStatus: true, emailVerified: true, createdAt: true, email: true, legacyFree: true } },
     },
   });
   const byUser = new Map<string, typeof rows>();
@@ -32,7 +32,7 @@ export async function GET(req: Request) {
     const u = list[0].user;
     if (!isVerified(u) || isAdminEmail(u.email)) continue;
     const plan = getEffectivePlan(u.plan, u.dodoStatus);
-    const over = overLimitIds(list, plan);
+    const over = overLimitIds(list, plan, u.legacyFree);
     for (const h of list) hbs.push(toWorker(h, plan, over.has(h.id)));
   }
   markRun("worker:heartbeats", true, undefined, `${hbs.length} heartbeats`);

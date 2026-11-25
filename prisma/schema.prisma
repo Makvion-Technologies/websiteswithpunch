@@ -16,8 +16,20 @@ model User {
   /// created before VERIFICATION_STARTED_AT count as verified even while this is null.
   emailVerified         DateTime?
   image                 String?
-  plan                  String                  @default("free") // free | pro | business (paid-through)
+  plan                  String                  @default("free") // free | starter | pro | business (paid-through)
+  /// Custom: extra 25-site blocks on Business (was: site packs, now retired).
   sitePackCount         Int                     @default(0)
+  /// True for accounts created before paid-only pricing: "free" means the 1-site Free plan for
+  /// life. The default makes `db push` mark every existing row; signup sets false for new ones,
+  /// whose "free" means no plan (0 sites) until they subscribe.
+  legacyFree            Boolean                 @default(true)
+  /// Starter free trial (from the Dodo subscription): start, end, first use, conversion, reminders.
+  trialStartedAt        DateTime?
+  trialEndsAt           DateTime?
+  trialUsedAt           DateTime?
+  trialConvertedAt      DateTime?
+  trialReminder7At      DateTime?
+  trialReminder2At      DateTime?
   /// Target pack count after a scheduled removal (applies at pendingPackChangeAt).
   pendingSitePackCount  Int?
   /// When pendingSitePackCount becomes the live limit (usually next renewal).

@@ -7,7 +7,7 @@ import { SwitchMonthlyModal } from "@/components/billing/SwitchMonthlyModal";
 type Props = {
   /** "annual" = monthly → annual now; "monthly" = annual → monthly at renewal. */
   flow: "annual" | "monthly" | null;
-  plan: "pro" | "business";
+  plan: "starter" | "pro" | "business";
   busy: boolean;
   onClose: () => void;
   run: (fn: () => Promise<void>) => Promise<unknown>;
@@ -39,6 +39,7 @@ export function IntervalSwitchModals({
       <UpgradePlanModal
         open={flow === "annual"}
         targetPlan={plan}
+        switchOnly
         loading={busy}
         message={error}
         onClose={onClose}

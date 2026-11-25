@@ -8,8 +8,8 @@ import { SiteGrid } from "./SiteGrid";
 import { byCadence } from "@/lib/monitor/config";
 
 const CTA = byCadence(
-  "Add your website and we check its uptime every few minutes (every minute on Pro and Business), plus SSL certificate and domain expiry daily, with email alerts when a confirmed check finds it down. Free for one site, no card needed.",
-  "Add your website and we check it every day: uptime, SSL certificate expiry and domain expiry, with email alerts when a check finds it down. Free for one site, no card needed.",
+  "Add your website and we check its uptime every few minutes (every minute on every paid plan), plus SSL certificate and domain expiry daily, with email alerts when a confirmed check finds it down. From $5/month for 10 sites, with a 30-day free trial.",
+  "Add your website and we check it every day: uptime, SSL certificate expiry and domain expiry, with email alerts when a check finds it down. From $5/month for 10 sites, with a 30-day free trial.",
 );
 
 /** Directory of every static “Is X down?” page, grouped by category; tools + CTA in the sidebar. */

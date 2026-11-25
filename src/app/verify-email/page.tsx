@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { NO_INDEX } from "@/lib/site-config";
 import { isVerified, maskEmail, resendCooldown } from "@/lib/email-verify";
 import { parseInterval } from "@/lib/billing-interval";
+import { parseChoice } from "@/lib/plan-choice";
 import { AuthShell } from "@/components/auth/AuthShell";
 import { VerifyForm } from "./verify-form";
 
@@ -17,7 +18,7 @@ export const dynamic = "force-dynamic";
 
 export default async function VerifyEmailPage(
   props: {
-    searchParams: Promise<{ plan?: string; interval?: string }>;
+    searchParams: Promise<{ plan?: string; sites?: string; interval?: string }>;
   }
 ) {
   const searchParams = await props.searchParams;
@@ -36,7 +37,8 @@ export default async function VerifyEmailPage(
       where: { userId: user.id, usedAt: null, expiresAt: { gt: new Date() } },
     }),
   ]);
-  const plan = searchParams.plan === "pro" || searchParams.plan === "business" ? searchParams.plan : null;
+  // Accounts that signed up before the plan picker (no ?plan=) go to Your plan to choose.
+  const choice = searchParams.plan ? parseChoice(searchParams.plan, searchParams.sites) : null;
 
   return (
     <AuthShell>
@@ -44,7 +46,7 @@ export default async function VerifyEmailPage(
         masked={maskEmail(user.email)}
         initialCooldown={cooldown}
         hasCode={active > 0}
-        plan={plan}
+        choice={choice}
         interval={parseInterval(searchParams.interval)}
       />
     </AuthShell>

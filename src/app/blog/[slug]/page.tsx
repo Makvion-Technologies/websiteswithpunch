@@ -50,7 +50,7 @@ export default async function BlogPostPage(props: Props) {
           <div className="hidden lg:block">
             <Toc items={toc} />
           </div>
-          <RailCta title="Monitor it for free" body={CTA[p.category]} />
+          <RailCta title="Monitor it, free for 30 days" body={CTA[p.category]} />
         </div>
       }
     >
@@ -70,7 +70,7 @@ export default async function BlogPostPage(props: Props) {
         </div>
       </article>
       <div className="mt-12">
-        <SoftCta title="Start monitoring for free" body={`${CTA[p.category]} Free for one site, no card needed.`} />
+        <SoftCta title="Start monitoring with a free trial" body={`${CTA[p.category]} From $5/month for 10 sites, with a 30-day free trial.`} />
       </div>
       <section aria-labelledby="more-title" className="mt-16">
         <h2 id="more-title" className="font-display text-2xl font-medium tracking-tight text-ink">

@@ -19,7 +19,7 @@ export function ProfileMenu() {
   const [hasBilling, setHasBilling] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const upgrade = usePlanUpgrade();
-  const { targets, loading, setUpgradeOpen, startCheckout, showUpgrades } = upgrade;
+  const { targets, loading, showUpgrades, plan } = upgrade;
 
   useEffect(() => {
     if (!session?.user) return;
@@ -63,11 +63,6 @@ export function ProfileMenu() {
     void portal.openPortal();
   }
 
-  function startBusinessUpgrade() {
-    setOpen(false);
-    setUpgradeOpen(true);
-  }
-
   return (
     <div className="relative" ref={rootRef}>
       <button
@@ -87,44 +82,26 @@ export function ProfileMenu() {
         >
           {showUpgrades && (
             <div className="md:hidden">
-              {targets.includes("pro") && (
-                <>
+              {plan === "free" ? (
+                <Link role="menuitem" href="/plan" onClick={() => setOpen(false)} className={accentItemClass}>
+                  See plans
+                </Link>
+              ) : (
+                targets.slice(0, 1).map((t) => (
                   <button
+                    key={t}
                     role="menuitem"
                     type="button"
                     disabled={loading !== null}
                     onClick={() => {
                       setOpen(false);
-                      startCheckout("pro");
+                      upgrade.startUpgrade(t);
                     }}
                     className={`${accentItemClass} disabled:opacity-60`}
                   >
-                    Upgrade to Pro
+                    Upgrade to {upgrade.nameOf(t)}
                   </button>
-                  <button
-                    role="menuitem"
-                    type="button"
-                    disabled={loading !== null}
-                    onClick={() => {
-                      setOpen(false);
-                      startCheckout("business");
-                    }}
-                    className={`${accentItemClass} disabled:opacity-60`}
-                  >
-                    Upgrade to Business
-                  </button>
-                </>
-              )}
-              {!targets.includes("pro") && targets.includes("business") && (
-                <button
-                  role="menuitem"
-                  type="button"
-                  disabled={loading !== null}
-                  onClick={startBusinessUpgrade}
-                  className={`${accentItemClass} disabled:opacity-60`}
-                >
-                  Upgrade to Business
-                </button>
+                ))
               )}
               <div className="my-1 border-t border-rule" role="separator" />
             </div>

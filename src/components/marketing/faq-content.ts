@@ -1,4 +1,4 @@
-import { PLANS, SITE_PACKS } from "@/lib/plans";
+import { CUSTOM, CUSTOM_MAX_SITES, CUSTOM_MIN_SITES, PLANS } from "@/lib/plans";
 import { byCadence, UPTIME_EVERY } from "@/lib/monitor/config";
 import { HEARTBEATS, HEARTBEAT_LIMIT } from "@/lib/heartbeats/config";
 import { CHANNEL_LIMIT, STATUS_PAGE_LIMIT } from "@/lib/features/limits";
@@ -17,24 +17,32 @@ export const faqs = [
     ),
   },
   {
-    q: "What’s free vs Pro vs Business?",
-    a: `Free monitors ${PLANS.free.siteLimit} site. Pro covers up to ${PLANS.pro.siteLimit} sites. Business covers up to ${PLANS.business.siteLimit} sites. Pay monthly, or yearly for 2 months free; prices in USD are on the Pricing page. On Pro or Business, add optional site packs from the dashboard — they join your existing subscription.`,
+    q: "What do Starter, Pro, Business and Custom include?",
+    a: `Every plan checks uptime, SSL certificates and domain expiry on every site, with the same dashboard, alerts, status pages, weekly report, expiry calendar and badges. The difference is how many sites: Starter ${PLANS.starter.siteLimit} sites for $${PLANS.starter.price}/month, Pro ${PLANS.pro.siteLimit} for $${PLANS.pro.price}, Business ${PLANS.business.siteLimit} for $${PLANS.business.price}, and Custom ${CUSTOM_MIN_SITES} to ${CUSTOM_MAX_SITES}. Bigger plans also get more alert channels, status pages and cron job monitors. Pay monthly, or yearly for 2 months free. Prices are in USD, before tax.`,
   },
   {
-    q: "What if I need more than 10 or 50 sites?",
-    a: `On Pro, add optional +${SITE_PACKS.pro.sitesPerPack} site packs (up to ${PLANS.pro.siteLimit + SITE_PACKS.pro.maxPacks * SITE_PACKS.pro.sitesPerPack} sites), then upgrade to Business. On Business, add +${SITE_PACKS.business.sitesPerPack} packs (up to ${PLANS.business.siteLimit + SITE_PACKS.business.maxPacks * SITE_PACKS.business.sitesPerPack} sites). Packs join your existing subscription and bill the same way, monthly or yearly. When you add a pack, the unused part of your current period is credited, the new total is charged right away, and your billing date moves to that day. You can remove packs anytime, and the removal takes effect at your next renewal. You keep the additional capacity until the end of the period you've paid for. Need more than that? Send us a message from the Contact page for a custom limit.`,
+    q: "Which plans have a free trial?",
+    a: `Starter only. It's free for 30 days and needs a payment method; nothing is charged until the trial ends, and we email you 7 days and 2 days before. Cancel before then and you're never charged. One trial per customer. Pro, Business and Custom are charged when you subscribe. If you upgrade during the Starter trial, the trial ends and the new plan's full price is charged that day.`,
+  },
+  {
+    q: "Is there a free plan?",
+    a: `Not for new accounts. Accounts created before our paid plans started keep their Free plan (${PLANS.free.siteLimit} site) for life. Our free tools, like the website down checker and SSL checker, stay free for everyone without an account.`,
+  },
+  {
+    q: "What if I need more than 100 sites?",
+    a: `Choose Custom: it's Business plus $${CUSTOM.blockPrice}/month ($${CUSTOM.blockPrice * 10}/year) for every ${CUSTOM.blockSites} extra sites, from ${CUSTOM_MIN_SITES} up to ${CUSTOM_MAX_SITES} (for example 200 sites for $44/month, 500 for $104/month). The first 100 sites are checked every minute and the rest every 3 minutes. Grow anytime from Your plan: the bigger size starts right away, with the unused part of your current period credited. A smaller size takes effect at your next renewal. Need more than ${CUSTOM_MAX_SITES}? Contact us.`,
   },
   ...(HEARTBEATS
     ? [
         {
           q: "Can you monitor cron jobs and scheduled tasks?",
-          a: `Yes, with heartbeats. Each one gets a secret ping URL; add one curl or wget line to the end of your job and we expect a ping every 5 minutes, 15 minutes, hour, day or week, plus a grace time you choose. If a ping doesn't arrive in time we email you (and any alert channels you connected), and again when pings resume. We look for missed pings every minute. Free includes ${HEARTBEAT_LIMIT.free} heartbeat (hourly or slower), Pro ${HEARTBEAT_LIMIT.pro} and Business ${HEARTBEAT_LIMIT.business}.`,
+          a: `Yes, with heartbeats. Each one gets a secret ping URL; add one curl or wget line to the end of your job and we expect a ping every 5 minutes, 15 minutes, hour, day or week, plus a grace time you choose. If a ping doesn't arrive in time we email you (and any alert channels you connected), and again when pings resume. We look for missed pings every minute. Starter includes ${HEARTBEAT_LIMIT.starter} heartbeats, Pro ${HEARTBEAT_LIMIT.pro} and Business ${HEARTBEAT_LIMIT.business}.`,
         },
       ]
     : []),
   {
     q: "Can I give my customers a public status page?",
-    a: `Yes. Pick the sites to show and publish a page at websiteswithpunch.com/status/your-name with current status and 90 days of daily uptime. It works in light and dark mode and on phones, and you can unpublish it anytime. Free includes ${STATUS_PAGE_LIMIT.free} status page, Pro ${STATUS_PAGE_LIMIT.pro} and Business ${STATUS_PAGE_LIMIT.business}. Custom domains aren't supported yet.`,
+    a: `Yes. Pick the sites to show and publish a page at websiteswithpunch.com/status/your-name with current status and 90 days of daily uptime. It works in light and dark mode and on phones, and you can unpublish it anytime. Starter includes ${STATUS_PAGE_LIMIT.starter} status page, Pro ${STATUS_PAGE_LIMIT.pro} and Business ${STATUS_PAGE_LIMIT.business}. Custom domains aren't supported yet.`,
   },
   {
     q: "What's in the weekly report?",
@@ -54,7 +62,7 @@ export const faqs = [
   },
   {
     q: "Do I need a card to start?",
-    a: "No. Create an account, add one URL, and use the free plan. Upgrade when you need more sites — secure checkout appears only when you’re ready to pay.",
+    a: "Yes. Every new account picks a plan at sign-up and pays through Dodo Payments, our merchant of record. For the Starter trial your payment method is checked but not charged for 30 days.",
   },
   {
     q: "How accurate is domain expiry?",
@@ -63,8 +71,8 @@ export const faqs = [
   {
     q: "Do you send alerts?",
     a: byCadence(
-      `Yes, by email, and also to Slack, Discord, Telegram or a signed webhook if you connect them (Free includes ${CHANNEL_LIMIT.free} channels, Pro ${CHANNEL_LIMIT.pro}, Business ${CHANNEL_LIMIT.business}). When a confirmed check finds a site down we email you once (and again when it recovers), usually within a few minutes, and we email 30, 7 and 1 day before an SSL certificate or domain expires. Choose which sites and events each channel gets, send a test message, and turn email alerts off under Alerts & integrations in your dashboard.`,
-      `Yes, by email, and also to Slack, Discord, Telegram or a signed webhook if you connect them (Free includes ${CHANNEL_LIMIT.free} channels, Pro ${CHANNEL_LIMIT.pro}, Business ${CHANNEL_LIMIT.business}). When a check finds a site down we email you once (and again when it recovers), and we email 30, 7 and 1 day before an SSL certificate or domain expires. Checks run daily and whenever you press Recheck, so alerts aren't real-time. Choose which sites and events each channel gets, send a test message, and turn email alerts off under Alerts & integrations in your dashboard.`,
+      `Yes, by email, and also to Slack, Discord, Telegram or a signed webhook if you connect them (Starter includes ${CHANNEL_LIMIT.starter} channels, Pro ${CHANNEL_LIMIT.pro}, Business ${CHANNEL_LIMIT.business}). When a confirmed check finds a site down we email you once (and again when it recovers), usually within a few minutes, and we email 30, 7 and 1 day before an SSL certificate or domain expires. Choose which sites and events each channel gets, send a test message, and turn email alerts off under Alerts & integrations in your dashboard.`,
+      `Yes, by email, and also to Slack, Discord, Telegram or a signed webhook if you connect them (Starter includes ${CHANNEL_LIMIT.starter} channels, Pro ${CHANNEL_LIMIT.pro}, Business ${CHANNEL_LIMIT.business}). When a check finds a site down we email you once (and again when it recovers), and we email 30, 7 and 1 day before an SSL certificate or domain expires. Checks run daily and whenever you press Recheck, so alerts aren't real-time. Choose which sites and events each channel gets, send a test message, and turn email alerts off under Alerts & integrations in your dashboard.`,
     ),
   },
   {
@@ -77,10 +85,10 @@ export const faqs = [
   },
   {
     q: "Can I cancel anytime?",
-    a: "Yes. Paid plans renew automatically each month or year, depending on the billing period you choose. You can cancel from Your plan on the dashboard or through Manage billing. When you cancel, your current plan remains active until the end of the billing period you've already paid for. After that, your account moves to the Free plan. Nothing is deleted — sites beyond the Free plan limit are locked.",
+    a: "Yes. Paid plans renew automatically each month or year, depending on the billing period you choose. You can cancel from Your plan on the dashboard or through Manage billing. When you cancel, your current plan remains active until the end of the billing period you've already paid for. After that, monitoring pauses (accounts from before paid plans go back to their Free site). Nothing is deleted, and picking a plan again turns everything back on. Cancelling during the Starter trial means you're never charged.",
   },
   {
     q: "Do you offer refunds?",
-    a: "Payments are non-refundable, including after you cancel. When you cancel, downgrade, remove a site pack, or switch from annual to monthly billing, no refund or credit is provided for the remaining time in the current billing period. You keep your current plan and capacity until the end of the period you've paid for, and the change takes effect at renewal. Upgrades take effect immediately and are charged on a prorated basis, with unused time credited. The only exceptions (duplicate charges, billing errors, or a paid plan we couldn't provide) are set out in our Refund & Cancellation Policy, linked in the footer.",
+    a: "Payments are non-refundable, including after you cancel. When you cancel, downgrade, choose a smaller Custom size, or switch from annual to monthly billing, no refund or credit is provided for the remaining time in the current billing period. You keep your current plan and capacity until the end of the period you've paid for, and the change takes effect at renewal. Upgrades take effect immediately and are charged on a prorated basis, with unused time credited (upgrading during the Starter trial ends the trial and charges the new plan in full). The only exceptions (duplicate charges, billing errors, or a paid plan we couldn't provide) are set out in our Refund & Cancellation Policy, linked in the footer.",
   },
 ];

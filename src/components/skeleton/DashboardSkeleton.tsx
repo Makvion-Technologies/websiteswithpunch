@@ -5,7 +5,7 @@ import { useLayoutShape } from "./shape";
 import { LockedSiteCardSkeleton, SiteCardSkeleton } from "./SiteCardSkeleton";
 import { AnalyticsSectionSkeleton } from "./AnalyticsSkeleton";
 
-const PLAN_NAME = { free: "Free", pro: "Pro", business: "Business" } as const;
+const PLAN_NAME = { free: "Free", starter: "Starter", pro: "Pro", business: "Business" } as const;
 const HEAD_BTN = "px-4 py-2 text-sm font-medium";
 
 /** Mirrors the Monitors page: header, one card per site, inline analytics. */

@@ -18,8 +18,8 @@ import { byCadence } from "@/lib/monitor/config";
 
 const title = "Website Uptime Monitoring – SSL & Domain Expiry";
 const description = byCadence(
-  "Uptime checks every minute on Pro and Business, every 5 minutes on Free, plus SSL and domain expiry, on one dashboard. Free for one site, no card needed.",
-  "Monitor website uptime, SSL certificates and domain expiry on one dashboard. Daily checks, with email alerts when a site is down. Free for one site.",
+  "Uptime checked every minute, plus SSL and domain expiry alerts, on one dashboard. From $5/month for 10 sites, with a 30-day free trial on Starter.",
+  "Monitor website uptime, SSL certificates and domain expiry on one dashboard, with email alerts. From $5/month for 10 sites, with a 30-day free trial.",
 );
 
 export const metadata: Metadata = {

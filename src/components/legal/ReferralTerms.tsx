@@ -14,8 +14,9 @@ export function ReferralTerms() {
       <UL>
         <li>
           You earn {ratePercent}% {SCOPE}, calculated on the plan amount excluding tax (sales tax,
-          VAT or GST). When a payment also covers site packs, only the plan part counts; payments for
-          site packs alone, and free accounts, earn nothing. For a prorated upgrade, only the plan
+          VAT or GST). When a payment also covers add-ons (extra Custom sites, or site packs
+          on older subscriptions), only the plan part counts; payments for add-ons alone, and free
+          accounts, earn nothing. For a prorated upgrade, only the plan
           part of the prorated charge counts.
         </li>
         <li>

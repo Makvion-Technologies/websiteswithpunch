@@ -75,7 +75,7 @@ export function GuestMenu() {
             onClick={() => setOpen(false)}
             className="flex min-h-11 items-center px-3 text-sm font-medium text-accent hover:bg-accent-soft focus:bg-accent-soft md:min-h-0 md:py-2"
           >
-            Start free
+            Start free trial
           </Link>
         </div>
       )}

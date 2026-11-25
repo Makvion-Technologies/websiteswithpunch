@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import { NO_INDEX } from "@/lib/site-config";
-import type { PlanId } from "@/lib/plans";
+import { parseChoice } from "@/lib/plan-choice";
 import { parseInterval } from "@/lib/billing-interval";
 import { AuthShell } from "@/components/auth/AuthShell";
 import { SignupForm } from "./signup-form";
@@ -10,36 +10,30 @@ import { PendingSiteNote } from "./PendingSiteNote";
 import { cleanSiteParam } from "@/lib/signup-link";
 
 export const metadata: Metadata = {
-  title: "Create Your Free Account",
+  title: "Start Your Free Trial",
   description:
-    "Create a free Websites With Punch account to monitor website uptime, SSL certificates and domain expiry. One site is free, and no card is required.",
+    "Create your Websites With Punch account and pick a plan to monitor uptime, SSL certificates and domain expiry. Starter is free for 30 days, then $5/month.",
   alternates: { canonical: "/signup" },
   robots: NO_INDEX,
 };
 
-function parsePlan(raw: string | string[] | undefined): PlanId {
-  const v = Array.isArray(raw) ? raw[0] : raw;
-  if (v === "pro" || v === "business") return v;
-  return "free";
-}
-
 export default async function SignupPage(
   props: {
-    searchParams: Promise<{ plan?: string; interval?: string; canceled?: string; site?: string }>;
+    searchParams: Promise<{ plan?: string; sites?: string; interval?: string; canceled?: string; site?: string }>;
   }
 ) {
   const searchParams = await props.searchParams;
   const session = await getSession();
   if (session?.user) redirect("/dashboard");
 
-  const initialPlan = parsePlan(searchParams.plan);
+  const initialChoice = parseChoice(searchParams.plan, searchParams.sites);
   const site = cleanSiteParam(searchParams.site);
 
   return (
     <AuthShell>
       {site ? <PendingSiteNote host={site} /> : null}
       <SignupForm
-        initialPlan={initialPlan}
+        initialChoice={initialChoice}
         initialInterval={parseInterval(searchParams.interval)}
         canceled={searchParams.canceled === "1"}
       />

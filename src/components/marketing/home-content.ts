@@ -5,7 +5,7 @@ export const howSteps = [
   {
     step: "01",
     title: "Add your URL",
-    body: "Paste the site you care about. Free covers one site; paid plans scale with you.",
+    body: "Paste the site you care about. Starter covers 10 sites, and bigger plans scale with you.",
   },
   {
     step: "02",

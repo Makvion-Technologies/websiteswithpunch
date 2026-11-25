@@ -27,7 +27,7 @@ export default async function OverviewPage(props: { searchParams: Promise<Search
 
   const plan = getEffectivePlan(user.plan, user.dodoStatus);
   const packCount = resolvePackCountForLimit(user).packCount;
-  const limit = getUserEffectiveSiteLimit(plan, user.sitePackCount, user.pendingSitePackCount, user.pendingPackChangeAt);
+  const limit = getUserEffectiveSiteLimit(plan, user.sitePackCount, user.pendingSitePackCount, user.pendingPackChangeAt, user.legacyFree);
   const active = sites.filter((s) => !s.locked);
   const atLimit = active.length >= limit;
   const o = await loadOverview(user.id, active, user.weeklyReport, HEARTBEATS);
@@ -45,7 +45,7 @@ export default async function OverviewPage(props: { searchParams: Promise<Search
         actions={<DashboardAddSiteButton atLimit={atLimit} pickUpPending />}
       />
       {searchParams.checkout && (
-        <CheckoutReturn outcome={searchParams.checkout} subscriptionId={searchParams.subscription_id} status={searchParams.status} plan={plan} />
+        <CheckoutReturn outcome={searchParams.checkout} subscriptionId={searchParams.subscription_id} status={searchParams.status} plan={plan} blocks={user.sitePackCount ?? 0} />
       )}
       <DashboardBanners
         showDefaultLockNotice={user.showDefaultLockNotice}

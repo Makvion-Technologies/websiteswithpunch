@@ -1,91 +1,59 @@
 "use client";
 
 import Link from "next/link";
-import { PLANS, SITE_PACKS } from "@/lib/plans";
-import { packPrice, type BillingInterval } from "@/lib/billing-interval";
-
-function CustomLimitLink() {
-  return (
-    <Link href="/contact?topic=custom-limits" className="font-medium underline underline-offset-2">
-      Ask us for a custom limit
-    </Link>
-  );
-}
+import { CUSTOM, CUSTOM_MAX_SITES, HIGHER_PLAN, PLANS, type PaidPlan } from "@/lib/plans";
 
 type Props = {
-  plan: "pro" | "business";
+  plan: PaidPlan;
+  /** Custom blocks today (Business only). */
+  blocks: number;
   atLimit: boolean;
   remaining: number;
-  canBuy: boolean;
-  interval?: BillingInterval;
   loading: boolean;
-  message: string | null;
-  onAdd: () => void;
   onUpgrade: () => void;
+  onResize: () => void;
 };
 
-export function LimitBanners({
-  plan,
-  atLimit,
-  remaining,
-  canBuy,
-  interval = "month",
-  loading,
-  message,
-  onAdd,
-  onUpgrade,
-}: Props) {
-  const pack = SITE_PACKS[plan];
-  const showSoft = !atLimit && remaining <= 2;
-  // Pack price on the subscription's interval: "$6/mo" or "$60/yr".
-  const packCost = `$${packPrice(plan, interval)}/${interval === "year" ? "yr" : "mo"}`;
+/** Near / at the site limit: the next step up (bigger plan, bigger Custom size, or contact us). */
+export function LimitBanners({ plan, blocks, atLimit, remaining, loading, onUpgrade, onResize }: Props) {
+  if (!atLimit && remaining > 2) return null;
+  const next = plan === "business" ? null : HIGHER_PLAN[plan];
+  const canGrow = plan === "business" && blocks < CUSTOM.maxBlocks;
+  const step = next
+    ? `Upgrade to ${PLANS[next].name} for ${PLANS[next].siteLimit} sites.`
+    : canGrow
+      ? `Add 25 more sites for $${CUSTOM.blockPrice}/month with Change size (up to ${CUSTOM_MAX_SITES}).`
+      : null;
+
   return (
-    <>
-      {showSoft && (
-        <div className="mt-3 rounded-none border border-amber-200 bg-amber-50 dark:border-amber-400/30 dark:bg-amber-400/10 px-4 py-3 text-sm text-amber-900 dark:text-amber-100">
-          Only {remaining} site slot{remaining === 1 ? "" : "s"} left on {PLANS[plan].name}.{" "}
-          {canBuy
-            ? `Add a +${pack.sitesPerPack} site pack for ${packCost} when you need more.`
-            : plan === "pro"
-              ? "Upgrade to Business for more capacity."
-              : <>Need more? <CustomLimitLink /></>}
-        </div>
+    <div
+      className={`mt-3 px-4 py-3 text-sm ${
+        atLimit
+          ? "border border-rule bg-accent-soft text-ink"
+          : "border border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-400/30 dark:bg-amber-400/10 dark:text-amber-100"
+      }`}
+    >
+      <p className={atLimit ? "font-medium" : ""}>
+        {atLimit ? "Every site slot is in use." : `Only ${remaining} site slot${remaining === 1 ? "" : "s"} left.`}{" "}
+        {step ?? (
+          <>
+            Need more than {CUSTOM_MAX_SITES}?{" "}
+            <Link href="/contact?topic=custom-limits" className="font-medium underline underline-offset-2">
+              Contact us
+            </Link>
+          </>
+        )}
+      </p>
+      {atLimit && (next || canGrow) && (
+        <button
+          type="button"
+          onClick={next ? onUpgrade : onResize}
+          disabled={loading}
+          className="mt-3 rounded-none bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-hover disabled:opacity-60"
+        >
+          {next ? `Upgrade to ${PLANS[next].name}` : "Change size"}
+        </button>
       )}
-      {atLimit && (
-        <div className="mt-3 rounded-none border border-rule bg-accent-soft px-4 py-4">
-          <p className="text-sm font-medium text-ink">Site limit reached ({PLANS[plan].name})</p>
-          <p className="mt-1 text-sm text-muted">
-            {canBuy
-              ? `Add a +${pack.sitesPerPack} site pack (${packCost}) to your subscription.`
-              : plan === "pro"
-                ? "You've used all Pro packs (30 sites). Upgrade to Business for up to 50 sites plus packs."
-                : <>You&apos;ve used all Business packs (100 sites). <CustomLimitLink /></>}
-          </p>
-          <div className="mt-3 flex flex-wrap items-center gap-2">
-            {canBuy && (
-              <button
-                type="button"
-                onClick={onAdd}
-                disabled={loading}
-                className="rounded-none bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-hover disabled:opacity-60"
-              >
-                Buy +{pack.sitesPerPack} sites — {packCost}
-              </button>
-            )}
-            {plan === "pro" && (
-              <button
-                type="button"
-                onClick={onUpgrade}
-                disabled={loading}
-                className="rounded-none border border-rule bg-surface px-4 py-2 text-sm font-medium text-ink hover:bg-surface disabled:opacity-60"
-              >
-                Upgrade to Business
-              </button>
-            )}
-          </div>
-          {message && <p className="mt-2 text-xs text-amber-700 dark:text-amber-300">{message}</p>}
-        </div>
-      )}
-    </>
+    </div>
   );
 }

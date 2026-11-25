@@ -1,5 +1,5 @@
 /**
- * Tax wording, in one place. Catalog prices ($12 / $42 / $120 / $420 and packs) exclude tax;
+ * Tax wording, in one place. Catalog prices (Starter, Pro, Business, Custom blocks) exclude tax;
  * Dodo Payments (merchant of record) calculates any tax, e.g. GST, per customer location.
  * Never show a fixed percentage: Dodo decides the rate.
  */
@@ -8,7 +8,7 @@
 export const TAX_NOTE_CHECKOUT =
   "Prices in USD. Applicable taxes (e.g. GST) are calculated at checkout and shown before you pay.";
 
-/** Charges to the saved card (upgrade, annual switch, extra pack): no checkout page. */
+/** Charges to the saved card (upgrade, annual switch, bigger Custom size): no checkout page. */
 export const TAX_NOTE_SAVED_CARD =
   "Applicable taxes (e.g. GST) are calculated by Dodo Payments. Your receipt shows the exact total charged.";
 

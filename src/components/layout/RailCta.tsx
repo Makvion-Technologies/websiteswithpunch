@@ -8,7 +8,7 @@ export function RailCta({ title = "Monitor your site free", body }: { title?: st
       <p className="mt-2 text-sm leading-relaxed text-muted">{body}</p>
       <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
         <Link href="/signup" className="inline-flex items-center bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-hover">
-          Start free
+          Start free trial
         </Link>
         <Link href="/pricing" className="text-sm text-muted underline-offset-4 hover:text-ink hover:underline">
           See pricing

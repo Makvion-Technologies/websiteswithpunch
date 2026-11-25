@@ -1,22 +1,25 @@
 # Websites With Punch
 
-> Websites With Punch is a website monitor for freelancers, agencies and small businesses. It checks each website you add for uptime and response time every minute (Pro and Business) or every 5 minutes (Free), checks SSL certificate expiry and domain expiry once a day, and shows all three on one dashboard. It also watches cron jobs and scheduled tasks with heartbeat URLs. It is a product by Makvion Technologies.
+> Websites With Punch is a website monitor for freelancers, agencies and small businesses. It checks each website you add for uptime and response time every minute on every paid plan, checks SSL certificate expiry and domain expiry once a day, and shows all three on one dashboard. It also watches cron jobs and scheduled tasks with heartbeat URLs. It is a product by Makvion Technologies.
 
 ## What it does
-- Uptime: an HTTPS request to each site's homepage every minute on Pro and Business and every 5 minutes on Free (following up to 5 redirects) records up/down status, the HTTP status code and the response time. 2xx and 3xx count as up; 4xx and 5xx count as down. A failed check is retried and confirmed from a second location before it is recorded as an outage.
+- Uptime: an HTTPS request to each site's homepage every minute (following up to 5 redirects; on Custom, sites beyond the first 100 every 3 minutes) records up/down status, the HTTP status code and the response time. 2xx and 3xx count as up; 4xx and 5xx count as down. A failed check is retried and confirmed from a second location before it is recorded as an outage.
 - SSL certificate expiry: reads the live certificate on port 443 daily and shows the days left (amber at 30 days, red at 7).
 - Domain expiry: looks up the registrable domain's expiry date daily over RDAP, with a WHOIS fallback, and shows the days left (amber at 30 days, red at 7). Best effort: some country-code registries don't publish expiry dates.
 - On demand: any site can be rechecked from its page (once a minute per site), and an opt-in auto refresh rechecks every 60 seconds while the page is open.
 - History: up to 90 days of checks per site, with response-time charts (24 hours, 7 days, 30 days, all), uptime percentage, last downtime and a Health Score.
-- Heartbeats (cron job monitoring): each heartbeat has a secret ping URL that accepts GET, POST or HEAD (curl, wget). The user picks an expected period (5 minutes, 15 minutes, 1 hour, 1 day or 1 week) and a grace time. Missed pings are looked for every minute; when period plus grace passes without a ping we email once, and again when pings resume. Free: 1 heartbeat, hourly or slower. Pro: 10. Business: 50.
-- Alerts: an email when a confirmed check finds a site down and again when it recovers, when a heartbeat misses its ping and when it resumes, and 30, 7 and 1 day before an SSL certificate or domain expires.
-- Not included: no SMS or chat alerts, no public status pages, and no multi-region monitoring (a second location is only used to confirm a failure).
+- Heartbeats (cron job monitoring): each heartbeat has a secret ping URL that accepts GET, POST or HEAD (curl, wget). The user picks an expected period (5 minutes, 15 minutes, 1 hour, 1 day or 1 week) and a grace time. Missed pings are looked for every minute; when period plus grace passes without a ping we email once, and again when pings resume. Starter: 5. Pro: 30. Business and Custom: 100.
+- Alerts: an email when a confirmed check finds a site down and again when it recovers, when a heartbeat misses its ping and when it resumes, and 30, 7 and 1 day before an SSL certificate or domain expires. The same alerts can also go to Slack, Discord, Telegram or a webhook (Starter: 5 channels, Pro: 10, Business: 25).
+- Public status pages (Starter: 1, Pro: 5, Business: 20), a weekly email report, an expiry calendar of SSL and domain renewals, and uptime badges to embed on a site.
+- Not included: no SMS or phone-call alerts, and no multi-region monitoring (a second location is only used to confirm a failure).
 
-## Pricing (USD)
-- Free: 1 site and 1 heartbeat, $0.
-- Pro: up to 10 sites and 10 heartbeats, $12/month or $120/year; optional +5 site packs ($6/month each, up to 30 sites).
-- Business: up to 50 sites and 50 heartbeats, $42/month or $420/year; optional +10 site packs ($9/month each, up to 100 sites).
-- Yearly billing gives 2 months free. No card needed for the Free plan.
+## Pricing (USD, plus tax)
+- Starter: up to 10 sites, $5/month or $50/year. 30-day free trial (card required); the only plan with a trial.
+- Pro (most popular): up to 30 sites, $12/month or $120/year.
+- Business: up to 100 sites, $24/month or $240/year.
+- Custom: Business plus extra sites in blocks of 25 at $5/month ($50/year) each, from 125 to 500 sites (for example 200 sites for $44/month). More than 500 sites: contact us.
+- Yearly billing is 10 times the monthly price (2 months free). There is no free plan for new accounts; accounts created before paid-only pricing keep their free 1-site plan.
+- Full details: https://www.websiteswithpunch.com/pricing
 
 ## Free tools (no signup)
 - [SSL checker](https://www.websiteswithpunch.com/tools/ssl-checker): issuer, expiry date, days left, covered hostnames and browser trust for any public domain.
@@ -46,7 +49,7 @@
 - [SSL certificate monitoring](https://www.websiteswithpunch.com/ssl-certificate-monitoring)
 - [Domain expiry monitoring](https://www.websiteswithpunch.com/domain-expiry-monitoring)
 - [Cron job monitoring (heartbeats)](https://www.websiteswithpunch.com/cron-job-monitoring)
-- [Pricing](https://www.websiteswithpunch.com/#pricing)
+- [Pricing](https://www.websiteswithpunch.com/pricing)
 - [FAQ](https://www.websiteswithpunch.com/#faq)
 - [Contact](https://www.websiteswithpunch.com/contact)
 - [Terms](https://www.websiteswithpunch.com/terms)

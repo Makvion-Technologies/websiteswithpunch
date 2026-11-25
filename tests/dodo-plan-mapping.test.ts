@@ -32,8 +32,9 @@ test("an unknown product maps to no plan (sync ignores it, never downgrades)", (
 });
 
 
-test("upgrade buttons: Free → Pro + Business, Pro → Business, Business → none", () => {
-  assert.deepEqual(upgradeTargets("free"), ["pro", "business"]);
+test("upgrade buttons: Free → all paid plans, Starter → Pro + Business, Pro → Business, Business → none", () => {
+  assert.deepEqual(upgradeTargets("free"), ["starter", "pro", "business"]);
+  assert.deepEqual(upgradeTargets("starter"), ["pro", "business"]);
   assert.deepEqual(upgradeTargets("pro"), ["business"]);
   assert.deepEqual(upgradeTargets("business"), []);
   assert.deepEqual(upgradeTargets(null), []);

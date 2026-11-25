@@ -6,7 +6,7 @@ import { signupHref } from "@/lib/signup-link";
 import { FREE_TRUST } from "./StartCta";
 
 /**
- * "Get alerts free" under a one-off check: signup link with the site carried in ?site=, and the
+ * "Start free trial" under a one-off check: signup link with the site carried in ?site=, and the
  * site remembered in this browser so the dashboard opens it ready to add after signup.
  */
 export function AlertsCta({ host, lead }: { host: string; lead?: string }) {
@@ -21,7 +21,7 @@ export function AlertsCta({ host, lead }: { host: string; lead?: string }) {
         onClick={() => rememberPendingSite({ name: host, url: `https://${host}` })}
         className="inline-flex shrink-0 justify-center bg-accent px-5 py-2.5 text-sm font-semibold text-white hover:bg-accent-hover"
       >
-        Get alerts free
+        Start free trial
       </Link>
     </div>
   );

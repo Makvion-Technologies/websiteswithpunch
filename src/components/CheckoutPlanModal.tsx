@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { BillingIntervalToggle } from "@/components/BillingIntervalToggle";
+import { CustomSizeSlider } from "@/components/CustomSizeSlider";
 import {
   ModalShell,
   NoRefundNote,
@@ -9,81 +10,87 @@ import {
   secondaryBtn,
   useEscapeClose,
 } from "@/components/billing/modal-bits";
-import { PLANS } from "@/lib/plans";
 import { TAX_NOTE_CHECKOUT } from "@/lib/tax-copy";
+import { periodWord, type BillingInterval } from "@/lib/billing-interval";
 import {
-  ANNUAL_PRICES,
-  formatPlanPrice,
-  perMonthPrice,
-  periodWord,
-  type BillingInterval,
-} from "@/lib/billing-interval";
+  TRIAL_DAYS,
+  choiceName,
+  choicePerMonth,
+  choicePrice,
+  choicePriceLabel,
+  choiceSites,
+  hasTrial,
+  type PlanChoice,
+} from "@/lib/plan-choice";
 
 type Props = {
   /** Plan being bought (new subscription → Dodo Payments checkout); null = closed. */
-  planId: "pro" | "business" | null;
+  choice: PlanChoice | null;
   loading: boolean;
   message: string | null;
+  /** The account already had a Starter trial: Starter is charged today. */
+  trialUsed?: boolean;
+  onChange?: (c: PlanChoice) => void;
   onClose: () => void;
   onConfirm: (interval: BillingInterval) => void;
 };
 
-/** Free → Pro / Business: pick Monthly or Annual, then continue to Dodo Payments checkout. */
-export function CheckoutPlanModal({ planId, loading, message, onClose, onConfirm }: Props) {
+/** No subscription → Starter / Pro / Business / Custom: pick Monthly or Annual, then Dodo checkout. */
+export function CheckoutPlanModal({ choice, loading, message, trialUsed, onChange, onClose, onConfirm }: Props) {
   const [interval, setBilling] = useState<BillingInterval>("month");
-  const open = planId !== null;
+  const open = choice !== null;
 
   useEffect(() => {
     if (open) setBilling("month");
   }, [open]);
 
   useEscapeClose(open, onClose);
-  if (!planId) return null;
+  if (!choice) return null;
 
-  const plan = PLANS[planId];
   const yearly = interval === "year";
+  const trial = hasTrial(choice) && !trialUsed;
+  const price = choicePriceLabel(choice, interval);
 
   return (
     <ModalShell titleId="checkout-plan-title" onClose={onClose}>
       <h2 id="checkout-plan-title" className="font-display text-xl font-medium text-ink">
-        Upgrade to {plan.name}
+        {trial ? "Start your 30-day free trial" : `Get ${choiceName(choice)}`}
       </h2>
-      <BillingIntervalToggle
-        value={interval}
-        onChange={setBilling}
-        disabled={loading}
-        className="mt-4"
-      />
+      <BillingIntervalToggle value={interval} onChange={setBilling} disabled={loading} className="mt-4" />
+
+      {choice.id === "custom" && onChange && (
+        <div className="mt-4">
+          <CustomSizeSlider blocks={choice.blocks} interval={interval} disabled={loading} onChange={(blocks) => onChange({ id: "custom", blocks })} />
+        </div>
+      )}
 
       <div className="mt-4 space-y-3">
         <p className="font-display text-2xl font-medium text-ink">
-          {formatPlanPrice(planId, interval)}
+          {trial ? `$0 today, then ${price}` : price}
         </p>
         <p className="text-sm leading-relaxed text-muted">
           {yearly
-            ? `One payment a year, which works out to $${perMonthPrice(planId, "year")} a month. That's 2 months free compared with paying monthly ($${plan.price * 12} a year).`
-            : `One payment a month. Choose Annual to get 2 months free ($${ANNUAL_PRICES[planId]} a year).`}
+            ? `One payment a year, which works out to ${choicePerMonth(choice, "year")} a month. That's 2 months free compared with paying monthly ($${choicePrice(choice, "month") * 12} a year).`
+            : `One payment a month. Choose Annual to get 2 months free ($${choicePrice(choice, "year")} a year).`}
         </p>
         <p className="text-sm leading-relaxed text-muted">
-          Up to {plan.siteLimit} sites. Cancel anytime and you keep {plan.name} until the end of
-          the {periodWord(interval)} you&apos;ve paid for.
+          {trial
+            ? `Up to ${choiceSites(choice)} sites. Your card is checked but not charged today. After ${TRIAL_DAYS} days you're charged ${price} unless you cancel first from Your plan. We email you 7 and 2 days before.`
+            : `Up to ${choiceSites(choice)} sites. Cancel anytime and you keep your plan until the end of the ${periodWord(interval)} you've paid for.`}
         </p>
+        {hasTrial(choice) && trialUsed && (
+          <p className="text-sm text-muted">This account already had its free trial, so Starter is charged today.</p>
+        )}
         <p className="text-xs text-muted">
-          Next you&apos;ll pay on the secure Dodo Payments checkout (our merchant of record). Nothing
-          is charged until you confirm there. {TAX_NOTE_CHECKOUT}
+          Next you&apos;ll {trial ? "add a card" : "pay"} on the secure Dodo Payments checkout (our merchant of record). {TAX_NOTE_CHECKOUT}
         </p>
         <NoRefundNote />
       </div>
 
       {message && <p className="mt-3 text-sm text-danger">{message}</p>}
       <div className="mt-5 flex flex-wrap gap-3">
-        <button
-          type="button"
-          onClick={() => onConfirm(interval)}
-          disabled={loading}
-          className={primaryBtn}
-        >
-          {loading ? "Redirecting…" : "Continue to payment"}
+        <button type="button" onClick={() => onConfirm(interval)} disabled={loading} className={primaryBtn}>
+          {loading ? "Redirecting…" : trial ? "Start free trial" : "Continue to payment"}
         </button>
         <button type="button" onClick={onClose} disabled={loading} className={secondaryBtn}>
           Cancel

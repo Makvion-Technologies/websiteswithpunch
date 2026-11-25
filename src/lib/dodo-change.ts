@@ -1,16 +1,20 @@
 /**
- * Plan / pack / interval changes on the one Dodo subscription (Change Plan API).
- * - Upgrades and added packs apply now: `prorated_immediately` credits the unused part of the
- *   current cycle and charges the new cycle (Dodo starts a new cycle on the change date).
+ * Plan / size / interval changes on the one Dodo subscription (Change Plan API).
+ * - Upgrades and bigger Custom sizes apply now: `prorated_immediately` credits the unused part
+ *   of the current cycle and charges the new cycle (Dodo starts a new cycle on the change date).
  *   `prevent_change` keeps the current plan if that charge fails, so nothing is lost.
- * - Downgrades, pack removals and annual → monthly are booked for the renewal date
+ * - Upgrading out of the Starter free trial ("trial" below) uses `full_immediately`: the trial
+ *   ends and the full new price is charged today (the $0 trial has nothing to credit, and
+ *   `do_not_bill` would keep the trial running). `prevent_change` keeps the trial if it fails.
+ * - Downgrades, smaller Custom sizes and annual → monthly are booked for the renewal date
  *   (`next_billing_date`, which Dodo requires to pair with `full_immediately`): nothing is
  *   charged, refunded or credited now; the renewal bills the new plan in full.
  * A Dodo subscription holds one booked change, so a new booking replaces the old one.
+ * `packs` in ChangeTarget = Custom extra 25-site blocks (Business only).
  */
 import type DodoPayments from "dodopayments";
 import type { BillingInterval, PaidPlanId } from "./billing-interval";
-import { missingCatalogMessage, packAddonIdFor, productIdFor } from "./dodo-products";
+import { extraAddonIdFor, missingCatalogMessage, productIdFor } from "./dodo-products";
 import { subscriptionState, type SubscriptionState } from "./dodo-subscription";
 import { syncSubscription } from "./dodo-sync";
 
@@ -20,15 +24,15 @@ type ChangeBody = DodoPayments.SubscriptionChangePlanParams;
 /** Change Plan body for a target, or a config error naming the missing env var. */
 export function changeBody(
   target: ChangeTarget,
-  when: "now" | "renewal",
+  when: "now" | "renewal" | "trial",
   st: SubscriptionState,
 ): { ok: true; body: ChangeBody } | { ok: false; error: string } {
   const productId = productIdFor(target.plan, target.interval);
   if (!productId) return { ok: false, error: missingCatalogMessage("plan", target.plan, target.interval) };
   const addons: ChangeBody["addons"] = [];
-  if (target.packs > 0) {
-    const addonId = packAddonIdFor(target.plan, target.interval);
-    if (!addonId) return { ok: false, error: missingCatalogMessage("pack", target.plan, target.interval) };
+  if (target.plan === "business" && target.packs > 0) {
+    const addonId = extraAddonIdFor(target.interval);
+    if (!addonId) return { ok: false, error: missingCatalogMessage("extra", target.plan, target.interval) };
     addons.push({ addon_id: addonId, quantity: target.packs });
   }
   const body: ChangeBody = {
@@ -41,12 +45,20 @@ export function changeBody(
           effective_at: "immediately",
           on_payment_failure: "prevent_change",
         }
-      : // Dodo only accepts full_immediately with next_billing_date. A booked change charges
-        // nothing now; at renewal the subscription simply bills the new plan in full.
-        { proration_billing_mode: "full_immediately", effective_at: "next_billing_date" }),
+      : when === "trial"
+        ? // Ends the free trial: full new price today, new cycle from today, trial kept on failure.
+          { proration_billing_mode: "full_immediately", effective_at: "immediately", on_payment_failure: "prevent_change" }
+        : // Dodo only accepts full_immediately with next_billing_date. A booked change charges
+          // nothing now; at renewal the subscription simply bills the new plan in full.
+          { proration_billing_mode: "full_immediately", effective_at: "next_billing_date" }),
     ...(st.scheduled ? { cancel_scheduled_change_plan: true } : {}),
   };
   return { ok: true, body };
+}
+
+/** "now", or "trial" while the Starter free trial runs (upgrades then end the trial). */
+export function upgradeMode(st: Pick<SubscriptionState, "trialEndsAt">): "now" | "trial" {
+  return st.trialEndsAt ? "trial" : "now";
 }
 
 /** Preview body: the same request minus fields the preview route ignores. */

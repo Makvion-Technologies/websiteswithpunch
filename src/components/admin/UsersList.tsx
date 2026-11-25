@@ -2,13 +2,14 @@ import Link from "next/link";
 import { countryName } from "@/lib/activity/geo";
 import { ago } from "@/lib/activity/status";
 import type { UserRow } from "@/lib/admin/users-query";
+import { PLAN_BUCKET_LABEL, planBucketOf } from "@/lib/admin/plan-mix";
 import { ActivityDot } from "./ActivityDot";
 import { Badge, NewDot, fmtDate } from "./ui";
 
 const place = (u: UserRow) => [u.lastCity, countryName(u.lastCountry)].filter(Boolean).join(", ") || "—";
 const PlanBadge = ({ u }: { u: UserRow }) => (
   <Badge tone={u.plan === "free" ? "muted" : u.dodoStatus === "past_due" || u.dodoStatus === "on_hold" ? "danger" : "accent"}>
-    {u.plan}{u.cancelAtPeriodEnd ? " · cancelling" : ""}
+    {PLAN_BUCKET_LABEL[planBucketOf(u)]}{u.cancelAtPeriodEnd ? " · cancelling" : ""}
   </Badge>
 );
 const th = "whitespace-nowrap px-4 py-2.5 text-xs font-medium text-muted";

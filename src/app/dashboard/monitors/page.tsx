@@ -3,7 +3,7 @@ import { getSession } from "@/lib/auth";
 import {
   getEffectivePlan,
   getUserEffectiveSiteLimit,
-  PLANS,
+  planDisplayName,
   resolvePackCountForLimit,
 } from "@/lib/plans";
 import { SiteCard } from "@/components/SiteCard";
@@ -48,6 +48,7 @@ export default async function MonitorsPage(
     user.sitePackCount,
     user.pendingSitePackCount,
     user.pendingPackChangeAt,
+    user.legacyFree,
   );
 
   const activeSites = sitesRaw.filter((s) => !s.locked);
@@ -56,7 +57,7 @@ export default async function MonitorsPage(
   const remaining = Math.max(0, limit - activeSites.length);
   const canUnlock = remaining > 0;
   const showInlineAnalytics = activeSites.length === 1 && lockedSites.length === 0;
-  const planLabel = PLANS[plan].name;
+  const planLabel = planDisplayName(plan, packCount, user.legacyFree);
 
   const clientSites = sitesRaw.map(toDashboardSite);
 

@@ -3,6 +3,7 @@ import {
   getEffectivePlan,
   getEffectiveSiteLimit,
   getUserEffectiveSiteLimit,
+  isPaidPlanId,
   resolvePackCountForLimit,
   type PlanId,
 } from "@/lib/plans";
@@ -27,6 +28,7 @@ export function pendingTargetLimit(user: {
   pendingPackChangeAt: Date | null;
   pendingPlan: string | null;
   pendingPlanAt: Date | null;
+  legacyFree?: boolean;
 }): number | null {
   const hasPackPending =
     user.pendingSitePackCount != null &&
@@ -39,16 +41,13 @@ export function pendingTargetLimit(user: {
   let packs = user.sitePackCount ?? 0;
 
   if (hasPlanPending && user.pendingPlan) {
-    plan = (user.pendingPlan === "pro" || user.pendingPlan === "business"
-      ? user.pendingPlan
-      : "free") as PlanId;
-    if (plan === "free") packs = 0;
-    else if (plan === "pro" && user.plan === "business") packs = 0;
+    plan = (isPaidPlanId(user.pendingPlan) ? user.pendingPlan : "free") as PlanId;
+    if (plan !== "business") packs = 0;
   }
   if (hasPackPending) {
     packs = user.pendingSitePackCount ?? 0;
   }
-  return getEffectiveSiteLimit(plan, packs);
+  return getEffectiveSiteLimit(plan, packs, user.legacyFree ?? true);
 }
 
 export function currentEffectiveLimit(user: {
@@ -57,6 +56,7 @@ export function currentEffectiveLimit(user: {
   sitePackCount: number;
   pendingSitePackCount: number | null;
   pendingPackChangeAt: Date | null;
+  legacyFree?: boolean;
 }): number {
   const plan = getEffectivePlan(user.plan, user.dodoStatus);
   return getUserEffectiveSiteLimit(
@@ -64,6 +64,7 @@ export function currentEffectiveLimit(user: {
     user.sitePackCount,
     user.pendingSitePackCount,
     user.pendingPackChangeAt,
+    user.legacyFree ?? true,
   );
 }
 
@@ -101,15 +102,11 @@ export async function applyDuePendingAndEnforce(userId: string): Promise<Enforce
 
   if (user.pendingPlan && user.pendingPlanAt && now >= user.pendingPlanAt) {
     const next = user.pendingPlan;
-    data.plan = next === "pro" || next === "business" ? next : "free";
+    data.plan = isPaidPlanId(next) ? next : "free";
     data.pendingPlan = null;
     data.pendingPlanAt = null;
     data.cancelAtPeriodEnd = false;
-    if (data.plan === "free") {
-      data.sitePackCount = 0;
-      data.pendingSitePackCount = null;
-      data.pendingPackChangeAt = null;
-    } else if (data.plan === "pro" && user.plan === "business") {
+    if (data.plan !== "business") {
       data.sitePackCount = 0;
       data.pendingSitePackCount = null;
       data.pendingPackChangeAt = null;

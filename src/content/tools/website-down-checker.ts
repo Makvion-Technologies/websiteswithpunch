@@ -84,7 +84,7 @@ export const downChecker = {
     },
   ] satisfies Faq[],
   cta: byCadence(
-    `Add the site and we check its uptime ${UPTIME_EVERY}, record the status and response time, and keep the history on your dashboard. A failure is confirmed from a second location before we email you, and again when it's back. Free for one site, no card needed.`,
-    "Add the site and we check it every day, record the status and response time, and keep the history on your dashboard. Recheck on demand, or turn on auto refresh while you're fixing something. Free for one site, no card needed. (Email alerts when a check finds it down. Checks are daily, not real-time.)",
+    `Add the site and we check its uptime ${UPTIME_EVERY}, record the status and response time, and keep the history on your dashboard. A failure is confirmed from a second location before we email you, and again when it's back. From $5/month for 10 sites, with a 30-day free trial.`,
+    "Add the site and we check it every day, record the status and response time, and keep the history on your dashboard. Recheck on demand, or turn on auto refresh while you're fixing something. From $5/month for 10 sites, with a 30-day free trial. (Email alerts when a check finds it down. Checks are daily, not real-time.)",
   ),
 };

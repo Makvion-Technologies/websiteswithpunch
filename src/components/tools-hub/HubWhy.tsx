@@ -38,16 +38,16 @@ export function HubWhy() {
       <section className="border-b border-rule bg-bg">
         <div className="mx-auto grid max-w-6xl gap-10 px-4 py-20 sm:px-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-16">
           <div>
-            <h2 className="font-display text-3xl font-medium text-ink sm:text-4xl">{byCadence("Monitor it around the clock for free", "Monitor it daily for free")}</h2>
+            <h2 className="font-display text-3xl font-medium text-ink sm:text-4xl">{byCadence("Monitor it around the clock, free for 30 days", "Monitor it daily, free for 30 days")}</h2>
             <p className="mt-4 max-w-lg text-muted">
               {byCadence(
-                "The tools answer once. Add a site to Websites With Punch and uptime is checked every few minutes (every minute on Pro and Business), with SSL and domain expiry checked daily, side by side on one dashboard. We email you when a confirmed check finds it down. Free for one site, no card needed.",
-                "The tools answer once. Add a site to Websites With Punch and the same three checks run every day, with uptime, SSL days left and domain days left side by side on one dashboard. We email you when a check finds it down. Free for one site, no card needed.",
+                "The tools answer once. Add a site to Websites With Punch and uptime is checked every few minutes (every minute on every paid plan), with SSL and domain expiry checked daily, side by side on one dashboard. We email you when a confirmed check finds it down. From $5/month for 10 sites, with a 30-day free trial.",
+                "The tools answer once. Add a site to Websites With Punch and the same three checks run every day, with uptime, SSL days left and domain days left side by side on one dashboard. We email you when a check finds it down. From $5/month for 10 sites, with a 30-day free trial.",
               )}
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Link href="/signup" className="bg-accent px-6 py-3 text-sm font-semibold text-white hover:bg-accent-hover">
-                Start free
+                Start free trial
               </Link>
               <Link href="/pricing" className="border border-rule bg-surface px-6 py-3 text-sm font-semibold text-ink hover:bg-accent-soft">
                 See pricing

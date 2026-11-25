@@ -47,6 +47,7 @@ export function userOrder(sort: UserSort): Prisma.UserOrderByWithRelationInput[]
 
 export const USER_ROW_SELECT = {
   id: true, email: true, name: true, plan: true, dodoStatus: true, cancelAtPeriodEnd: true, createdAt: true,
+  sitePackCount: true, legacyFree: true, trialEndsAt: true, trialConvertedAt: true,
   lastActiveAt: true, lastLoginAt: true, lastCountry: true, lastCity: true, lastDevice: true, signupSource: true,
   _count: { select: { sites: true } },
 } satisfies Prisma.UserSelect;

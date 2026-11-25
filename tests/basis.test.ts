@@ -37,9 +37,13 @@ test("prorated upgrade uses the prorated plan line, capped at the pre-tax total"
 });
 
 test("fallback: full cycle matches list price; anything else is unmatched (0)", () => {
-  const sub = { plan: "pro" as const, interval: "month" as const, packs: 2 };
-  assert.deepEqual(planBasis({ preTaxCents: 2400, totalCents: 2400, classify, sub }), { planCents: 1200, source: "list-price" });
-  assert.deepEqual(planBasis({ preTaxCents: 1200, totalCents: 1200, classify, sub, items: [{ items_id: "?", amount: 1200 }] }), { planCents: 1200, source: "list-price" });
+  // Custom = Business ($24) + 2 extra 25-site blocks ($5 each): only the plan part counts.
+  const sub = { plan: "business" as const, interval: "month" as const, packs: 2 };
+  assert.deepEqual(planBasis({ preTaxCents: 3400, totalCents: 3400, classify, sub }), { planCents: 2400, source: "list-price" });
+  assert.deepEqual(planBasis({ preTaxCents: 2400, totalCents: 2400, classify, sub, items: [{ items_id: "?", amount: 2400 }] }), { planCents: 2400, source: "list-price" });
   assert.deepEqual(planBasis({ preTaxCents: 300, totalCents: 300, classify, sub }), { planCents: 0, source: "unmatched" });
   assert.equal(planBasis({ preTaxCents: 12000, totalCents: 12000, classify, sub: { plan: "pro", interval: "year", packs: 0 } }).planCents, 12000);
+  // Pro and Starter have no add-ons: a Pro amount plus a block price is not a full cycle.
+  assert.equal(planBasis({ preTaxCents: 1700, totalCents: 1700, classify, sub: { plan: "pro", interval: "month", packs: 1 } }).source, "unmatched");
+  assert.equal(planBasis({ preTaxCents: 500, totalCents: 500, classify, sub: { plan: "starter", interval: "month", packs: 0 } }).planCents, 500);
 });

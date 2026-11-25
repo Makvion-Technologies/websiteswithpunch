@@ -2,7 +2,7 @@ import Link from "next/link";
 import { byCadence } from "@/lib/monitor/config";
 
 /** Low-key signup prompt under a tool result or article. Claims stay within what the product does. */
-export function SoftCta({ title = byCadence("Monitor it around the clock for free", "Monitor it daily for free"), body, href = "/signup" }: { title?: string; body: string; href?: string }) {
+export function SoftCta({ title = byCadence("Monitor it around the clock, free for 30 days", "Monitor it daily, free for 30 days"), body, href = "/signup" }: { title?: string; body: string; href?: string }) {
   return (
     <aside className="border border-rule bg-surface p-6 sm:p-8">
       <p className="font-display text-xl font-medium tracking-tight text-ink sm:text-2xl">{title}</p>
@@ -12,7 +12,7 @@ export function SoftCta({ title = byCadence("Monitor it around the clock for fre
           href={href}
           className="inline-flex items-center bg-accent px-4 py-2.5 text-sm font-medium text-white hover:bg-accent-hover"
         >
-          Start free
+          Start free trial
         </Link>
         <Link href="/pricing" className="text-sm text-muted underline-offset-4 hover:text-ink hover:underline">
           See pricing

@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { DashIcon } from "./icons";
 import { isActive, type DashNavGroup } from "./nav-items";
 
-export type PlanBox = { planName: string; used: number; limit: number; upgrade: boolean };
+export type PlanBox = { planName: string; used: number; limit: number; upgrade: boolean; noPlan?: boolean; trial?: boolean };
 
 /** Desktop left rail (lg+). Sticky under the navbar; the active item gets the accent bar. */
 export function DashSidebar({ groups, plan }: { groups: DashNavGroup[]; plan: PlanBox }) {
@@ -41,7 +41,7 @@ export function DashSidebar({ groups, plan }: { groups: DashNavGroup[]; plan: Pl
       </nav>
       <div className="mt-6 border border-rule bg-surface p-3">
         <p className="flex items-baseline justify-between text-xs text-muted">
-          <span className="font-medium text-ink">{plan.planName} plan</span>
+          <span className="font-medium text-ink">{plan.noPlan ? "No plan yet" : `${plan.planName} ${plan.trial ? "trial" : "plan"}`}</span>
           <span>
             {plan.used}/{plan.limit} sites
           </span>
@@ -50,7 +50,7 @@ export function DashSidebar({ groups, plan }: { groups: DashNavGroup[]; plan: Pl
           <div className="h-1 bg-accent" style={{ width: `${pct}%` }} />
         </div>
         <Link href="/plan" className="mt-2.5 inline-block text-xs font-medium text-accent hover:underline">
-          {plan.upgrade ? "Upgrade plan →" : "Manage plan →"}
+          {plan.noPlan ? "Choose a plan →" : plan.upgrade ? "Upgrade plan →" : "Manage plan →"}
         </Link>
       </div>
     </aside>

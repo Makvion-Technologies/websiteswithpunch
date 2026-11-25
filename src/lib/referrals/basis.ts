@@ -1,6 +1,6 @@
 /**
- * Commission basis = the pre-tax PLAN portion of a payment. Site packs (Dodo add-ons on the same
- * subscription) never earn commission. Pure; amounts are cents.
+ * Commission basis = the pre-tax PLAN portion of a payment. Add-ons on the same subscription
+ * (Custom "Extra 25 sites" blocks, retired site packs) never earn commission. Pure; amounts are cents.
  *
  * 1. Line items (preferred): sum the items whose id is a configured plan product. Prorated
  *    upgrades bill the plan's prorated difference as the plan line, so that amount is used as-is.
@@ -11,10 +11,10 @@
  *    split safely, so the basis is 0 and the webhook logs it for manual review.
  * Either way the basis is never more than the pre-tax payment total.
  */
-import { planPrice, packPrice, type BillingInterval, type PaidPlanId } from "../billing-interval";
-import { SITE_PACKS } from "../plans";
+import { blockPrice, planPrice, type BillingInterval, type PaidPlanId } from "../billing-interval";
+import { CUSTOM } from "../plans";
 
-export type Kind = { kind: "plan" | "pack"; plan: PaidPlanId; interval: BillingInterval } | null;
+export type Kind = { kind: string; plan: PaidPlanId; interval: BillingInterval } | null;
 export type Item = { items_id: string; amount: number; tax?: number | null; name?: string | null };
 export type Basis = { planCents: number; source: "line-items" | "list-price" | "unmatched" };
 
@@ -40,8 +40,9 @@ export function planBasis(opts: {
   const s = opts.sub;
   if (s) {
     const plan = planPrice(s.plan, s.interval) * 100;
-    const pack = packPrice(s.plan, s.interval) * 100;
-    for (let n = 0; n <= SITE_PACKS[s.plan].maxPacks; n++) {
+    const pack = blockPrice(s.interval) * 100;
+    const max = s.plan === "business" ? CUSTOM.maxBlocks : 0;
+    for (let n = 0; n <= max; n++) {
       if (opts.preTaxCents === plan + n * pack) return { planCents: cap(plan), source: "list-price" };
     }
   }

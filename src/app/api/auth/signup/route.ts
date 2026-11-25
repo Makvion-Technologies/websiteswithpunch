@@ -56,7 +56,7 @@ export async function POST(req: Request) {
     const password = await bcrypt.hash(parsed.data.password, 12);
     const ipHash = hashIp(clientIp(req));
     const user = await prisma.user.create({
-      data: { name: parsed.data.name, email, password, plan: "free", signupIpHash: ipHash },
+      data: { name: parsed.data.name, email, password, plan: "free", legacyFree: false, signupIpHash: ipHash },
       select: { id: true, email: true, name: true },
     });
     // Referral: first-touch cookie (from /r/CODE or ?ref=) wins over a ?ref passed by the form.

@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { getEffectivePlan } from "@/lib/plans";
 import { crossSiteBlocked } from "@/lib/same-origin";
 import { HOUR, rateLimit, tooMany } from "@/lib/rate-limit";
-import { HEARTBEATS, HEARTBEAT_LIMIT, minPeriod, spanText } from "@/lib/heartbeats/config";
+import { HEARTBEATS, HEARTBEAT_LIMIT, heartbeatLimit, minPeriod, spanText } from "@/lib/heartbeats/config";
 import { newToken } from "@/lib/heartbeats/token";
 import { pushHeartbeat, toWorker } from "@/lib/heartbeats/worker";
 import { loadHeartbeats } from "@/lib/heartbeats/load";
@@ -34,16 +34,23 @@ export async function POST(req: Request) {
 
   const parsed = hbSchema.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ error: "Pick a name, a period and a grace time." }, { status: 400 });
-  const user = await prisma.user.findUnique({ where: { id: session.user.id }, select: { plan: true, dodoStatus: true } });
+  const user = await prisma.user.findUnique({ where: { id: session.user.id }, select: { plan: true, dodoStatus: true, legacyFree: true } });
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const plan = getEffectivePlan(user.plan, user.dodoStatus);
+  const limit = heartbeatLimit(plan, user.legacyFree);
+  if (limit === 0) return NextResponse.json({ error: "Heartbeats come with a plan. Start your Starter trial to add one.", code: "HB_LIMIT" }, { status: 403 });
   if (parsed.data.periodSec < minPeriod(plan)) {
     return NextResponse.json({ error: `Free heartbeats expect a ping every ${spanText(minPeriod(plan))} or longer. Upgrade for 5-minute heartbeats.`, code: "PERIOD_PLAN" }, { status: 403 });
   }
   const count = await prisma.heartbeat.count({ where: { userId: session.user.id } });
-  if (count >= HEARTBEAT_LIMIT[plan]) {
-    const more = plan === "free" ? " Upgrade to Pro for 10, or Business for 50." : plan === "pro" ? " Upgrade to Business for 50." : "";
-    return NextResponse.json({ error: `Your plan includes ${HEARTBEAT_LIMIT[plan]} heartbeat${HEARTBEAT_LIMIT[plan] === 1 ? "" : "s"}.${more}`, code: "HB_LIMIT" }, { status: 403 });
+  if (count >= limit) {
+    const more =
+      plan === "free" || plan === "starter"
+        ? ` Upgrade to Pro for ${HEARTBEAT_LIMIT.pro}, or Business for ${HEARTBEAT_LIMIT.business}.`
+        : plan === "pro"
+          ? ` Upgrade to Business for ${HEARTBEAT_LIMIT.business}.`
+          : "";
+    return NextResponse.json({ error: `Your plan includes ${limit} heartbeat${limit === 1 ? "" : "s"}.${more}`, code: "HB_LIMIT" }, { status: 403 });
   }
   const hb = await prisma.heartbeat.create({ data: { userId: session.user.id, token: newToken(), ...parsed.data } });
   const ready = await pushHeartbeat(toWorker(hb, plan, false));

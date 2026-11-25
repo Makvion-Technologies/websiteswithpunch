@@ -36,7 +36,7 @@ export const heartbeatFeature = {
     {
       h: "Plans",
       p: [
-        `Free includes ${HEARTBEAT_LIMIT.free} heartbeat with a period of an hour or longer. Pro includes ${HEARTBEAT_LIMIT.pro} and Business ${HEARTBEAT_LIMIT.business}, and both can expect pings as often as every 5 minutes. Heartbeats sit on the same dashboard as your uptime, SSL and domain checks, and alerts follow your existing email alert settings.`,
+        `Starter includes ${HEARTBEAT_LIMIT.starter} heartbeats, Pro ${HEARTBEAT_LIMIT.pro} and Business ${HEARTBEAT_LIMIT.business}, and every plan can expect pings as often as every 5 minutes. Heartbeats sit on the same dashboard as your uptime, SSL and domain checks, and alerts follow your existing email alert settings.`,
       ],
     },
     {

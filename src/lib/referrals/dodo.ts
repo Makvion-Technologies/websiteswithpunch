@@ -75,7 +75,7 @@ export async function handleReferralEvent(type: string, data: { payment_id?: str
   return res.created ? "recorded" : res.reason;
 }
 
-/** Plan share of the payment (site packs excluded); see basis.ts for the rules. */
+/** Plan share of the payment (add-ons excluded); see basis.ts for the rules. */
 async function planPortion(dodo: NonNullable<ReturnType<typeof import("@/lib/dodo").getDodo>>, p: PaymentLike, preTaxCents: number) {
   const [{ planBasis }, { lookupCatalogId }] = await Promise.all([import("./basis"), import("@/lib/dodo-products")]);
   const items = await dodo.payments.retrieveLineItems(p.payment_id).then((r) => r.items, () => null);
@@ -83,8 +83,9 @@ async function planPortion(dodo: NonNullable<ReturnType<typeof import("@/lib/dod
   if (!items?.length || !items.every((i) => lookupCatalogId(i.items_id))) {
     const s = await dodo.subscriptions.retrieve(p.subscription_id!);
     const k = lookupCatalogId(s.product_id);
-    const packs = (s.addons ?? []).reduce((n, a) => n + (lookupCatalogId(a.addon_id)?.kind === "pack" ? a.quantity : 0), 0);
-    if (k?.kind === "plan") sub = { plan: k.plan, interval: k.interval, packs };
+    const packs = (s.addons ?? []).reduce((n, a) => n + (lookupCatalogId(a.addon_id)?.kind === "extra" ? a.quantity : 0), 0);
+    // Legacy plans/packs have other list prices: leave them to the line-item path / manual review.
+    if (k?.kind === "plan" && !k.legacy) sub = { plan: k.plan, interval: k.interval, packs };
   }
   return planBasis({ preTaxCents, totalCents: Math.round(p.total_amount), items, sub, classify: lookupCatalogId });
 }

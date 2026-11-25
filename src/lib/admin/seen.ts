@@ -23,7 +23,7 @@ const created = (model: Def["model"], base: object, field = "createdAt"): Def =>
 
 export const KEYS: Record<string, Def> = {
   users: created("user", usersWhere({})),
-  ...Object.fromEntries(["paid", "free", "pro", "business"].map((p) => [`users:${p}`, created("user", usersWhere({ plan: p }))])),
+  ...Object.fromEntries(["paid", "free", "starter", "pro", "business", "custom", "legacy", "noplan"].map((p) => [`users:${p}`, created("user", usersWhere({ plan: p }))])),
   sites: { model: "site", actionable: true, where: (s, first) => ({ OR: [{ createdAt: gt(first ? LAUNCH : s) }, siteDown(s, first)] }) },
   "sites:down": { model: "site", actionable: true, where: siteDown },
   "sites:monitored": created("site", sitesWhere({ status: "monitored" })),
