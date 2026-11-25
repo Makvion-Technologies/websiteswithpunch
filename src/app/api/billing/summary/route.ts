@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { getEffectivePlan, getUserEffectiveSiteLimit, PLANS, resolvePackCountForLimit, SITE_PACKS, type PlanId } from "@/lib/plans";
+import { CUSTOM, getEffectivePlan, getUserEffectiveSiteLimit, planDisplayName, resolvePackCountForLimit, type PlanId } from "@/lib/plans";
 import { intervalLabel, type BillingInterval } from "@/lib/billing-interval";
 import { getDodo, isDodoConfigured, isDodoNotFound } from "@/lib/dodo";
 import { ENDED_STATUSES, isPaidStatus, scheduledKind, subscriptionState } from "@/lib/dodo-subscription";
@@ -58,7 +58,7 @@ export async function GET() {
 
   const plan = getEffectivePlan(user.plan, user.dodoStatus);
   const { packCount } = resolvePackCountForLimit(user);
-  const siteLimit = getUserEffectiveSiteLimit(plan, user.sitePackCount, user.pendingSitePackCount, user.pendingPackChangeAt);
+  const siteLimit = getUserEffectiveSiteLimit(plan, user.sitePackCount, user.pendingSitePackCount, user.pendingPackChangeAt, user.legacyFree);
 
   let interval: BillingInterval = "month";
   let nextPaymentDate: string | null = null;
@@ -87,24 +87,32 @@ export async function GET() {
     user.pendingPackChangeAt != null &&
     user.pendingSitePackCount < (user.sitePackCount ?? 0);
   const pendingSites =
-    hasPendingRemoval && plan !== "free"
-      ? ((user.sitePackCount ?? 0) - (user.pendingSitePackCount ?? 0)) * SITE_PACKS[plan].sitesPerPack
+    hasPendingRemoval && plan === "business"
+      ? ((user.sitePackCount ?? 0) - (user.pendingSitePackCount ?? 0)) * CUSTOM.blockSites
       : 0;
 
   // Today's total (what the current period cost) and the next renewal's total, kept apart so
   // every surface shows "$X/year" now and "From {date}: $Y/year" when a change is booked.
   const monthlyTotalCents = recurringTotalCents(plan, packCount, interval);
   if (!next && plan !== "free") {
-    const pendingPro = user.pendingPlan === "pro" && plan === "business";
-    next = { plan: pendingPro ? "pro" : plan, packs: pendingPro ? 0 : hasPendingRemoval ? user.pendingSitePackCount! : packCount, interval };
+    const lower = user.pendingPlan === "pro" || user.pendingPlan === "starter" ? user.pendingPlan : null;
+    next = { plan: lower ?? plan, packs: lower ? 0 : hasPendingRemoval ? user.pendingSitePackCount! : packCount, interval };
   }
+  // Live Dodo state wins; if Dodo couldn't be read, fall back to our copy while it's still running.
+  const storedTrial =
+    plan === "starter" && user.trialEndsAt && !user.trialConvertedAt && user.trialEndsAt.getTime() > Date.now() ? user.trialEndsAt : null;
+  const trialEndsAt = live ? live.trialEndsAt : storedTrial;
   const nextTotalCents = next ? recurringTotalCents(next.plan, next.packs, next.interval) : 0;
   const nextTotalFormatted = next ? formatRecurringFromCents(nextTotalCents, "usd", next.interval) : null;
 
   return NextResponse.json({
     healed,
     plan,
-    planName: PLANS[plan].name,
+    planName: planDisplayName(plan, packCount, user.legacyFree),
+    legacyFree: user.legacyFree,
+    inTrial: Boolean(trialEndsAt),
+    trialEndsAt: trialEndsAt?.toISOString() ?? null,
+    trialEndsAtFormatted: trialEndsAt ? formatShortDate(trialEndsAt.toISOString()) : null,
     interval: plan === "free" ? null : interval,
     intervalLabel: plan === "free" ? null : intervalLabel(interval),
     sitePackCount: packCount,

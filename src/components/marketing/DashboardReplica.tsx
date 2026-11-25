@@ -83,7 +83,7 @@ export function DashboardReplica() {
             <div className="flex shrink-0 flex-wrap items-center gap-2">
               <span className="rounded-none bg-solid px-4 py-2 text-sm font-medium text-solid-fg hover:opacity-90">Add site</span>
               <span className="rounded-none border border-rule bg-surface px-4 py-2 text-sm font-medium text-ink hover:bg-accent-soft">
-                Buy +{u.packSites} site slots
+                Get more sites
               </span>
             </div>
           </div>

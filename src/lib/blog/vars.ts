@@ -6,7 +6,7 @@ import { FAST_CHECKS } from "@/lib/monitor/config";
  */
 const VARS: Record<string, string> = {
   checks: FAST_CHECKS
-    ? "Websites With Punch checks uptime every 5 minutes on the Free plan and every minute on Pro and Business, and confirms a failure from a second location before it emails you."
+    ? "Websites With Punch checks uptime every minute on every paid plan and confirms a failure from a second location before it emails you."
     : "Websites With Punch checks every site once a day today, and you can press Recheck for a fresh result at any time (once a minute per site) or turn on auto refresh while you watch a site. It emails you when a check finds the site down and again when it recovers, but because checks aren't minute-by-minute, alerts aren't real-time.",
 };
 

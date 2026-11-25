@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AddSiteModal } from "@/components/AddSiteModal";
 import { takePendingSite, type PendingSite } from "@/lib/pending-site";
@@ -20,9 +21,10 @@ export function DashboardAddSiteButton({
   const [prefill, setPrefill] = useState<PendingSite | null>(null);
 
   useEffect(() => {
-    if (!pickUpPending) return;
+    // At the limit (or no plan yet) the remembered site stays put until there's room for it.
+    if (!pickUpPending || atLimit) return;
     const site = takePendingSite();
-    if (site && !atLimit) {
+    if (site) {
       setPrefill(site);
       setOpen(true);
     }
@@ -30,9 +32,13 @@ export function DashboardAddSiteButton({
 
   if (atLimit) {
     return (
-      <span className="rounded-none border border-rule bg-accent-soft px-4 py-2 text-sm text-muted">
-        Site limit reached
-      </span>
+      <Link
+        href="/plan"
+        title="Site limit reached"
+        className="inline-flex rounded-none border border-rule bg-accent-soft px-4 py-2 text-sm font-medium text-ink hover:border-accent"
+      >
+        Get more sites
+      </Link>
     );
   }
 

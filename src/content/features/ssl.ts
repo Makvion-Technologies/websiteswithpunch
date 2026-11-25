@@ -4,7 +4,7 @@ export const sslFeature = {
   path: "/ssl-certificate-monitoring",
   title: "SSL Certificate Monitoring – Track Expiry on Every Site",
   description:
-    "Track SSL certificate expiry for every site you run: days left, read daily from the live certificate, amber at 30 days and red at 7. Free for one site.",
+    "Track SSL certificate expiry for every site you run: days left, read daily from the live certificate, amber at 30 days and red at 7. Free 30-day trial.",
   eyebrow: "SSL certificate monitoring",
   h1: "SSL certificate monitoring for every site you look after",
   intro:

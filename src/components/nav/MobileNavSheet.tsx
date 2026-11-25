@@ -117,7 +117,7 @@ export function MobileNavSheet({ onClose }: { onClose: () => void }) {
           Log in
         </Link>
         <Link href="/signup" onClick={onClose} className={`flex min-h-11 items-center justify-center bg-accent text-sm font-medium text-white hover:bg-accent-hover ${FOCUS_RING}`}>
-          Start free
+          Start free trial
         </Link>
       </div>
     </div>

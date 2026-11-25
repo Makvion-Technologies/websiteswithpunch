@@ -100,7 +100,7 @@ export function HeartbeatForm({ open, onClose, plan, initial }: { open: boolean;
               </div>
             </div>
             <p className="text-xs text-muted">
-              Grace covers jobs that run long or start late. {free ? "Free heartbeats start at 1 hour; Pro and Business can use 5 and 15 minutes." : "We look for missed pings every minute."}
+              Grace covers jobs that run long or start late. {free ? "Free heartbeats start at 1 hour; paid plans can use 5 and 15 minutes." : "We look for missed pings every minute."}
             </p>
             {error && <p className="bg-danger/10 px-3 py-2 text-sm text-danger">{error}</p>}
             <div className="flex flex-wrap gap-3 pt-1">

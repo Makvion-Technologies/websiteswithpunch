@@ -6,8 +6,8 @@ export const uptimeFeature = {
   title: "Website Uptime Monitoring – Email Alerts If a Site Is Down",
   description:
     byCadence(
-      "Website uptime monitoring every minute on Pro and Business, every 5 minutes on Free, with confirmed email alerts and 90-day history. Free for one site.",
-      "Website uptime monitoring with a daily check of every site, on-demand rechecks, auto refresh and 90 days of history. Free for one site, no card needed.",
+      "Website uptime monitoring every minute, confirmed from a second location, with email alerts and 90-day history. From $5/month, 30-day free trial.",
+      "Website uptime monitoring with a daily check of every site, on-demand rechecks, auto refresh and 90 days of history. From $5/month, 30-day free trial.",
     ),
   eyebrow: "Uptime monitoring",
   h1: "Website uptime monitoring without the noise",
@@ -17,7 +17,7 @@ export const uptimeFeature = {
       "Websites With Punch checks each of your sites once a day in the background, records whether it answered and how fast, and keeps the history on one calm dashboard. When you need a fresh answer, recheck on demand or turn on auto refresh.",
     ),
   facts: [
-    byCadence("Uptime every minute on Pro and Business, every 5 minutes on Free", "Daily background check of every site"),
+    byCadence("Uptime checked every minute on every paid plan", "Daily background check of every site"),
     "Recheck on demand, once a minute per site",
     "Auto refresh every 60 s while a site page is open",
     "Up to 90 days of status and response-time history",
@@ -85,7 +85,7 @@ export const uptimeFeature = {
     },
     {
       q: "Is uptime monitoring free?",
-      a: "The free plan monitors one site with uptime, SSL and domain checks. Pro covers up to 10 sites and Business up to 50, billed monthly or yearly.",
+      a: "Not for new accounts, but Starter is free for 30 days: 10 sites with uptime, SSL and domain checks, then $5/month. Pro covers 30 sites for $12, Business 100 for $24, and Custom up to 500, billed monthly or yearly.",
     },
   ] satisfies Faq[],
 };

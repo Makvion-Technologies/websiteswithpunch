@@ -9,27 +9,35 @@ import type { BillingInterval } from "@/lib/billing-interval";
 export function UpgradeModals({
   upgrade: u,
   currentInterval,
+  trialUsed,
 }: {
   upgrade: PlanUpgrade;
   currentInterval?: BillingInterval | null;
+  /** The account already had a Starter trial (no second one). */
+  trialUsed?: boolean;
 }) {
   return (
     <>
       <UpgradePlanModal
-        open={u.upgradeOpen}
-        loading={u.loading === "business"}
-        message={u.message}
-        currentInterval={currentInterval}
-        onClose={() => u.setUpgradeOpen(false)}
-        onConfirm={(interval) => void u.checkout("business", interval)}
-      />
-      <CheckoutPlanModal
-        planId={u.choosePlan}
+        open={u.upgradeTo !== null}
+        targetPlan={u.upgradeTo ?? "business"}
         loading={u.loading !== null}
         message={u.message}
-        onClose={() => u.setChoosePlan(null)}
+        currentInterval={currentInterval}
+        onClose={() => u.setUpgradeTo(null)}
         onConfirm={(interval) => {
-          if (u.choosePlan) void u.checkout(u.choosePlan, interval);
+          if (u.upgradeTo) void u.checkout({ id: u.upgradeTo, blocks: 0 }, interval);
+        }}
+      />
+      <CheckoutPlanModal
+        choice={u.choice}
+        loading={u.loading !== null}
+        message={u.message}
+        trialUsed={trialUsed}
+        onChange={u.setChoice}
+        onClose={() => u.setChoice(null)}
+        onConfirm={(interval) => {
+          if (u.choice) void u.checkout(u.choice, interval);
         }}
       />
     </>

@@ -1,12 +1,12 @@
 "use client";
 
 /**
- * Charge-now changes (upgrade, annual billing, extra site pack) are confirmed by Dodo
+ * Charge-now changes (upgrade, annual billing, a bigger Custom size) are confirmed by Dodo
  * Payments off-session, usually within a couple of minutes. Poll /api/billing/sync (which
  * re-reads the subscription from Dodo) until the change shows up or we give up.
  */
 export type SyncState = {
-  plan: "free" | "pro" | "business";
+  plan: "free" | "starter" | "pro" | "business";
   status: string | null;
   sitePackCount: number;
   interval: "month" | "year" | null;

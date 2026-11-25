@@ -1,4 +1,5 @@
-import { PLANS, SITE_PACKS } from "@/lib/plans";
+import { CUSTOM_MAX_SITES, PLANS } from "@/lib/plans";
+import { CHANNEL_LIMIT, STATUS_PAGE_LIMIT } from "@/lib/features/limits";
 
 export type Persona = {
   id: string;
@@ -16,9 +17,6 @@ export type Persona = {
   href: string;
 };
 
-const proMax = PLANS.pro.siteLimit + SITE_PACKS.pro.maxPacks * SITE_PACKS.pro.sitesPerPack;
-const bizMax =
-  PLANS.business.siteLimit + SITE_PACKS.business.maxPacks * SITE_PACKS.business.sitesPerPack;
 
 export const personas: Persona[] = [
   {
@@ -27,11 +25,11 @@ export const personas: Persona[] = [
     body: "Ship product, not pager duty. One dashboard for the sites that keep revenue flowing.",
     pain: "The site that pays the bills goes down, and you hear it from a customer.",
     outcome: "Up/down, SSL days and domain days on one dashboard, plus a Health Score for each site.",
-    get: "Uptime, SSL and domain checks for your main site. Upgrade only when you add more.",
-    stat: String(PLANS.free.siteLimit),
-    statLabel: `site on ${PLANS.free.name}, no card needed`,
-    cta: "Start monitoring free",
-    href: "/signup",
+    get: `Starter covers up to ${PLANS.starter.siteLimit} sites for $${PLANS.starter.price}/month, free for the first 30 days.`,
+    stat: String(PLANS.starter.siteLimit),
+    statLabel: `sites on ${PLANS.starter.name}, 30 days free`,
+    cta: "Start free trial",
+    href: "/signup?plan=starter",
   },
   {
     id: "freelancers",
@@ -39,22 +37,22 @@ export const personas: Persona[] = [
     body: "Client sites shouldn’t surprise you. Spot SSL and domain issues before the midnight email.",
     pain: "An expired certificate or lapsed domain on a client site becomes your emergency.",
     outcome: "Every client site in one list, with SSL and domain days left turning amber before they run out.",
-    get: `Pro covers up to ${PLANS.pro.siteLimit} sites; add +${SITE_PACKS.pro.sitesPerPack} packs up to ${proMax}.`,
+    get: `Pro covers up to ${PLANS.pro.siteLimit} sites for $${PLANS.pro.price}/month, with ${CHANNEL_LIMIT.pro} alert channels and ${STATUS_PAGE_LIMIT.pro} status pages.`,
     stat: String(PLANS.pro.siteLimit),
     statLabel: `client sites on ${PLANS.pro.name}`,
-    cta: "Start with Pro",
+    cta: "Get Pro",
     href: "/signup?plan=pro",
   },
   {
     id: "agencies",
     title: "Small agencies",
-    body: "Monitor a portfolio without enterprise pricing. Free for one, Pro for ten, Business for fifty.",
+    body: "Monitor a portfolio without enterprise pricing. Business covers 100 sites; Custom grows to 500.",
     pain: "A growing portfolio, and monitoring tools built and priced for enterprise teams.",
     outcome: "One dashboard for the whole portfolio, with per-site analytics when something looks off.",
-    get: `Business covers up to ${PLANS.business.siteLimit} sites; add +${SITE_PACKS.business.sitesPerPack} packs up to ${bizMax}.`,
+    get: `Business covers up to ${PLANS.business.siteLimit} sites for $${PLANS.business.price}/month; Custom grows 25 sites at a time, up to ${CUSTOM_MAX_SITES}.`,
     stat: String(PLANS.business.siteLimit),
     statLabel: `sites on ${PLANS.business.name}, in one view`,
-    cta: "Start with Business",
+    cta: "Get Business",
     href: "/signup?plan=business",
   },
 ];

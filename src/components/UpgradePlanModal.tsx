@@ -11,7 +11,8 @@ import {
   secondaryBtn,
   useEscapeClose,
 } from "@/components/billing/modal-bits";
-import { intervalParam, type BillingInterval } from "@/lib/billing-interval";
+import { intervalParam, type BillingInterval, type PaidPlanId } from "@/lib/billing-interval";
+import { PLANS } from "@/lib/plans";
 import { TAX_NOTE_SAVED_CARD, taxLine } from "@/lib/tax-copy";
 
 type UpgradeProps = {
@@ -20,8 +21,10 @@ type UpgradeProps = {
   message: string | null;
   onClose: () => void;
   onConfirm: (interval: BillingInterval) => void;
-  /** "business" = Pro → Business; the current plan = switch to annual billing. */
-  targetPlan?: "pro" | "business";
+  /** Plan to move up to, or the current plan with switchOnly (monthly → annual). */
+  targetPlan?: PaidPlanId;
+  /** Same plan, switch to annual billing. */
+  switchOnly?: boolean;
   /** Yearly subscribers stay yearly, so the toggle is hidden for them. */
   currentInterval?: BillingInterval | null;
 };
@@ -33,7 +36,9 @@ export type PlanPreview = {
   samePlan?: boolean;
   intervalChanges?: boolean;
   keptPacks?: number;
-  hadPacks: boolean;
+  /** The Starter free trial ends with this change (full price today, no credit). */
+  endsTrial?: boolean;
+  trialEndsAtFormatted?: string | null;
   amountDueToday: number;
   amountDueTodayFormatted: string;
   taxTodayFormatted?: string | null;
@@ -45,7 +50,10 @@ export type PlanPreview = {
 /** Dodo's prorated change: a full new period at the new price, minus unused time credited. */
 function costLine(p: PlanPreview, interval: BillingInterval): string {
   const period = interval === "year" ? "year" : "month";
-  const what = p.samePlan && p.keptPacks ? `${p.targetPlanName} and your site packs` : p.targetPlanName;
+  if (p.endsTrial) {
+    return `Your free trial ends now and you pay a full ${period} of ${p.targetPlanName} today. Your plan renews from today's date.`;
+  }
+  const what = p.samePlan && p.keptPacks ? `${p.targetPlanName} and your extra sites` : p.targetPlanName;
   return `That's a full ${period} of ${what}, minus a credit for the unused part of what you already paid for ${p.currentPlanName}.`;
 }
 
@@ -56,9 +64,9 @@ export function UpgradePlanModal({
   onClose,
   onConfirm,
   targetPlan = "business",
+  switchOnly = false,
   currentInterval = "month",
 }: UpgradeProps) {
-  const switchOnly = targetPlan !== "business";
   // Set when the server reports a yearly subscription (callers that don't know the interval).
   const [serverYearly, setServerYearly] = useState(false);
   const yearlyNow = currentInterval === "year" || serverYearly;
@@ -109,7 +117,8 @@ export function UpgradePlanModal({
   const renew = preview?.nextRenewalFormatted || "your next billing date";
   const todayZero = preview != null && preview.amountDueToday === 0;
   const packs = preview?.keptPacks ?? 0;
-  const title = switchOnly ? "Switch to annual billing" : "Upgrade to Business";
+  const name = PLANS[targetPlan].name;
+  const title = switchOnly ? "Switch to annual billing" : `Upgrade to ${name}`;
 
   return (
     <ModalShell titleId="upgrade-plan-title" onClose={onClose}>
@@ -125,7 +134,7 @@ export function UpgradePlanModal({
         />
       )}
       {!switchOnly && yearlyNow && (
-        <p className="mt-2 text-sm text-muted">You&apos;re billed yearly, so Business is billed yearly too.</p>
+        <p className="mt-2 text-sm text-muted">You&apos;re billed yearly, so {name} is billed yearly too.</p>
       )}
 
       <div className="mt-4 space-y-3">
@@ -137,15 +146,14 @@ export function UpgradePlanModal({
               {todayZero ? "Nothing to pay today." : `Pay ${preview.amountDueTodayFormatted} today`}
             </p>
             <p className="text-sm leading-relaxed text-muted">{costLine(preview, interval)}</p>
-            {preview.hadPacks && (
+            {!switchOnly && (
               <p className="text-sm leading-relaxed text-muted">
-                Your extra site packs are no longer needed. Business includes 50 sites.
+                {name} includes {PLANS[targetPlan].siteLimit} sites.
               </p>
             )}
             {packs > 0 && (
               <p className="text-sm leading-relaxed text-muted">
-                Your {packs} site pack{packs === 1 ? "" : "s"} move{packs === 1 ? "s" : ""} to yearly
-                billing too, so everything renews on one date.
+                Your {packs * 25} extra sites move to yearly billing too, so everything renews on one date.
               </p>
             )}
             <p className="text-sm leading-relaxed text-muted">

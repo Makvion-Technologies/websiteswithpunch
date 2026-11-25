@@ -12,9 +12,9 @@ const since = (r: Range | undefined, now: number) => (r ? { createdAt: { gte: ne
 /** Start of the window, rounded down to the minute so the Overview and the page agree. */
 const minute = (n: number) => Math.floor(n / 60_000) * 60_000;
 
-export const USER_PLANS = ["free", "pro", "business", "paid"] as const;
+export const USER_PLANS = ["free", "starter", "pro", "business", "paid"] as const;
 export function usersWhere(o: { q?: string; plan?: string }): Prisma.UserWhereInput {
-  const plan = o.plan === "paid" ? { plan: { in: ["pro", "business"] } } : o.plan && (USER_PLANS as readonly string[]).includes(o.plan) ? { plan: o.plan } : {};
+  const plan = o.plan === "paid" ? { plan: { in: ["starter", "pro", "business"] } } : o.plan && (USER_PLANS as readonly string[]).includes(o.plan) ? { plan: o.plan } : {};
   return {
     ...(o.q && { OR: [{ email: { contains: o.q, mode: "insensitive" } }, { name: { contains: o.q, mode: "insensitive" } }] }),
     ...plan,

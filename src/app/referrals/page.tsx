@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 
 const title = "Referral Program – Earn 20% When Friends Subscribe";
 const description =
-  "Share your Websites With Punch link. You earn 20% on Pro and Business plan payments from people you refer, excluding site packs. Withdraw from $20.";
+  "Share your Websites With Punch link. You earn 20% on the plan payments of the people you refer, excluding extra Custom sites. Withdraw from $20.";
 
 export const metadata: Metadata = {
   title: { absolute: title },

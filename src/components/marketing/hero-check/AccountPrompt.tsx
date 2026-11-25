@@ -10,7 +10,7 @@ export type PromptKind = "analytics" | "edit" | "delete";
 
 const COPY: Record<PromptKind, { title: string; lead: string }> = {
   analytics: {
-    title: "Analytics need a free account",
+    title: "Analytics need an account",
     lead: "Analytics are built from a site's saved check history, so the site needs to be in an account first.",
   },
   edit: {
@@ -86,10 +86,10 @@ export function AccountPrompt({
           <div id="account-prompt-body" className="text-sm text-muted">
             <p>{lead}</p>
             <p className="mt-3">
-              Create a free account to save <span className="font-medium text-ink">{site.name}</span> and get:
+              Start a free trial to save <span className="font-medium text-ink">{site.name}</span> and get:
             </p>
             <ul className="mt-2 space-y-1.5">
-              {["The site on your dashboard, with analytics and history", byCadence("Uptime checked every 5 minutes, SSL and domain daily", "Uptime, SSL and domain checks every day"), "Free for one site, no card needed"].map((t) => (
+              {["The site on your dashboard, with analytics and history", byCadence("Uptime checked every minute, SSL and domain daily", "Uptime, SSL and domain checks every day"), "30 days free on Starter, then $5/month for 10 sites"].map((t) => (
                 <li key={t} className="flex gap-2">
                   <span aria-hidden className="mt-[7px] h-1.5 w-1.5 shrink-0 bg-accent" />
                   {t}
@@ -99,7 +99,7 @@ export function AccountPrompt({
           </div>
           <div className="mt-6 flex flex-wrap gap-3">
             <Link href="/signup" onClick={keep} className="rounded-none bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-hover">
-              Create free account
+              Start free trial
             </Link>
             <Link href="/login" onClick={keep} className="rounded-none border border-rule px-4 py-2 text-sm font-medium text-ink hover:bg-accent-soft">
               Log in

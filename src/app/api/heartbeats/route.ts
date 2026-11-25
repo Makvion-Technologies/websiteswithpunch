@@ -42,7 +42,12 @@ export async function POST(req: Request) {
   }
   const count = await prisma.heartbeat.count({ where: { userId: session.user.id } });
   if (count >= HEARTBEAT_LIMIT[plan]) {
-    const more = plan === "free" ? " Upgrade to Pro for 10, or Business for 50." : plan === "pro" ? " Upgrade to Business for 50." : "";
+    const more =
+      plan === "free" || plan === "starter"
+        ? ` Upgrade to Pro for ${HEARTBEAT_LIMIT.pro}, or Business for ${HEARTBEAT_LIMIT.business}.`
+        : plan === "pro"
+          ? ` Upgrade to Business for ${HEARTBEAT_LIMIT.business}.`
+          : "";
     return NextResponse.json({ error: `Your plan includes ${HEARTBEAT_LIMIT[plan]} heartbeat${HEARTBEAT_LIMIT[plan] === 1 ? "" : "s"}.${more}`, code: "HB_LIMIT" }, { status: 403 });
   }
   const hb = await prisma.heartbeat.create({ data: { userId: session.user.id, token: newToken(), ...parsed.data } });

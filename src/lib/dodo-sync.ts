@@ -12,6 +12,7 @@ import {
   type SubLike,
 } from "./dodo-subscription";
 import { enforceSiteLimit } from "./site-limits";
+import { applyTrialState } from "./trial";
 
 export type SyncResult = "synced" | "ignored" | "no_user";
 
@@ -68,6 +69,8 @@ export async function syncSubscription(
         pendingPlanAt: null,
         cancelAtPeriodEnd: false,
         dodoStatus: st.status,
+        // A trial cancelled before it converted: no reminders, no conversion email.
+        ...(user.trialEndsAt && !user.trialConvertedAt ? { trialEndsAt: null } : {}),
         ...ids,
         ...stamp,
       },
@@ -106,6 +109,11 @@ export async function syncSubscription(
       ...stamp,
     },
   });
+
+  if (isPaidStatus(st.status) && (isCurrent || !user.dodoSubscriptionId)) {
+    const created = sub.created_at ? new Date(sub.created_at) : null;
+    await applyTrialState(user, st, created).catch((e) => console.warn("[trial] state update failed", user.id, e));
+  }
 
   const hadPending = Boolean(user.pendingPlan) || user.pendingSitePackCount != null;
   if (hadPending && !planPending && packsPending == null) {

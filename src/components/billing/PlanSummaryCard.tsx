@@ -1,8 +1,8 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { PLANS, SITE_PACKS, type PlanId } from "@/lib/plans";
-import { packPrice, type BillingInterval } from "@/lib/billing-interval";
+import { CUSTOM, CUSTOM_MAX_SITES, HIGHER_PLAN, LOWER_PLAN, PLANS, customSites, planDisplayName, type PlanId } from "@/lib/plans";
+import { blockPrice, type BillingInterval } from "@/lib/billing-interval";
 import { IconArrow, IconLayers, IconSliders } from "@/components/plan/icons";
 
 type Props = {
@@ -17,7 +17,12 @@ type Props = {
   pendingSites: number;
   pendingDate: string | null;
   loading: boolean;
+  /** Limit banners etc. under the size block. */
   packSlot?: ReactNode;
+  /** Starter free trial running: upgrades end it. */
+  inTrial?: boolean;
+  onResize?: () => void;
+  onUpgrade?: () => void;
   onChooseActive: () => void;
   onResume: () => void;
   onUndoPack: () => void;
@@ -59,11 +64,13 @@ function Option({ onClick, disabled, children, hint, tone = "ink" }: { onClick: 
   );
 }
 
-/** "Manage plan": booked changes, site packs and the plan options. */
+/** "Manage plan": booked changes, plan size and the plan options. */
 export function PlanSummaryCard(p: Props) {
   const paid = p.plan === "free" ? null : p.plan;
-  const pack = paid ? SITE_PACKS[paid] : null;
   const short = p.interval === "year" ? "yr" : "mo";
+  const name = planDisplayName(p.plan, p.effectivePacks);
+  const lower = paid && paid !== "starter" ? LOWER_PLAN[paid] : null;
+  const higher = paid && paid !== "business" ? HIGHER_PLAN[paid] : null;
   const keepBtn = (
     <button type="button" onClick={p.onChooseActive} className={calloutBtn}>
       Change which sites stay active
@@ -80,12 +87,13 @@ export function PlanSummaryCard(p: Props) {
 
       {p.cancelAtPeriodEnd && p.pendingPlanDate && (
         <Booked actions={<>{keepBtn}<button type="button" onClick={p.onResume} disabled={p.loading} className={calloutBtn}>{work("Resume plan")}</button></>}>
-          Your {PLANS[p.plan].name} plan ends on <b className="font-medium">{p.pendingPlanDate}</b>. {p.chooseMax} site{p.chooseMax === 1 ? "" : "s"} will stay active.
+          {p.inTrial ? "Your free trial" : `Your ${name} plan`} ends on <b className="font-medium">{p.pendingPlanDate}</b>.{" "}
+          {p.chooseMax > 0 ? `${p.chooseMax} site${p.chooseMax === 1 ? "" : "s"} will stay active.` : "Monitoring pauses then; nothing is deleted."}
         </Booked>
       )}
-      {!p.cancelAtPeriodEnd && p.pendingPlan === "pro" && p.pendingPlanDate && (
-        <Booked actions={<>{keepBtn}<button type="button" onClick={p.onResume} disabled={p.loading} className={calloutBtn}>{work("Keep Business")}</button></>}>
-          Switching to Pro on <b className="font-medium">{p.pendingPlanDate}</b>. {p.chooseMax} sites will stay active.
+      {!p.cancelAtPeriodEnd && (p.pendingPlan === "pro" || p.pendingPlan === "starter") && p.pendingPlanDate && (
+        <Booked actions={<>{keepBtn}<button type="button" onClick={p.onResume} disabled={p.loading} className={calloutBtn}>{work(`Keep ${name}`)}</button></>}>
+          Switching to {PLANS[p.pendingPlan].name} on <b className="font-medium">{p.pendingPlanDate}</b>. {p.chooseMax} sites will stay active.
         </Booked>
       )}
       {p.pendingMonthlyDate && !p.cancelAtPeriodEnd && (
@@ -100,29 +108,41 @@ export function PlanSummaryCard(p: Props) {
         </Booked>
       )}
 
-      {pack && paid && (
+      {paid && (
         <div className="border-b border-rule px-4 py-4">
           <div className="flex items-start gap-3">
             <span className="flex h-9 w-9 shrink-0 items-center justify-center bg-accent-soft text-accent">
               <IconLayers className="h-[18px] w-[18px]" />
             </span>
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-medium text-ink">Site packs</p>
+              <p className="text-sm font-medium text-ink">Plan size</p>
               <p className="mt-0.5 text-xs text-muted">
-                +{pack.sitesPerPack} sites for ${packPrice(paid, p.interval)}/{short} each · up to {pack.maxPacks}
+                {paid === "business"
+                  ? `Grow in steps of ${CUSTOM.blockSites} sites for $${blockPrice(p.interval)}/${short} each, up to ${CUSTOM_MAX_SITES}`
+                  : higher
+                    ? `${PLANS[higher].name} gives you ${PLANS[higher].siteLimit} sites`
+                    : ""}
               </p>
             </div>
             <p className="font-display text-2xl font-medium tabular-nums leading-none text-ink">
-              {p.effectivePacks}
-              <span className="text-sm text-muted">/{pack.maxPacks}</span>
+              {paid === "business" ? customSites(p.effectivePacks) : PLANS[paid].siteLimit}
+              <span className="text-sm text-muted"> sites</span>
             </p>
           </div>
-          <div className="mt-3 flex gap-1" aria-hidden>
-            {Array.from({ length: pack.maxPacks }, (_, i) => (
-              <span key={i} className={`h-1.5 flex-1 ${i < p.effectivePacks ? "bg-accent" : "bg-ink/[0.07]"}`} />
-            ))}
-          </div>
-          {p.packSlot && <div className="mt-3">{p.packSlot}</div>}
+          {paid === "business" && p.onResize && !p.cancelAtPeriodEnd && (
+            <button type="button" onClick={p.onResize} disabled={p.loading} className="mt-3 rounded-none bg-accent px-3 py-1.5 text-sm font-medium text-white hover:bg-accent-hover disabled:opacity-60">
+              Change size
+            </button>
+          )}
+          {higher && p.onUpgrade && (
+            <button type="button" onClick={p.onUpgrade} disabled={p.loading} className="mt-3 rounded-none bg-accent px-3 py-1.5 text-sm font-medium text-white hover:bg-accent-hover disabled:opacity-60">
+              Upgrade to {PLANS[higher].name}
+            </button>
+          )}
+          {higher && p.inTrial && (
+            <p className="mt-2 text-xs text-muted">Upgrading ends your free trial and charges the new plan today.</p>
+          )}
+          {p.packSlot && <div className="mt-1">{p.packSlot}</div>}
         </div>
       )}
 
@@ -137,14 +157,19 @@ export function PlanSummaryCard(p: Props) {
             Switch to monthly billing
           </Option>
         )}
-        {p.plan === "business" && !p.pendingPlan && (
-          <Option onClick={p.onDowngrade} disabled={p.loading} hint="10 sites, from your renewal date">
-            Switch to Pro
+        {lower && !p.pendingPlan && !p.cancelAtPeriodEnd && (
+          <Option onClick={p.onDowngrade} disabled={p.loading} hint={`${PLANS[lower].siteLimit} sites, from your renewal date`}>
+            Switch to {PLANS[lower].name}
           </Option>
         )}
         {!p.cancelAtPeriodEnd && (
-          <Option onClick={p.onCancel} disabled={p.loading} tone="danger" hint="Keep everything until the period you've paid for ends">
-            Cancel plan
+          <Option
+            onClick={p.onCancel}
+            disabled={p.loading}
+            tone="danger"
+            hint={p.inTrial ? "The trial ends on its date and you're never charged" : "Keep everything until the period you've paid for ends"}
+          >
+            {p.inTrial ? "Cancel free trial" : "Cancel plan"}
           </Option>
         )}
       </div>

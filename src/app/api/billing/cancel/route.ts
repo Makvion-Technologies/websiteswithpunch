@@ -15,7 +15,10 @@ const schema = z.object({ keepSiteIds: z.array(z.string()).optional() });
 /**
  * Cancel at the end of the paid period (Dodo cancel_at_next_billing_date). The plan stays
  * until then; nothing is refunded. Any booked change is dropped first: cancelling wins.
- * Body may include keepSiteIds when active sites > the Free limit (1).
+ * Accounts from before paid-only pricing (legacyFree) fall back to Free: keepSiteIds picks the
+ * one site that stays. Newer accounts have no free fallback: monitoring pauses when the plan
+ * ends (sites and history are kept), so no picker. During the Starter trial, cancelling means
+ * the trial simply ends and nothing is ever charged.
  */
 export async function POST(req: Request) {
   const body = await req.json().catch(() => ({}));
@@ -23,9 +26,9 @@ export async function POST(req: Request) {
   const keepSiteIds = parsed.success ? parsed.data.keepSiteIds ?? [] : [];
 
   return withSubscription({ label: "cancel" }, async ({ dodo, user, sub, st }) => {
-    const freeLimit = PLANS.free.siteLimit;
+    const freeLimit = user.legacyFree ? PLANS.free.siteLimit : 0;
     const activeCount = await prisma.site.count({ where: { userId: user.id, locked: false } });
-    if (activeCount > freeLimit) {
+    if (user.legacyFree && activeCount > freeLimit) {
       if (keepSiteIds.length !== freeLimit) {
         return fail(400, `Your Free plan includes ${freeLimit} site. Choose which one stays active.`, "KEEP_REQUIRED", {
           maxKeep: freeLimit,
@@ -47,6 +50,8 @@ export async function POST(req: Request) {
       pendingPlanAt: at?.toISOString() ?? null,
       pendingPlanAtFormatted: formatShortDate(at),
       keepLimit: freeLimit,
+      legacyFree: user.legacyFree,
+      inTrial: Boolean(st.trialEndsAt),
     });
   });
 }

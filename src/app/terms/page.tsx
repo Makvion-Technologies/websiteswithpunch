@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <LegalPage title="Terms of Service" updated="October 9, 2026" path="/terms">
+    <LegalPage title="Terms of Service" updated="November 25, 2026" path="/terms">
       <P>
         These Terms govern your use of Websites With Punch at{" "}
         <a className="text-accent underline underline-offset-2 hover:no-underline" href="https://websiteswithpunch.com">
@@ -41,7 +41,7 @@ export default function TermsPage() {
         Monitoring is informational and may be delayed, incomplete, or unavailable. Domain expiry
         information relies on public RDAP/WHOIS sources and is not guaranteed to be accurate or
         continuously available. {byCadence(
-          "Uptime is checked at intervals (about every 5 minutes on Free and every minute on paid plans) and SSL and domain expiry about once a day, so problems between checks can be missed and alert emails may be delayed or not delivered.",
+          "Uptime is checked at intervals (about every minute on paid plans, every 3 minutes for sites beyond the first 100 on Custom, and every 5 minutes on legacy Free accounts) and SSL and domain expiry about once a day, so problems between checks can be missed and alert emails may be delayed or not delivered.",
           "Sites are checked about once a day and when you press Recheck, so alert emails are not real-time and may be delayed or not delivered.",
         )} You can turn alerts off
         in your dashboard or with the unsubscribe link in any alert email.
@@ -49,9 +49,21 @@ export default function TermsPage() {
 
       <H2>Accounts &amp; Plans</H2>
       <P>
-        Free accounts may monitor 1 site. Paid plans (Pro and Business) monitor more sites, with
-        optional site packs, and are billed monthly or yearly at the prices shown on our{" "}
-        <A href="/pricing">Pricing</A> page.
+        New accounts choose a paid plan (Starter, Pro, Business or Custom), billed monthly or yearly
+        at the prices shown on our <A href="/pricing">Pricing</A> page. Each plan monitors up to the
+        number of sites shown there; Custom is Business with extra sites added in blocks of 25.
+        Accounts created before paid-only plans were introduced keep the Free plan (1 site) for as
+        long as the account stays open; Free is not available to new accounts.
+      </P>
+      <P>
+        Starter includes a one-time 30-day free trial, limited to one per person, card and
+        payment method. A valid payment method is required to start it, and nothing is charged
+        during the trial. Unless you cancel before it ends, the trial converts automatically into a
+        paid Starter subscription and your payment method is charged the Starter price for the
+        billing period you chose. Upgrading to another plan during the trial ends the trial and
+        charges the new plan&apos;s full price right away. Pro, Business and Custom have no trial
+        and are charged when you subscribe. We may decline or end a trial that we reasonably believe
+        is a repeat or misuse.
       </P>
       <P>
         You are responsible for keeping your account credentials secure and for ensuring that the
@@ -90,15 +102,16 @@ export default function TermsPage() {
       <P>
         Payments are non-refundable, including after you cancel, except in the limited cases set
         out in our <A href="/refund-policy">Refund &amp; Cancellation Policy</A>. When you cancel,
-        downgrade, remove site packs, or switch from annual to monthly billing, no refund or credit
+        downgrade, reduce a Custom size, or switch from annual to monthly billing, no refund or credit
         is provided for the remaining time of the current billing period. You keep your current
         plan and capacity until the end of the period you have paid for, and the change takes
         effect at renewal.
       </P>
       <P>
-        Upgrades and added site packs take effect immediately and are charged right away on a
+        Upgrades and larger Custom sizes take effect immediately and are charged right away on a
         prorated basis: unused time on your current subscription is credited, the new total is
-        charged, and your billing date moves to that day.
+        charged, and your billing date moves to that day. An upgrade during the Starter trial is
+        charged at the new plan&apos;s full price, since nothing was paid for the trial.
       </P>
 
       <ReferralTerms />

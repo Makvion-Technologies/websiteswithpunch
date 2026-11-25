@@ -2,7 +2,7 @@
 
 import { readJson } from "@/lib/read-json";
 import { useRouter } from "next/navigation";
-import { PLANS, type PlanId } from "@/lib/plans";
+import { PLANS, customSites, type PlanId } from "@/lib/plans";
 import { useToast } from "@/components/Toast";
 import { BILLING_CHANGED } from "@/components/billing/useBillingSummary";
 import { PENDING_MESSAGE, STILL_PENDING_MESSAGE, awaitBilling } from "@/components/billing/awaitBilling";
@@ -11,11 +11,15 @@ type ToastFn = ReturnType<typeof useToast>["toast"];
 
 export function useBillingActions(opts: {
   plan: PlanId;
+  /** Custom blocks today (Business only). */
+  blocks?: number;
+  legacyFree?: boolean;
   loadSummary: () => Promise<void>;
   toast: ToastFn;
 }) {
   const router = useRouter();
   const { plan, loadSummary, toast } = opts;
+  const blocks = opts.blocks ?? 0;
 
   async function afterOk() {
     await loadSummary();
@@ -34,8 +38,13 @@ export function useBillingActions(opts: {
       toast(data.error || "Could not cancel.", "error");
       return false;
     }
+    const until = data.pendingPlanAtFormatted || "the end of the period you've paid for";
     toast(
-      `You keep ${PLANS[plan].name} until ${data.pendingPlanAtFormatted || "the end of the period you've paid for"}. After that you're on Free (1 site). No more payments.`,
+      data.inTrial
+        ? `Trial cancelled. It runs until ${until} and you won't be charged.`
+        : data.legacyFree
+          ? `You keep ${PLANS[plan].name} until ${until}. After that you're on Free (1 site). No more payments.`
+          : `You keep ${PLANS[plan].name} until ${until}. After that monitoring pauses. No more payments.`,
       "success",
     );
     await afterOk();
@@ -66,7 +75,7 @@ export function useBillingActions(opts: {
       return false;
     }
     toast(
-      `Nothing is charged today. You keep Business until ${data.pendingPlanAtFormatted || "renewal"}. From then you'll pay ${data.newRecurringFormatted || "the Pro price"}.`,
+      `Nothing is charged today. You keep ${data.fromName || PLANS[plan].name} until ${data.pendingPlanAtFormatted || "renewal"}. From then you'll pay ${data.newRecurringFormatted || "the new price"}.`,
       "success",
     );
     await afterOk();
@@ -159,16 +168,30 @@ export function useBillingActions(opts: {
     return true;
   }
 
-  async function undoPendingRemoval() {
-    const res = await fetch("/api/billing/checkout-pack", { method: "POST" });
+  /** POST /api/billing/resize. Returns an error message, or null when done. */
+  async function resize(next: number, keepSiteIds?: string[]): Promise<string | null> {
+    const res = await fetch("/api/billing/resize", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ blocks: next, ...(keepSiteIds ? { keepSiteIds } : {}) }),
+    });
     const data = await readJson(res);
-    if (!res.ok) {
-      toast(data.error || "Could not undo.", "error");
-      return false;
-    }
-    toast("Pack removal canceled.", "success");
+    if (!res.ok) return data.error || "Could not change the size.";
+    if (data.undone) toast("Smaller size canceled. You keep your current size.", "success");
+    else if (data.booked) toast(`Booked: ${customSites(next)} sites from ${data.effectiveAtFormatted || "your renewal date"}. Nothing is charged today.`, "success");
+    else if (data.pending) {
+      toast(PENDING_MESSAGE, "info");
+      const ok = await awaitBilling((s) => s.sitePackCount >= next);
+      toast(ok ? `You now have ${customSites(next)} sites.` : STILL_PENDING_MESSAGE, ok ? "success" : "info");
+    } else toast(`You now have ${customSites(next)} sites.`, "success");
     await afterOk();
-    return true;
+    return null;
+  }
+
+  async function undoPendingRemoval() {
+    const err = await resize(blocks);
+    if (err) toast(err, "error");
+    return !err;
   }
 
   /** A dropped connection shows a toast instead of failing silently (resolves to null). */
@@ -193,5 +216,6 @@ export function useBillingActions(opts: {
     scheduleMonthly: safe(scheduleMonthly),
     cancelMonthlySwitch: safe(cancelMonthlySwitch),
     undoPendingRemoval: safe(undoPendingRemoval),
+    resize: safe(resize),
   };
 }

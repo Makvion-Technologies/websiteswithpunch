@@ -4,7 +4,7 @@ export const domainFeature = {
   path: "/domain-expiry-monitoring",
   title: "Domain Expiry Monitoring – Track Renewal Dates Daily",
   description:
-    "Domain expiry monitoring for your sites and your clients': renewal dates looked up daily via RDAP, with days left beside uptime and SSL. Free for one site.",
+    "Domain expiry monitoring for your sites and your clients': renewal dates looked up daily via RDAP, with days left beside uptime and SSL. 30-day free trial.",
   eyebrow: "Domain expiry monitoring",
   h1: "Domain expiry monitoring that keeps renewals in sight",
   intro:

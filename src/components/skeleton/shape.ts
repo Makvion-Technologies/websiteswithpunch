@@ -8,7 +8,7 @@ import { useEffect, useMemo, useSyncExternalStore } from "react";
  * Holds counts only — no names, URLs or personal data.
  */
 export type LayoutShape = {
-  plan: "free" | "pro" | "business";
+  plan: "free" | "starter" | "pro" | "business";
   active: number;
   locked: number;
   limit: number;
@@ -38,7 +38,7 @@ export function useLayoutShape(): LayoutShape {
       const n = (x: unknown, max = 12) =>
         typeof x === "number" && x >= 0 ? Math.min(Math.floor(x), max) : 0;
       return {
-        plan: v.plan === "pro" || v.plan === "business" ? v.plan : "free",
+        plan: v.plan === "starter" || v.plan === "pro" || v.plan === "business" ? v.plan : "free",
         active: n(v.active),
         locked: n(v.locked),
         limit: typeof v.limit === "number" && v.limit > 0 ? Math.min(Math.floor(v.limit), 9999) : 1,

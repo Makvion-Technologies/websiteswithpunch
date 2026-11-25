@@ -1,15 +1,8 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 import type { BillingInterval } from "@/lib/billing-interval";
-import type { PricingPlan } from "./pricing-content";
+import { cardPricing, type PricingPlan } from "./pricing-content";
 import { HEARTBEATS } from "@/lib/heartbeats/config";
-
-function Dash({ className = "" }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 16 16" className={`h-4 w-4 shrink-0 ${className}`} fill="none" aria-hidden>
-      <path d="M4 8h8" stroke="currentColor" strokeWidth={1.5} />
-    </svg>
-  );
-}
 
 function Check({ className = "" }: { className?: string }) {
   return (
@@ -38,28 +31,40 @@ function PopularTag() {
 }
 
 const cta = {
-  free: "border border-rule bg-bg text-ink hover:bg-accent-soft",
+  starter: "border border-rule bg-bg text-ink hover:bg-accent-soft",
   pro: "bg-accent text-white hover:bg-accent-hover",
   business: "bg-solid text-solid-fg hover:opacity-90",
+  custom: "border border-rule bg-bg text-ink hover:bg-accent-soft",
 } as const;
 
 /**
- * One plan: name + tag, who it's for, price + billing note, CTA, divider, feature list.
- * Price, note and CTA link follow the Monthly / Annual toggle; everything else is fixed.
- * lg: each card is a subgrid spanning the parent's rows (6 blocks + 10 feature rows, the longest
- * list, or 11 with the heartbeat row; update SPAN / ROWS if the lists grow; a test checks this),
- * so every block and every feature row sits at the same height across the three cards.
+ * One plan: name, who it's for, price + billing note, a size row (Custom: the slider), CTA,
+ * divider, feature list. lg: each card is a subgrid spanning the parent's rows (7 blocks + 8
+ * feature rows, or 9 with the heartbeat row; update SPAN / ROWS if the lists grow; a test
+ * checks this), so every block and feature row lines up across the four cards.
  */
-const SPAN = HEARTBEATS ? "lg:[grid-row:span_17]" : "lg:[grid-row:span_16]";
-const ROWS = HEARTBEATS ? "lg:[grid-row:span_11]" : "lg:[grid-row:span_10]";
+const SPAN = HEARTBEATS ? "lg:[grid-row:span_16]" : "lg:[grid-row:span_15]";
+const ROWS = HEARTBEATS ? "lg:[grid-row:span_9]" : "lg:[grid-row:span_8]";
 
-export function PricingCard({ plan, interval }: { plan: PricingPlan; interval: BillingInterval }) {
+export function PricingCard({
+  plan,
+  interval,
+  blocks = 0,
+  size,
+}: {
+  plan: PricingPlan;
+  interval: BillingInterval;
+  /** Custom size (extra 25-site blocks). */
+  blocks?: number;
+  /** Size row: the Custom slider, or a short line for the fixed plans. */
+  size?: ReactNode;
+}) {
   const dark = plan.id === "pro";
-  const { price, note, href } = plan.pricing[interval];
+  const { price, note, href } = cardPricing(plan.id, interval, blocks);
   const soft = dark ? "text-solid-fg/60" : "text-muted";
   return (
     <div
-      className={`relative flex min-w-0 flex-col p-6 sm:p-8 ${SPAN} lg:grid lg:grid-rows-subgrid lg:gap-y-0 ${
+      className={`relative flex min-w-0 flex-col p-6 xl:p-7 ${SPAN} lg:grid lg:grid-rows-subgrid lg:gap-y-0 ${
         dark ? "border border-solid bg-solid text-solid-fg max-lg:mt-3" : "border border-rule bg-surface text-ink"
       }`}
     >
@@ -73,10 +78,9 @@ export function PricingCard({ plan, interval }: { plan: PricingPlan; interval: B
       </p>
       <p className={`mt-2 text-xs ${soft}`}>{note}</p>
 
-      <Link
-        href={href}
-        className={`mt-6 block px-4 py-3 text-center text-sm font-semibold transition-colors ${cta[plan.id]}`}
-      >
+      <div className={`mt-4 text-sm ${soft}`}>{size}</div>
+
+      <Link href={href} className={`mt-6 block px-4 py-3 text-center text-sm font-semibold transition-colors ${cta[plan.id]}`}>
         {plan.cta}
       </Link>
 
@@ -86,8 +90,8 @@ export function PricingCard({ plan, interval }: { plan: PricingPlan; interval: B
       <ul className={`space-y-3 text-sm ${ROWS} lg:grid lg:grid-rows-subgrid lg:gap-y-0`}>
         {plan.features.map((f) => (
           <li key={f.text} className="flex gap-3">
-            {f.off ? <Dash className={`mt-0.5 ${soft}`} /> : <Check className="mt-0.5 text-accent" />}
-            <span className={f.off ? soft : dark ? "text-solid-fg/90" : "text-ink"}>{f.text}</span>
+            <Check className="mt-0.5 text-accent" />
+            <span className={dark ? "text-solid-fg/90" : "text-ink"}>{f.text}</span>
           </li>
         ))}
       </ul>

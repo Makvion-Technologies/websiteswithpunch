@@ -75,7 +75,7 @@ export function SwitchMonthlyModal({ open, loading, message, onClose, onConfirm 
             <p className="text-sm leading-relaxed text-muted">
               From {when} you&apos;ll pay {preview.newRecurringFormatted} (
               {preview.recurringBreakdown}), once a month on the same date.
-              {preview.packs > 0 ? " Your site packs move to monthly billing too." : ""}
+              {preview.packs > 0 ? " Your extra Custom sites move to monthly billing too." : ""}
             </p>
             <p className="text-sm leading-relaxed text-muted">
               You can cancel this switch anytime before {when}.

@@ -61,7 +61,7 @@ export function siteCopy(site: DownSite) {
       h: "How this check works",
       p: [
         `We load the homepage of ${host} over HTTPS when you open this page, follow a few redirects, and show the HTTP status code and response time. 2xx and 3xx answers count as up. The result is cached for about a minute. You can run it again with Check again. For any other address, use the [website down checker](/tools/website-down-checker).`,
-        `If you look after your own site, you can [monitor it ${byCadence("around the clock", "daily")} for free](/signup) — uptime, SSL and domain expiry on one dashboard, with email alerts when a check finds it down. No card needed for one site.`,
+        `If you look after your own site, you can [monitor it ${byCadence("around the clock", "daily")} free for 30 days](/signup?plan=starter) — uptime, SSL and domain expiry on one dashboard, with email alerts when a check finds it down. Then $5/month for 10 sites.`,
       ],
     },
   ];
@@ -93,6 +93,6 @@ export function siteCopy(site: DownSite) {
     intro: `Check whether ${name} is down for everyone or just for you. We'll request ${host} from our server and show the status code and response time. Free, no signup — and we don't invent live outage counts.`,
     sections,
     faqs,
-    cta: `Want this kind of check on your own website, ${byCadence("every few minutes", "every day")}? Add it to Websites With Punch. We record uptime, SSL and domain expiry, and email you if a check finds it down. Free for one site, no card needed.`,
+    cta: `Want this kind of check on your own website, ${byCadence("every few minutes", "every day")}? Add it to Websites With Punch. We record uptime, SSL and domain expiry, and email you if a check finds it down. From $5/month for 10 sites, with a 30-day free trial.`,
   };
 }

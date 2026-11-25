@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { PLANS, type PlanId } from "@/lib/plans";
+import { getEffectiveSiteLimit, planDisplayName, type PlanId } from "@/lib/plans";
 import { RECEIPT_NOTE } from "@/lib/tax-copy";
 import { STILL_PENDING_MESSAGE, awaitBilling } from "@/components/billing/awaitBilling";
 
@@ -20,16 +20,20 @@ export function CheckoutReturn({
   subscriptionId,
   status,
   plan,
+  blocks = 0,
 }: {
   outcome: string;
   subscriptionId?: string;
   status?: string;
   plan: PlanId;
+  /** Custom extra 25-site blocks already on the account. */
+  blocks?: number;
 }) {
   const router = useRouter();
   const failed = outcome === "canceled" || status === "failed" || status === "cancelled";
   const [state, setState] = useState<"waiting" | "done" | "slow">(plan !== "free" ? "done" : "waiting");
   const [newPlan, setNewPlan] = useState<PlanId>(plan);
+  const [newBlocks, setNewBlocks] = useState(blocks);
 
   useEffect(() => {
     if (failed || state !== "waiting") return;
@@ -37,7 +41,10 @@ export function CheckoutReturn({
     void awaitBilling(
       (s) => {
         if (s.plan === "free") return false;
-        if (live) setNewPlan(s.plan);
+        if (live) {
+          setNewPlan(s.plan);
+          setNewBlocks(s.sitePackCount ?? 0);
+        }
         return true;
       },
       { subscriptionId, tries: 30, everyMs: 3000 },
@@ -54,15 +61,15 @@ export function CheckoutReturn({
   if (failed) {
     return (
       <div className={warn} role="status">
-        Checkout didn&apos;t finish, so nothing was charged. You can upgrade anytime from Your plan.
+        Checkout didn&apos;t finish, so nothing was charged. You can pick a plan anytime from Your plan.
       </div>
     );
   }
   if (state === "done" && newPlan !== "free") {
     return (
       <div className={ok} role="status">
-        Payment confirmed. You&apos;re on {PLANS[newPlan].name}: up to {PLANS[newPlan].siteLimit} sites are
-        ready to monitor. {RECEIPT_NOTE}
+        Confirmed. You&apos;re on {planDisplayName(newPlan, newBlocks, false)}: up to{" "}
+        {getEffectiveSiteLimit(newPlan, newBlocks, false)} sites are ready to monitor. {RECEIPT_NOTE}
       </div>
     );
   }
@@ -70,7 +77,7 @@ export function CheckoutReturn({
     <div className={warn} role="status" aria-live="polite">
       {state === "slow"
         ? STILL_PENDING_MESSAGE
-        : `Thanks! Confirming your payment with Dodo Payments. Your plan switches on automatically, usually within a minute. ${RECEIPT_NOTE}`}
+        : `Thanks! Confirming your checkout with Dodo Payments. Your plan switches on automatically, usually within a minute. ${RECEIPT_NOTE}`}
     </div>
   );
 }

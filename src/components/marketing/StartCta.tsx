@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { PLANS } from "@/lib/plans";
 
-/** True facts from the Free plan config: its site limit, and no checkout for Free. */
-export const FREE_TRUST = `Free for ${PLANS.free.siteLimit} site${PLANS.free.siteLimit === 1 ? "" : "s"} · No card needed`;
-export const START_LABEL = "Start monitoring free";
+/** True facts from the plan config: Starter's price, sites and its 30-day trial. */
+export const FREE_TRUST = `30 days free, then $${PLANS.starter.price}/month for ${PLANS.starter.siteLimit} sites · Cancel anytime`;
+export const START_LABEL = "Start your free trial";
+/** Where every "start" button goes: sign-up with Starter (the trial) chosen. */
+export const START_HREF = "/signup?plan=starter";
 
 /** Mid-page CTA band, repeated after key homepage sections. */
 export function CtaBand({ line }: { line: string }) {
@@ -13,7 +15,7 @@ export function CtaBand({ line }: { line: string }) {
         <p className="font-display text-xl font-medium tracking-tight text-ink sm:text-2xl">{line}</p>
         <div className="shrink-0 sm:text-right">
           <Link
-            href="/signup"
+            href={START_HREF}
             className="inline-flex bg-accent px-6 py-3 text-sm font-semibold text-white hover:bg-accent-hover"
           >
             {START_LABEL}

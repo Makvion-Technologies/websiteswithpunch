@@ -1,11 +1,11 @@
-import { PLANS } from "@/lib/plans";
+import { planOffers } from "@/lib/seo/offers";
 import { faqs } from "./home-content";
 import { TOUR } from "./tour-content";
 import { SITE_ALT_NAMES, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site-config";
 
 /**
  * Structured data for the homepage: the organisation and the app. Monthly prices come from the
- * same PLANS config the pricing section uses, so they can't drift; no ratings or reviews. The
+ * same plan config the pricing section uses, so they can't drift; no ratings or reviews. The
  * FAQPage is built from the same list the visible FAQ renders; the VideoObject is the tour in
  * "How it works".
  */
@@ -43,21 +43,7 @@ export function HomeJsonLd() {
         applicationCategory: "BusinessApplication",
         operatingSystem: "Web",
         publisher: { "@id": `${SITE_URL}/#organization` },
-        offers: Object.values(PLANS).map((p) => ({
-          "@type": "Offer",
-          name: p.name,
-          price: String(p.price),
-          priceCurrency: "USD",
-          priceSpecification: {
-            "@type": "UnitPriceSpecification",
-            price: String(p.price),
-            priceCurrency: "USD",
-            unitText: "MONTH",
-            billingDuration: "P1M",
-          },
-          url: `${SITE_URL}/pricing`,
-          description: p.description,
-        })),
+        offers: planOffers(),
       },
       {
         "@type": "VideoObject",

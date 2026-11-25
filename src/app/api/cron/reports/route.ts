@@ -2,6 +2,7 @@ import { timingSafeEqual } from "node:crypto";
 import { markRun } from "@/lib/admin/jobs";
 import { NextResponse } from "next/server";
 import { sendDueReports } from "@/lib/reports/send";
+import { sendTrialReminders } from "@/lib/trial";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -15,10 +16,11 @@ function authorized(req: Request): boolean {
   return got.length === want.length && timingSafeEqual(got, want);
 }
 
-/** Daily (vercel.json): weekly reports for the users whose weekday it is. */
+/** Daily (vercel.json): weekly reports for the users whose weekday it is, then trial reminders (7 and 2 days left). */
 export async function GET(req: Request) {
   if (!authorized(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const result = await sendDueReports();
-  markRun("cron:reports", true, undefined, JSON.stringify(result).slice(0, 200));
-  return NextResponse.json({ ok: true, ...result });
+  const trials = await sendTrialReminders().catch((e) => ({ error: String(e) }));
+  markRun("cron:reports", !("error" in trials), undefined, JSON.stringify({ ...result, trials }).slice(0, 200));
+  return NextResponse.json({ ok: true, ...result, trials });
 }

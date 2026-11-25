@@ -1,9 +1,10 @@
 /**
  * Pure helpers over a Dodo subscription (API response or webhook `data`). One subscription
- * per customer: the plan is the product, site packs are the matching add-on's quantity, and a
- * change booked for the renewal date shows up as `scheduled_change`.
+ * per customer: the plan is the product, Custom's extra 25-site blocks ("packs" below) are the
+ * "Extra 25 sites" add-on's quantity on Business, and a change booked for the renewal date shows
+ * up as `scheduled_change`. Retired pack add-ons are ignored: the new plan sizes include them.
  */
-import { getPackConfig, type PlanId } from "./plans";
+import { clampBlocks, type PlanId } from "./plans";
 import type { BillingInterval, PaidPlanId } from "./billing-interval";
 import { lookupCatalogId } from "./dodo-products";
 
@@ -19,6 +20,9 @@ export type SubLike = {
   next_billing_date?: string | null;
   payment_frequency_interval?: string | null;
   customer?: { customer_id: string; email?: string | null } | null;
+  created_at?: string | null;
+  /** Days of free trial on this subscription (0 when none, or once a plan change ended it). */
+  trial_period_days?: number | null;
   metadata?: Record<string, unknown> | null;
   scheduled_change?: {
     product_id: string;
@@ -47,16 +51,35 @@ function planOfProduct(
   return { plan: info.plan, interval: frequency === "Year" ? "year" : "month" };
 }
 
-/** Pack add-on quantity for this plan (other add-ons ignored), clamped to maxPacks. */
+/** Custom block quantity ("Extra 25 sites" add-on) on Business; 0 for other plans. */
 export function packCountOf(addons: AddonQty[] | null | undefined, plan: PlanId): number {
-  const config = getPackConfig(plan);
-  if (!config) return 0;
+  if (plan !== "business") return 0;
   let qty = 0;
   for (const a of addons ?? []) {
-    const info = lookupCatalogId(a.addon_id);
-    if (info?.kind === "pack" && info.plan === plan) qty += a.quantity;
+    if (lookupCatalogId(a.addon_id)?.kind === "extra") qty += a.quantity;
   }
-  return Math.max(0, Math.min(qty, config.maxPacks));
+  return clampBlocks(qty);
+}
+
+/** True when the subscription still carries a retired product or site-pack add-on. */
+export function hasLegacyItems(sub: Pick<SubLike, "product_id" | "addons">): boolean {
+  if (lookupCatalogId(sub.product_id)?.legacy) return true;
+  return (sub.addons ?? []).some((a) => lookupCatalogId(a.addon_id)?.kind === "legacy-pack");
+}
+
+/**
+ * End of the free trial while one is running, else null. Dodo has no trial-status field: a
+ * subscription with trial days starts with a $0 authorisation and first bills at
+ * created_at + trial days; a plan change that ends the trial sets trial_period_days to 0.
+ */
+export function trialEndOf(sub: Pick<SubLike, "trial_period_days" | "created_at" | "status">, nowMs = Date.now()): Date | null {
+  const days = Number(sub.trial_period_days ?? 0);
+  if (!(days > 0) || !sub.created_at) return null;
+  if (sub.status !== "active" && sub.status !== "past_due") return null;
+  const start = new Date(sub.created_at).getTime();
+  if (Number.isNaN(start)) return null;
+  const end = start + days * 86400000;
+  return end > nowMs ? new Date(end) : null;
 }
 
 export type ScheduledState = {
@@ -76,6 +99,8 @@ export type SubscriptionState = {
   /** End of the paid period (= next billing date). */
   periodEnd: Date | null;
   scheduled: ScheduledState | null;
+  /** Free-trial end while the trial runs (Starter only), else null. */
+  trialEndsAt: Date | null;
 };
 
 function toDate(iso: string | null | undefined): Date | null {
@@ -102,6 +127,7 @@ export function subscriptionState(sub: SubLike): SubscriptionState {
     cancelAtPeriodEnd: Boolean(sub.cancel_at_next_billing_date),
     periodEnd: toDate(sub.next_billing_date),
     scheduled,
+    trialEndsAt: trialEndOf(sub),
   };
 }
 

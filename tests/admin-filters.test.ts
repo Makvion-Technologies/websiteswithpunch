@@ -5,7 +5,7 @@ import { alertsWhere, commissionsWhere, messagesWhere, sitesWhere, usersWhere } 
 import { noAlertReason } from "../src/lib/admin/site-alert";
 
 test("filters: paid users, down/monitored sites, available commissions", () => {
-  assert.deepEqual(usersWhere({ plan: "paid" }), { plan: { in: ["pro", "business"] } });
+  assert.deepEqual(usersWhere({ plan: "paid" }), { plan: { in: ["starter", "pro", "business"] } });
   assert.deepEqual(usersWhere({ plan: "nope" }), {});
   assert.deepEqual(sitesWhere({ status: "down" }), { locked: false, status: { in: ["down", "error"] } });
   assert.deepEqual(sitesWhere({ status: "monitored" }), { locked: false });

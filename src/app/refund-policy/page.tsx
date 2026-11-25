@@ -15,26 +15,38 @@ export const metadata: Metadata = {
 
 export default function RefundPolicyPage() {
   return (
-    <LegalPage title="Refund & Cancellation Policy" updated="October 4, 2026" path="/refund-policy">
+    <LegalPage title="Refund & Cancellation Policy" updated="November 25, 2026" path="/refund-policy">
       <P>
         This policy explains how cancellations and refunds work for Websites With Punch, a website
         monitoring software subscription operated by <strong>Makvion Technologies</strong>. It is
-        part of our <A href="/terms">Terms of Service</A>. The Free plan costs nothing and needs no
-        card, so you can try the service before you pay.
+        part of our <A href="/terms">Terms of Service</A>. Starter comes with a 30-day free trial, so
+        you can try the service before you pay.
       </P>
 
       <H2>What You Pay For</H2>
       <P>
-        Pro and Business are subscriptions to our online service, billed in advance monthly or
-        yearly in USD. Optional site packs are billed on the same schedule. Subscriptions renew
-        automatically until you cancel. Current prices are on our <A href="/pricing">Pricing</A>{" "}
+        Starter, Pro, Business and Custom are subscriptions to our online service, billed in
+        advance monthly or yearly in USD, or in your local currency where checkout shows one.
+        Custom&apos;s extra sites are billed on the same schedule. Subscriptions renew automatically
+        until you cancel. Current prices are on our <A href="/pricing">Pricing</A>{" "}
         page.
+      </P>
+
+      <H2>Free Trial</H2>
+      <P>
+        Starter starts with a 30-day free trial, one per person. You add a card or other payment
+        method to start it, but nothing is charged during the trial. If you don&apos;t cancel, the
+        trial converts automatically on its end date and you are charged for your first Starter
+        billing period (monthly or yearly, as you chose). We email you 7 days and 2 days before
+        that. Cancel before the end date and you are never charged. If you upgrade to Pro,
+        Business or Custom during the trial, the trial ends and the new plan is charged in full
+        straight away. Pro, Business and Custom have no trial.
       </P>
 
       <H2>Refunds</H2>
       <P>
         Payments are not refunded, including after you cancel. This applies to monthly and annual
-        plans, site packs, upgrade charges and renewals, and to any unused time left in a billing
+        plans, the first charge after a free trial ends, extra Custom sites, upgrade charges and renewals, and to any unused time left in a billing
         period. The only exceptions are listed under Exceptions below.
       </P>
 
@@ -51,9 +63,11 @@ export default function RefundPolicyPage() {
       </UL>
       <P>
         After you cancel, you keep your plan until the end of the period you have already paid
-        for, and you are not charged again. Your account then moves to the Free plan. Nothing is
-        deleted: sites beyond the Free limit are locked until you upgrade or free a slot. To avoid
-        the next charge, cancel before your renewal date.
+        for, and you are not charged again. If you cancel during a free trial, the trial runs to
+        its end date and nothing is charged. When the plan ends, monitoring pauses: nothing is
+        deleted, and your sites start being checked again when you pick a plan. Accounts created
+        before paid-only plans move back to their Free plan (1 site), with other sites locked. To
+        avoid the next charge, cancel before your renewal or trial end date.
       </P>
 
       <H2>Plan Changes</H2>
@@ -63,13 +77,14 @@ export default function RefundPolicyPage() {
           annual billing until then, with no refund or credit for the remaining months.
         </li>
         <li>
-          <strong>Downgrades and removing site packs:</strong> take effect at renewal, with no
+          <strong>Downgrades and smaller Custom sizes:</strong> take effect at renewal, with no
           refund or credit. You keep your current capacity until then.
         </li>
         <li>
-          <strong>Upgrades and adding site packs:</strong> take effect immediately and are
+          <strong>Upgrades and larger Custom sizes:</strong> take effect immediately and are
           charged right away on a prorated basis: unused time on your current subscription is
-          credited, the new total is charged, and your billing date moves to that day.
+          credited, the new total is charged, and your billing date moves to that day. During the
+          Starter trial, an upgrade ends the trial and is charged at the full price.
         </li>
       </UL>
 
@@ -78,7 +93,7 @@ export default function RefundPolicyPage() {
       <UL>
         <li>
           <strong>Duplicate charges:</strong> you were charged more than once for the same plan,
-          site pack or billing period.
+          Custom size or billing period.
         </li>
         <li>
           <strong>Billing errors:</strong> you were charged a different amount from the price shown
@@ -86,7 +101,7 @@ export default function RefundPolicyPage() {
         </li>
         <li>
           <strong>Service not provided:</strong> a technical problem on our side means a paid plan
-          or site pack you were charged for was never made available to you, and we can&apos;t fix
+          or Custom size you were charged for was never made available to you, and we can&apos;t fix
           it within a reasonable time.
         </li>
       </UL>

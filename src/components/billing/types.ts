@@ -7,6 +7,11 @@ export type BillingSummary = {
   healed?: boolean;
   plan: PlanId;
   planName: string;
+  /** Account from before paid-only pricing ("free" = the 1-site Free plan for life). */
+  legacyFree?: boolean;
+  /** Starter free trial running (ends trialEndsAt; first charge then). */
+  inTrial?: boolean;
+  trialEndsAtFormatted?: string | null;
   /** null on Free. */
   interval?: BillingInterval | null;
   intervalLabel?: string | null;
@@ -37,6 +42,7 @@ export type BillingSummary = {
 export type SiteCapacityProps = {
   plan: PlanId;
   sitePackCount: number;
+  legacyFree?: boolean;
   siteCount: number;
   siteLimit: number;
   atLimit: boolean;
@@ -47,25 +53,21 @@ export type SiteCapacityProps = {
   pendingPlanAt?: string | null;
 };
 
-/** /api/billing/preview-pack response. Amounts follow the subscription's interval. */
-export type PackPreview = {
-  interval?: BillingInterval;
-  action?: "add" | "remove";
-  isUndo?: boolean;
-  sitesPerPack: number;
-  plan: PlanId;
-  planName: string;
-  siteCount?: number;
-  amountDueToday: number;
+/** GET /api/billing/resize?blocks=N response. */
+export type ResizePreview = {
+  action: "increase" | "decrease" | "undo";
+  blocks: number;
+  sites: number;
+  name: string;
+  currentSites: number;
+  interval: BillingInterval;
+  activeCount: number;
   amountDueTodayFormatted: string;
-  /** Tax in today's charge, as reported by Dodo's preview (null when none). */
   taxTodayFormatted?: string | null;
-  daysLeftInPeriod: number | null;
-  nextRenewal: string | null;
-  nextRenewalFormatted: string | null;
-  newRecurringMonthlyFormatted: string;
+  newRecurringFormatted: string;
   recurringBreakdown: string;
-  keepSiteLimitUntilRenewal?: number;
-  newSiteLimitFromRenewal?: number;
-  newSiteLimit?: number;
+  nextRenewalFormatted?: string | null;
+  effectiveAtFormatted?: string | null;
+  needsKeepPicker?: boolean;
+  maxKeep?: number;
 };

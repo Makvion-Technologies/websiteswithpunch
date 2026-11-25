@@ -99,8 +99,8 @@ export const ON_HOLD_ERROR =
 
 const SCHEDULED_ERRORS = {
   interval: ["A switch to monthly billing is booked for your renewal date. Keep annual billing in Your plan first, then try again.", "SWITCH_PENDING"],
-  downgrade: ["A switch to Pro is booked for your renewal date. Choose Keep Business in Your plan first, then try again.", "DOWNGRADE_PENDING"],
-  packs: ["A site pack removal is booked for your renewal date. Undo it in Your plan first, then try again.", "REMOVAL_PENDING"],
+  downgrade: ["A switch to a smaller plan is booked for your renewal date. Keep your current plan in Your plan first, then try again.", "DOWNGRADE_PENDING"],
+  packs: ["A smaller Custom size is booked for your renewal date. Undo it in Your plan first, then try again.", "REMOVAL_PENDING"],
 } as const;
 
 /** 409 when a renewal-date change is booked whose kind is not in `allow`. */

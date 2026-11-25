@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { VERIFICATION_STARTED_AT } from "@/lib/email-verify";
-import { PLANS, SITE_PACKS } from "@/lib/plans";
+import { CUSTOM, PLANS } from "@/lib/plans";
 import { alertsWhere, commissionsWhere, messagesWhere, payoutsWhere, sitesWhere, usersWhere } from "./filters";
 
 export const verifiedWhere = { OR: [{ emailVerified: { not: null } }, { createdAt: { lt: VERIFICATION_STARTED_AT } }] };
@@ -30,7 +30,8 @@ export async function overviewStats(now = Date.now()) {
   const packSum = (p: string) => packs.find((r) => r.plan === p)?._sum.sitePackCount ?? 0;
   const pro = count("pro");
   const business = count("business");
-  const mrr = pro * PLANS.pro.price + business * PLANS.business.price + packSum("pro") * SITE_PACKS.pro.pricePerMonth + packSum("business") * SITE_PACKS.business.pricePerMonth;
+  // Custom = Business + extra 25-site blocks (sitePackCount). Legacy pack holders read 0 blocks.
+  const mrr = count("starter") * PLANS.starter.price + pro * PLANS.pro.price + business * PLANS.business.price + packSum("business") * CUSTOM.blockPrice;
   return {
     users, verified, pro, business, sites, down, mrr,
     openPayouts: open._count._all, openPayoutCents: open._sum.amountCents ?? 0,

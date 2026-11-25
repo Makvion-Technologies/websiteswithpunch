@@ -8,17 +8,31 @@ import type { SubscriptionState } from "../src/lib/dodo-subscription";
 
 process.env.DODO_PRODUCT_PRO_MONTHLY = "pdt_pro_m";
 process.env.DODO_PRODUCT_BUSINESS_MONTHLY = "pdt_biz_m";
-process.env.DODO_ADDON_PACK_PRO_MONTHLY = "adn_pro_m";
+process.env.DODO_ADDON_EXTRA25_MONTHLY = "adn_x25_m";
 
 const st = { plan: "business", interval: "month", packs: 0, status: "active", cancelAtPeriodEnd: false, scheduled: null, periodEnd: null } as unknown as SubscriptionState;
 
 test("renewal bookings use next_billing_date + full_immediately (Dodo's only allowed pair)", () => {
-  const r = changeBody({ plan: "pro", interval: "month", packs: 1 }, "renewal", st);
+  const r = changeBody({ plan: "business", interval: "month", packs: 1 }, "renewal", st);
   assert.ok(r.ok);
   assert.equal(r.body.effective_at, "next_billing_date");
   assert.equal(r.body.proration_billing_mode, "full_immediately");
   assert.equal(r.body.on_payment_failure, undefined);
-  assert.deepEqual(r.body.addons, [{ addon_id: "adn_pro_m", quantity: 1 }]);
+  assert.deepEqual(r.body.addons, [{ addon_id: "adn_x25_m", quantity: 1 }]);
+});
+
+test("extra-site blocks only ride on Business (Custom); other plans drop them", () => {
+  const r = changeBody({ plan: "pro", interval: "month", packs: 3 }, "renewal", st);
+  assert.ok(r.ok);
+  assert.deepEqual(r.body.addons, []);
+});
+
+test("trial upgrade ends the trial: full charge now, immediately, prevent_change", () => {
+  const r = changeBody({ plan: "pro", interval: "month", packs: 0 }, "trial", st);
+  assert.ok(r.ok);
+  assert.equal(r.body.effective_at, "immediately");
+  assert.equal(r.body.proration_billing_mode, "full_immediately");
+  assert.equal(r.body.on_payment_failure, "prevent_change");
 });
 
 test("charge-now changes stay prorated, immediate, prevent_change", () => {

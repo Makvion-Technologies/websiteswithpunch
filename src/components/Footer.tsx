@@ -19,7 +19,7 @@ const columns: { title: string; links: FooterLink[] }[] = [
       { label: "Domain expiry monitoring", href: "/domain-expiry-monitoring" },
       ...(HEARTBEATS ? [{ label: "Cron job monitoring", href: "/cron-job-monitoring" }] : []),
       { label: "Pricing", href: "/pricing" },
-      { label: "Create a free account", href: "/signup" },
+      { label: "Start free trial", href: "/signup" },
     ],
   },
   {

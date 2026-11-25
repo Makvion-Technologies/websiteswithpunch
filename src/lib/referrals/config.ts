@@ -10,7 +10,7 @@ export const REFERRAL = {
 } as const;
 
 /** Shared wording for what earns commission. */
-export const SCOPE = "on Pro and Business plan payments (site packs excluded)";
+export const SCOPE = "on plan payments (extra Custom sites and retired site packs excluded)";
 
 export const ratePercent = REFERRAL.rateBps / 100;
 export const fmtUsd = (cents: number) =>

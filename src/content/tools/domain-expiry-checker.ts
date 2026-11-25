@@ -75,5 +75,5 @@ export const domainChecker = {
       a: "Yes. Websites With Punch looks up the domain expiry of every site you add once a day and shows the days left on one dashboard, next to uptime and SSL. The free plan covers one site; Pro covers 10 and Business 50.",
     },
   ] satisfies Faq[],
-  cta: "Add your site and we look up its domain expiry every day, next to uptime and SSL, so the renewal date is always one glance away. Free for one site. The days left show on your dashboard, amber at 30 and red at 7, and we email you 30, 7 and 1 day before expiry.",
+  cta: "Add your site and we look up its domain expiry every day, next to uptime and SSL, so the renewal date is always one glance away. From $5/month for 10 sites, with a 30-day free trial. The days left show on your dashboard, amber at 30 and red at 7, and we email you 30, 7 and 1 day before expiry.",
 };

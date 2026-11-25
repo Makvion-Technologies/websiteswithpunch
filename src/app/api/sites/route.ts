@@ -2,13 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import {
-  canBuySitePack,
-  getEffectivePlan,
-  PLANS,
-  SITE_PACKS,
-  resolvePackCountForLimit,
-} from "@/lib/plans";
+import { getEffectivePlan, resolvePackCountForLimit, siteLimitHint } from "@/lib/plans";
 import { runFullSiteCheck } from "@/lib/checks";
 import { infoFields } from "@/lib/site-info";
 import {
@@ -75,22 +69,7 @@ export async function POST(req: Request) {
   });
   const limit = currentEffectiveLimit(user);
   if (activeCount >= limit) {
-    let upgradeHint: string;
-    if (plan === "free") {
-      upgradeHint = `Free allows ${PLANS.free.siteLimit} site. Upgrade to Pro (${PLANS.pro.siteLimit}) or Business (${PLANS.business.siteLimit}).`;
-    } else if (plan === "pro") {
-      if (canBuySitePack("pro", resolved.packCount)) {
-        upgradeHint = `Pro site limit reached (${limit}). Buy a +${SITE_PACKS.pro.sitesPerPack} site pack ($${SITE_PACKS.pro.pricePerMonth}/mo) or upgrade to Business.`;
-      } else {
-        upgradeHint = `Pro max capacity reached (${limit} sites). Upgrade to Business for more sites.`;
-      }
-    } else {
-      if (canBuySitePack("business", resolved.packCount)) {
-        upgradeHint = `Business site limit reached (${limit}). Buy a +${SITE_PACKS.business.sitesPerPack} site pack ($${SITE_PACKS.business.pricePerMonth}/mo) or contact us from the Contact page for a custom limit.`;
-      } else {
-        upgradeHint = `Business max capacity reached (${limit} sites). Contact us from the Contact page for a custom limit.`;
-      }
-    }
+    const upgradeHint = siteLimitHint(plan, limit, user.legacyFree, resolved.packCount);
     return NextResponse.json(
       { error: upgradeHint, code: "SITE_LIMIT", limit },
       { status: 403 },

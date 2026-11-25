@@ -4,14 +4,14 @@ import { REFERRAL, fmtUsd, ratePercent, SCOPE } from "@/lib/referrals/config";
 const min = fmtUsd(REFERRAL.minPayoutCents).replace(".00", "");
 
 const STEPS = [
-  { title: "Share your link", body: "Create a free account and copy your personal link." },
-  { title: "They subscribe to Pro or Business", body: `Anyone who signs up within ${REFERRAL.attributionDays} days of opening it becomes your referral.` },
-  { title: `You get ${ratePercent}%`, body: `Of their plan payments (site packs excluded). Withdraw from ${min} via PayPal or UPI.` },
+  { title: "Share your link", body: "Create an account and copy your personal link." },
+  { title: "They subscribe to a paid plan", body: `Anyone who signs up within ${REFERRAL.attributionDays} days of opening it becomes your referral.` },
+  { title: `You get ${ratePercent}%`, body: `Of their plan payments (extra Custom sites excluded). Withdraw from ${min} via PayPal or UPI.` },
 ];
 
 const FAQ = [
   { q: "Who can join?", a: "Anyone with a free Websites With Punch account. No application, no paid plan needed." },
-  { q: "How much do I earn?", a: `${ratePercent}% ${SCOPE}, excluding tax. If a payment includes site packs, only the plan part counts. USD subscriptions only. Refunded or disputed payments are reversed.` },
+  { q: "How much do I earn?", a: `${ratePercent}% ${SCOPE}, excluding tax. If a payment includes extra Custom sites, only the plan part counts. USD subscriptions only. Refunded or disputed payments are reversed.` },
   { q: "When can I withdraw?", a: `Each commission is available as soon as the payment goes through. Request a payout once your available balance reaches ${min}.` },
   { q: "How do I get paid?", a: "Payouts are reviewed and sent manually in USD to your PayPal email or UPI ID, usually within 7 business days. Provider fees or conversion may apply." },
 ];
@@ -31,7 +31,7 @@ export function ReferralLanding({ refCode }: { refCode: string | null }) {
       </p>
       <div className="mt-8 flex flex-col gap-3 sm:flex-row">
         <Link href={signup} className="bg-accent px-5 py-3 text-center text-sm font-medium text-white transition-colors hover:bg-accent-hover">
-          Create free account
+          Create an account
         </Link>
         <Link href="/login?callbackUrl=%2Freferrals" className="border border-rule px-5 py-3 text-center text-sm font-medium text-ink transition-colors hover:border-accent hover:text-accent">
           Log in
