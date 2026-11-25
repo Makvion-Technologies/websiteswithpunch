@@ -158,6 +158,30 @@ h6 {
   }
 }
 
+/* Public tool / is-down check: a travelling ECG pulse in logo blue. */
+.ecg-baseline {
+  opacity: 0.2;
+}
+.ecg-trace {
+  stroke-dasharray: 28 72;
+  stroke-dashoffset: 100;
+  animation: ecg-run 1.35s linear infinite;
+}
+@keyframes ecg-run {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ecg-trace {
+    animation: none;
+    stroke-dasharray: none;
+  }
+  .ecg-loader-label {
+    animation: sk-pulse 2s ease-in-out infinite;
+  }
+}
+
 /* Modals: quick fade, plus a slight scale-in on wider screens. */
 .modal-fade {
   animation: modal-fade 150ms ease-out;

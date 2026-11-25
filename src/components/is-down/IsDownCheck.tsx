@@ -2,8 +2,8 @@
 
 import { ToolForm } from "@/components/tools/ToolForm";
 
-/** Live down check for one known site. Does not run until the visitor presses the button. */
-export function IsDownCheck({ host }: { host: string }) {
+/** Live down check for one known site. Starts once after mount; Check again re-runs it. */
+export function IsDownCheck({ host, name }: { host: string; name: string }) {
   return (
     <ToolForm
       kind="down"
@@ -12,6 +12,8 @@ export function IsDownCheck({ host }: { host: string }) {
       button="Check now"
       initial={host}
       locked
+      autorun
+      checkingLabel={`Checking ${name}…`}
     />
   );
 }

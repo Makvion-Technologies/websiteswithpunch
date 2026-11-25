@@ -33,7 +33,7 @@ export function IsDownPage({ site }: { site: DownSite }) {
         title={site.host}
         badge={<StageChip>Free · no signup</StageChip>}
       >
-        <IsDownCheck host={site.host} />
+        <IsDownCheck host={site.host} name={site.name} />
       </ToolStage>
       <div className="mt-16">
         <Article sections={c.sections} />

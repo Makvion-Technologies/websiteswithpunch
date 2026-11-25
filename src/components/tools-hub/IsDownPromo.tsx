@@ -9,7 +9,7 @@ export function IsDownPromo() {
         <p className="label-caps text-accent">Popular sites</p>
         <h2 className="mt-3 font-display text-3xl font-medium text-ink sm:text-4xl">Is Instagram down? Gmail? IRCTC?</h2>
         <p className="mt-3 max-w-2xl text-muted">
-          Ready-made pages for 150+ well-known sites. Each one checks live from our server when you press the button.
+          Ready-made pages for 200+ well-known sites. Each one checks live from our server when you open the page.
         </p>
         <ul className="mt-8 flex flex-wrap gap-2">
           {POPULAR_DOWN.map((s) => (
