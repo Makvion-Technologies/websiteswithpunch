@@ -27,7 +27,7 @@ export function ProductPreviewSection() {
             One screen. Every site. <span className="text-accent">Three signals.</span>
           </h2>
           <p className="mt-6 max-w-md text-lg leading-relaxed text-muted lg:mt-4 lg:text-base">
-            This is the dashboard you land on after signup. Each site gets its own card with status,
+            This is the Monitors screen in your dashboard. Each site gets its own card with status,
             SSL days left and domain days left, plus a manual recheck and a full analytics view.
           </p>
         </div>

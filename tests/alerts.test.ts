@@ -57,5 +57,6 @@ test("unsubscribe token round-trips and rejects tampering", async () => {
   const h = unsubscribeHeaders("user_1", "all");
   assert.match(h["List-Unsubscribe"], /^<https:\/\/.+\/api\/alerts\/unsubscribe\?t=/);
   assert.equal(h["List-Unsubscribe-Post"], "List-Unsubscribe=One-Click");
-  assert.deepEqual(scopeOff("all"), { alertDown: false, alertSsl: false, alertDomain: false });
+  assert.deepEqual(scopeOff("all"), { alertDown: false, alertSsl: false, alertDomain: false, weeklyReport: false });
+  assert.deepEqual(scopeOff("report"), { weeklyReport: false });
 });

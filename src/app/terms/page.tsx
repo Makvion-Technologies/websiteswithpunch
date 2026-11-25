@@ -44,7 +44,7 @@ export default function TermsPage() {
           "Uptime is checked at intervals (about every 5 minutes on Free and every minute on paid plans) and SSL and domain expiry about once a day, so problems between checks can be missed and alert emails may be delayed or not delivered.",
           "Sites are checked about once a day and when you press Recheck, so alert emails are not real-time and may be delayed or not delivered.",
         )} You can turn alerts off
-        on your profile or with the unsubscribe link in any alert email.
+        in your dashboard or with the unsubscribe link in any alert email.
       </P>
 
       <H2>Accounts &amp; Plans</H2>

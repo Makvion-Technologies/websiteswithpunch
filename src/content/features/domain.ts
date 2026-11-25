@@ -63,7 +63,7 @@ export const domainFeature = {
     },
     {
       q: "Will you remind me before a domain expires?",
-      a: "Not by email. The days left show on your dashboard, amber at 30 days and red at 7.",
+      a: "Yes. We email you 30, 7 and 1 day before the domain expires, and to any Slack, Discord, Telegram or webhook channels you connect. The days left also show on your dashboard (amber at 30 days, red at 7), and the expiry calendar lists every renewal with a feed you can add to your own calendar.",
     },
   ] satisfies Faq[],
 };

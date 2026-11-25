@@ -56,7 +56,7 @@ export const uptimeFeature = {
     {
       h: "Who it's for",
       p: [
-        `Freelancers and small agencies who look after a handful of client sites, owners of a business site or online shop, and developers with side projects. If you need 30-second checks from a dozen regions, phone-call escalation or a public status page, a dedicated incident tool is a better fit. ${byCadence("If you want a quiet, steady watch on", "If you want a quiet daily look at")} whether your sites are up, fast and not about to expire, this is built for that.`,
+        `Freelancers and small agencies who look after a handful of client sites, owners of a business site or online shop, and developers with side projects. If you need 30-second checks from a dozen regions, phone-call escalation or on-call rotas, a dedicated incident tool is a better fit. ${byCadence("If you want a quiet, steady watch on", "If you want a quiet daily look at")} whether your sites are up, fast and not about to expire, this is built for that.`,
       ],
     },
   ] satisfies ArticleSection[],
@@ -71,8 +71,8 @@ export const uptimeFeature = {
     {
       q: "Will I get an alert when my site goes down?",
       a: byCadence(
-        "Yes, by email. When a background check finds the site down and a second location confirms it, we email you once, and again once it recovers, usually within a few minutes (about a minute on Pro and Business). We don't send SMS or chat alerts. You can switch alerts off on your profile.",
-        "Yes, by email. When our daily check (or a Recheck you run) finds the site down, we email you once, and again once it recovers. Checks aren't minute-by-minute, so alerts aren't real-time, and we don't send SMS or chat alerts. You can switch alerts off on your profile.",
+        "Yes, by email. When a background check finds the site down and a second location confirms it, we email you once, and again once it recovers, usually within a few minutes (about a minute on Pro and Business). Connect Slack, Discord, Telegram or a signed webhook under Alerts & integrations to get the same alerts there. We don't send SMS. You can switch email alerts off in your dashboard.",
+        "Yes, by email. When our daily check (or a Recheck you run) finds the site down, we email you once, and again once it recovers. Checks aren't minute-by-minute, so alerts aren't real-time, and we don't send SMS. Connect Slack, Discord, Telegram or a signed webhook under Alerts & integrations to get the same alerts there, and switch email alerts off in your dashboard.",
       ),
     },
     {

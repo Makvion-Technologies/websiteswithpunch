@@ -2,6 +2,7 @@ import { PLANS, SITE_PACKS, type PlanId } from "@/lib/plans";
 import { ANNUAL_PRICES, perMonthPrice, type BillingInterval } from "@/lib/billing-interval";
 import { byCadence, CHECK_EVERY_MIN } from "@/lib/monitor/config";
 import { HEARTBEATS, HEARTBEAT_LIMIT } from "@/lib/heartbeats/config";
+import { CHANNEL_LIMIT, STATUS_PAGE_LIMIT, planWord } from "@/lib/features/limits";
 
 const packCeiling = (id: "pro" | "business") =>
   PLANS[id].siteLimit + SITE_PACKS[id].maxPacks * SITE_PACKS[id].sitesPerPack;
@@ -55,8 +56,20 @@ const hbRow = (id: PlanId): PlanFeature[] => {
   return [{ text: id === "free" ? "1 cron job heartbeat (hourly or slower)" : `${n} cron job heartbeats, from every 5 minutes` }];
 };
 
+/** Alert channels and status pages per plan, from lib/features/limits. */
+const shareRows = (id: PlanId): PlanFeature[] => [
+  { text: `Email plus ${planWord(CHANNEL_LIMIT[id], "Slack, Discord, Telegram or webhook channel")}` },
+  { text: planWord(STATUS_PAGE_LIMIT[id], "public status page") },
+];
+
 /** Rows shared by every card (row 3 onward); row 3 names the plan's check interval. */
-const shared = (id: PlanId): PlanFeature[] => [checksRow(id), ...hbRow(id), { text: "Dashboard, analytics and check history" }];
+const shared = (id: PlanId): PlanFeature[] => [
+  checksRow(id),
+  ...hbRow(id),
+  ...shareRows(id),
+  { text: "Dashboard, analytics and check history" },
+  { text: "Weekly report, expiry calendar and uptime badges" },
+];
 
 /** Paid-only, from the code: Dodo customer portal (needs a Dodo customer) and pack add/remove. */
 const paid: PlanFeature[] = [

@@ -7,7 +7,7 @@ import { HeartbeatList } from "./HeartbeatList";
 export async function HeartbeatsSection({ userId, plan }: { userId: string; plan: PlanId }) {
   const { list } = await loadHeartbeats(userId, plan);
   return (
-    <section id="heartbeats" className="mt-12 scroll-mt-24 border-t border-rule pt-8">
+    <section id="heartbeats">
       <HeartbeatList list={list} plan={plan} limit={HEARTBEAT_LIMIT[plan]} serverNow={Date.now()} />
     </section>
   );

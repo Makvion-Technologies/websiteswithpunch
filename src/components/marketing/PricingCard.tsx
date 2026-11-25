@@ -46,12 +46,12 @@ const cta = {
 /**
  * One plan: name + tag, who it's for, price + billing note, CTA, divider, feature list.
  * Price, note and CTA link follow the Monthly / Annual toggle; everything else is fixed.
- * lg: each card is a subgrid spanning the parent's rows (6 blocks + 7 feature rows, the longest
- * list, or 8 with the heartbeat row; update SPAN / ROWS if the lists grow),
+ * lg: each card is a subgrid spanning the parent's rows (6 blocks + 10 feature rows, the longest
+ * list, or 11 with the heartbeat row; update SPAN / ROWS if the lists grow; a test checks this),
  * so every block and every feature row sits at the same height across the three cards.
  */
-const SPAN = HEARTBEATS ? "lg:[grid-row:span_14]" : "lg:[grid-row:span_13]";
-const ROWS = HEARTBEATS ? "lg:row-span-8" : "lg:row-span-7";
+const SPAN = HEARTBEATS ? "lg:[grid-row:span_17]" : "lg:[grid-row:span_16]";
+const ROWS = HEARTBEATS ? "lg:[grid-row:span_11]" : "lg:[grid-row:span_10]";
 
 export function PricingCard({ plan, interval }: { plan: PricingPlan; interval: BillingInterval }) {
   const dark = plan.id === "pro";

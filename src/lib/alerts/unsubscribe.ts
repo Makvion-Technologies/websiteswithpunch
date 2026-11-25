@@ -1,8 +1,8 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { SITE_URL } from "@/lib/site-config";
 
-/** Alert types a user can switch off. "all" turns off every alert email. */
-export const ALERT_SCOPES = ["down", "ssl", "domain", "all"] as const;
+/** Alert types a user can switch off. "all" turns off every alert email; "report" the weekly report. */
+export const ALERT_SCOPES = ["down", "ssl", "domain", "all", "report"] as const;
 export type AlertScope = (typeof ALERT_SCOPES)[number];
 
 function secret(): string {
@@ -56,5 +56,6 @@ export function scopeOff(scope: AlertScope) {
   if (scope === "down") return { alertDown: false };
   if (scope === "ssl") return { alertSsl: false };
   if (scope === "domain") return { alertDomain: false };
-  return { alertDown: false, alertSsl: false, alertDomain: false };
+  if (scope === "report") return { weeklyReport: false };
+  return { alertDown: false, alertSsl: false, alertDomain: false, weeklyReport: false };
 }
