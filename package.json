@@ -21,12 +21,12 @@
     "@vercel/speed-insights": "^2.1.0",
     "bcryptjs": "^3.0.3",
     "date-fns": "^4.4.0",
-    "dodopayments": "^2.62.0",
+    "dodopayments": "^2.63.1",
     "next": "16.4.6",
     "next-auth": "^4.24.15",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
-    "tldts": "^7.5.2",
+    "tldts": "^7.5.5",
     "zod": "^4.6.7"
   },
   "devDependencies": {
