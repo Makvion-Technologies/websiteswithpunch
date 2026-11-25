@@ -82,7 +82,7 @@ export function GuestNav() {
         </Link>
         <Link
           href="/signup"
-          className={`hidden bg-accent px-3 py-1.5 font-medium text-white hover:bg-accent-hover sm:inline-flex ${FOCUS_RING}`}
+          className={`hidden h-10 items-center bg-accent px-3 py-1.5 font-medium text-white hover:bg-accent-hover sm:inline-flex lg:h-auto ${FOCUS_RING}`}
         >
           Start free trial
         </Link>

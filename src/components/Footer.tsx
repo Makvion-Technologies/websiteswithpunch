@@ -65,7 +65,7 @@ const legal: FooterLink[] = [
 ];
 
 const linkClass =
-  "text-sm text-muted transition-colors hover:text-ink focus-visible:text-ink focus-visible:underline focus-visible:outline-none";
+  "inline-flex min-h-10 items-center text-sm text-muted transition-colors hover:text-ink focus-visible:text-ink focus-visible:underline focus-visible:outline-none lg:inline lg:min-h-0";
 
 /**
  * Public footer: brand column and link columns, theme switch above the bar, then copyright + legal,
@@ -79,7 +79,7 @@ export function Footer() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="grid gap-12 pb-10 pt-16 sm:pt-20 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.6fr)] lg:gap-16 lg:pb-12">
           <div>
-            <Link href="/" className="inline-flex items-center gap-3 text-ink">
+            <Link href="/" className="inline-flex min-h-10 items-center gap-3 text-ink">
               <Image src="/logo.svg" alt="" width={36} height={36} unoptimized className="h-9 w-9 object-contain" />
               <span className="font-display text-lg font-medium tracking-tight">Websites With Punch</span>
             </Link>
@@ -92,7 +92,7 @@ export function Footer() {
             <p className="mt-8 text-xs text-muted">Questions? Write to us</p>
             <Link
               href={contactHref("general")}
-              className="mt-1.5 inline-block font-display text-base font-medium text-ink underline decoration-rule underline-offset-[6px] transition-colors hover:decoration-ink"
+              className="inline-block py-2 font-display text-base font-medium text-ink underline decoration-rule underline-offset-[6px] transition-colors hover:decoration-ink"
             >
               {EMAIL}
             </Link>
@@ -103,7 +103,7 @@ export function Footer() {
                 <h2 id={`footer-${col.title}`} className="font-display text-sm font-medium text-ink">
                   {col.title}
                 </h2>
-                <ul className="mt-5 space-y-3">
+                <ul className="mt-3 lg:mt-5 lg:space-y-3">
                   {col.links.map((l) => (
                     <li key={l.label}>
                       <Link href={l.href} className={linkClass}>
@@ -123,9 +123,9 @@ export function Footer() {
           <p>© {year} Websites With Punch. All rights reserved. | A product by{" "}
             <a href="https://makvion.com" target="_blank" rel="noopener" className="underline decoration-rule underline-offset-2 transition-colors hover:text-ink hover:decoration-current">Makvion Technologies</a>, India.
           </p>
-          <nav aria-label="Legal" className="flex flex-wrap gap-x-5 gap-y-2 sm:justify-end">
+          <nav aria-label="Legal" className="flex flex-wrap gap-x-5 sm:justify-end lg:gap-y-2">
             {legal.map((l) => (
-              <Link key={l.href} href={l.href} className="transition-colors hover:text-ink">
+              <Link key={l.href} href={l.href} className="inline-flex min-h-10 items-center transition-colors hover:text-ink lg:min-h-0">
                 {l.label}
               </Link>
             ))}

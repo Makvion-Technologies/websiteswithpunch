@@ -50,7 +50,7 @@ export function HeroSection() {
               <br className="hidden lg:block" />
               SSL or domain lets you down.
             </h1>
-            <p className="mt-6 max-w-lg text-lg leading-relaxed text-muted lg:max-w-[36rem]">
+            <p className="mt-5 max-w-lg text-base leading-relaxed text-muted sm:mt-6 sm:text-lg lg:max-w-[36rem]">
               Websites With Punch watches your sites’ uptime, SSL certificates and domain expiry
               on one dashboard. Alerts go to email, Slack, Discord, Telegram or a webhook, and you
               can publish a status page, get a weekly report and keep renewals on a calendar.
@@ -59,13 +59,13 @@ export function HeroSection() {
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Link
                 href="/signup"
-                className="bg-accent px-6 py-3 text-sm font-semibold text-white shadow-[4px_4px_0_0_hsl(var(--ink)/0.12)] hover:bg-accent-hover"
+                className="flex-1 whitespace-nowrap bg-accent px-6 py-3 text-center text-sm font-semibold text-white shadow-[4px_4px_0_0_hsl(var(--ink)/0.12)] hover:bg-accent-hover sm:flex-none"
               >
                 {START_LABEL}
               </Link>
               <Link
                 href="/#how-it-works"
-                className="border border-rule bg-surface px-6 py-3 text-sm font-semibold text-ink hover:bg-accent-soft"
+                className="flex-1 whitespace-nowrap border border-rule bg-surface px-6 py-3 text-center text-sm font-semibold text-ink hover:bg-accent-soft sm:flex-none"
               >
                 See how it works
               </Link>

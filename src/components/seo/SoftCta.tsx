@@ -14,7 +14,7 @@ export function SoftCta({ title = byCadence("Monitor it around the clock, free f
         >
           Start free trial
         </Link>
-        <Link href="/pricing" className="text-sm text-muted underline-offset-4 hover:text-ink hover:underline">
+        <Link href="/pricing" className="inline-flex min-h-10 items-center text-sm text-muted underline-offset-4 hover:text-ink hover:underline">
           See pricing
         </Link>
       </div>

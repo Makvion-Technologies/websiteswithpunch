@@ -6,6 +6,19 @@ import { shareAlertsCaption, shareStatusCaption } from "./share-data";
 
 const linkClass = "font-medium text-ink underline decoration-rule underline-offset-4 hover:decoration-ink";
 
+/** Feature-page links under a caption: one row that wraps, each at least 40px tall for touch. */
+function FeatureLinks({ links }: { links: [href: string, label: string][] }) {
+  return (
+    <ul className="mt-1 flex flex-wrap gap-x-5 text-sm">
+      {links.map(([href, label]) => (
+        <li key={href}>
+          <Link href={href} className={`inline-flex min-h-10 items-center ${linkClass}`}>{label} →</Link>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 /**
  * "Stay informed, and share it": product replicas of alerts, a public status page,
  * the expiry calendar, the weekly report and uptime badges. Captions link to the feature pages.
@@ -21,7 +34,7 @@ export function ShareSection() {
             When something changes, we email you and any Slack, Discord, Telegram or webhook
             channels you connect. Publish a status page for clients, get a weekly report, keep
             renewals on a calendar, and embed an uptime badge.{" "}
-            <Link href="/features" className={linkClass}>See all features</Link>
+            <Link href="/features" className={`inline-block py-2.5 -my-2.5 ${linkClass}`}>See all features</Link>
           </p>
         </div>
 
@@ -36,10 +49,8 @@ export function ShareSection() {
             <div className="mt-8 border border-rule bg-[hsl(var(--ink)/0.03)] p-3 sm:p-5">
               <AlertsPreview />
             </div>
-            <p className="mt-4 max-w-3xl text-sm leading-relaxed text-muted">
-              {shareAlertsCaption}{" "}
-              <Link href="/website-alerts" className={linkClass}>Website alerts</Link>
-            </p>
+            <p className="mt-4 max-w-3xl text-sm leading-relaxed text-muted">{shareAlertsCaption}</p>
+            <FeatureLinks links={[["/website-alerts", "Website alerts"]]} />
           </div>
 
           <div>
@@ -49,20 +60,19 @@ export function ShareSection() {
               Publish a page at websiteswithpunch.com/status/your-name, subscribe to an expiry
               calendar from Google Calendar, Outlook or Apple Calendar, and opt in to a weekly report.
             </p>
-            <div className="mt-8 grid items-start gap-6 border border-rule bg-surface p-3 sm:p-5 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-8">
+            <div className="mt-8 grid grid-cols-1 items-start gap-6 border border-rule bg-surface p-3 sm:p-5 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-8">
               <StatusSharePreview />
               <CalendarReportPreview />
             </div>
-            <p className="mt-4 max-w-3xl text-sm leading-relaxed text-muted">
-              {shareStatusCaption}{" "}
-              <Link href="/status-pages" className={linkClass}>Status pages</Link>
-              {" · "}
-              <Link href="/expiry-calendar" className={linkClass}>Expiry calendar</Link>
-              {" · "}
-              <Link href="/weekly-reports" className={linkClass}>Weekly reports</Link>
-              {" · "}
-              <Link href="/uptime-badges" className={linkClass}>Uptime badges</Link>
-            </p>
+            <p className="mt-4 max-w-3xl text-sm leading-relaxed text-muted">{shareStatusCaption}</p>
+            <FeatureLinks
+              links={[
+                ["/status-pages", "Status pages"],
+                ["/expiry-calendar", "Expiry calendar"],
+                ["/weekly-reports", "Weekly reports"],
+                ["/uptime-badges", "Uptime badges"],
+              ]}
+            />
           </div>
         </div>
       </div>

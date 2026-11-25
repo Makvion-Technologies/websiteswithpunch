@@ -50,7 +50,7 @@ export function BillingIntervalToggle({
             tabIndex={on ? 0 : -1}
             disabled={disabled}
             onClick={() => onChange(o.value)}
-            className={`inline-flex h-9 items-center gap-2 whitespace-nowrap px-3.5 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent disabled:opacity-60 sm:px-4 ${
+            className={`inline-flex h-10 items-center gap-2 whitespace-nowrap px-3.5 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent disabled:opacity-60 sm:px-4 lg:h-9 ${
               on ? "bg-solid text-solid-fg" : "text-muted hover:text-ink"
             }`}
           >
