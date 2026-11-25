@@ -3,7 +3,7 @@ import { requireAdmin } from "@/lib/admin/guard";
 import { newCounts } from "@/lib/admin/seen";
 import { overviewStats } from "@/lib/admin/overview";
 import { platformKpis, signupSeries, topCountries, topSources } from "@/lib/admin/insights";
-import { SEGMENT_LABEL } from "@/lib/admin/plan-mix";
+import { PLAN_BUCKETS, PLAN_BUCKET_FILTER, PLAN_BUCKET_LABEL } from "@/lib/admin/plan-mix";
 import { countryName } from "@/lib/activity/geo";
 import { fmtUsd } from "@/lib/referrals/config";
 import { AdminHeader, Panel, Stat } from "@/components/admin/ui";
@@ -28,7 +28,7 @@ export default async function AdminOverview(props: { searchParams: Promise<{ day
     topCountries(),
     topSources(),
   ]);
-  const paying = k.seg.paid;
+  const paying = k.seg.paid + k.seg["at-risk"];
   return (
     <div className="space-y-6">
       <AdminHeader title="Overview" sub="Live numbers from the database. Active = signed in or opened the dashboard in a new session." />
@@ -39,12 +39,17 @@ export default async function AdminOverview(props: { searchParams: Promise<{ day
         <Stat href="/admin/users?sort=joined" label="New users" value={n(k.new7)} note={`7 days · ${n(k.new30)} in 30 days`} />
         <Stat href="/admin/users?act=today" label="Active today (DAU)" value={n(k.dau)} note={`WAU ${n(k.wau)} · MAU ${n(k.mau)}`} />
         <Stat href="/admin/users?plan=paid" label="Paying" value={n(paying)} note={`${k.paidShare}% of users`} />
-        <Stat label="MRR (estimated)" value={`$${n(k.mrr)}`} note="Plans + packs at monthly list price" />
+        <Stat label="MRR (estimated)" value={`$${n(k.mrr)}`} note="Plans + Custom blocks at monthly list price" />
         <Stat href="/admin/sites?status=monitored" label="Sites monitored" value={n(k.sites)} note={s.down ? <span className="text-danger">{n(s.down)} down now</span> : "None down"} />
       </div>
       <div className="grid grid-cols-2 gap-px border border-rule bg-rule md:grid-cols-4 2xl:grid-cols-8">
         <Stat href="/admin/users?act=dormant" label="Dormant 30d+" value={n(Math.max(0, k.users - k.mau))} note="No session in 30 days" />
-        <Stat label="On trial" value={n(k.seg.trial)} note="Conversions show once trials launch" />
+        <Stat
+          href="/admin/users?plan=trial"
+          label="On trial"
+          value={n(k.trials.running)}
+          note={k.trials.conversionPct === null ? `${n(k.trials.converted)} converted so far` : `${n(k.trials.converted)} converted · ${k.trials.conversionPct}% of ended trials`}
+        />
         <Stat label="Cancellations (30d)" value={n(k.cancelled30)} note={`${n(k.cancelling)} set to cancel`} />
         <Stat label="Payment issues" value={n(k.seg["at-risk"])} note="Past due or on hold" />
         <Stat href="/admin/payouts?tab=requested" label="Payouts pending" value={n(s.openPayouts)} note={`${fmtUsd(s.openPayoutCents)} to pay`} />
@@ -67,14 +72,20 @@ export default async function AdminOverview(props: { searchParams: Promise<{ day
           <div className="px-4 py-4"><BarChart data={series} label="Sign-ups per day" /></div>
         </Panel>
         <div className="grid gap-px border border-rule bg-rule">
-          <Meter label="Worker check capacity" used={k.capacity.perMin} limit={k.capacity.limit} unit="checks/min" note="Free Cloudflare Worker budget. Free sites count as 1 check every 5 min." />
+          <Meter label="Worker check capacity" used={k.capacity.perMin} limit={k.capacity.limit} unit="checks/min" note="Free Cloudflare Worker budget. Legacy Free sites count as 1 check every 5 min, Custom sites past 100 every 3 min." />
           <Meter label="Emails, last 24 hours (estimate)" used={k.emails.total} limit={k.emails.limit} unit="sent" note={`Resend free plan. Alerts ${k.emails.parts.alerts} · reports ${k.emails.parts.reports} · codes ${k.emails.parts.codes} · resets ${k.emails.parts.resets} · contact ${k.emails.parts.contact}`} />
         </div>
       </div>
 
       <div className="grid grid-cols-[minmax(0,1fr)] gap-6 md:grid-cols-2 lg:grid-cols-3">
         <Panel title="Plan mix">
-          <ShareList rows={(Object.keys(k.seg) as Array<keyof typeof k.seg>).map((key) => ({ key, label: SEGMENT_LABEL[key], n: k.seg[key] }))} />
+          <ShareList
+            rows={PLAN_BUCKETS.map((key) => ({
+              key,
+              label: <Link href={`/admin/users?plan=${PLAN_BUCKET_FILTER[key]}`} className="hover:text-accent hover:underline">{PLAN_BUCKET_LABEL[key]}</Link>,
+              n: k.plans[key],
+            }))}
+          />
         </Panel>
         <Panel title="Top countries" action={<Link href="/admin/users?sort=active" className="text-xs text-accent hover:underline">Users</Link>}>
           <ShareList rows={countries.map((c) => ({ key: c.country, label: countryName(c.country), n: c.n }))} empty="Location appears after users sign in on the live site." />

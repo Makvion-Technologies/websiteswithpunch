@@ -7,6 +7,12 @@ import { noAlertReason } from "../src/lib/admin/site-alert";
 test("filters: paid users, down/monitored sites, available commissions", () => {
   assert.deepEqual(usersWhere({ plan: "paid" }), { plan: { in: ["starter", "pro", "business"] } });
   assert.deepEqual(usersWhere({ plan: "nope" }), {});
+  assert.deepEqual(usersWhere({ plan: "custom" }), { plan: "business", sitePackCount: { gt: 0 } });
+  assert.deepEqual(usersWhere({ plan: "legacy" }), { plan: "free", legacyFree: true });
+  assert.deepEqual(usersWhere({ plan: "noplan" }), { plan: "free", legacyFree: false });
+  const t = usersWhere({ plan: "trial" }, Date.parse("2026-11-25T12:00:30Z")) as { trialEndsAt: { gt: Date }; trialConvertedAt: null };
+  assert.equal(t.trialEndsAt.gt.toISOString(), "2026-11-25T12:00:00.000Z");
+  assert.equal(t.trialConvertedAt, null);
   assert.deepEqual(sitesWhere({ status: "down" }), { locked: false, status: { in: ["down", "error"] } });
   assert.deepEqual(sitesWhere({ status: "monitored" }), { locked: false });
   assert.deepEqual(commissionsWhere({ status: "available" }), { status: { in: ["available", "pending"] }, clawback: false });

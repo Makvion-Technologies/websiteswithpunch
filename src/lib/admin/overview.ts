@@ -18,7 +18,7 @@ export async function overviewStats(now = Date.now()) {
     prisma.commission.aggregate({ where: commissionsWhere({ status: "available" }), _count: { _all: true }, _sum: { amountCents: true } }),
     prisma.alertLog.count({ where: alertsWhere({ sent: "yes", range: "7d" }, now) }),
     prisma.contactMessage.count({ where: messagesWhere({ state: "all", range: "7d" }, now) }),
-    prisma.user.findMany({ orderBy: { createdAt: "desc" }, take: 8, select: { id: true, email: true, plan: true, createdAt: true } }),
+    prisma.user.findMany({ orderBy: { createdAt: "desc" }, take: 8, select: { id: true, email: true, plan: true, createdAt: true, dodoStatus: true, sitePackCount: true, legacyFree: true, trialEndsAt: true, trialConvertedAt: true } }),
     prisma.auditLog.findMany({ orderBy: { createdAt: "desc" }, take: 8 }),
     prisma.payout.findMany({ where: { status: "requested", amountChangedAt: { not: null } }, take: 5, select: { id: true, amountCents: true, requestedCents: true, user: { select: { email: true } } } }),
     prisma.contactMessage.count({ where: messagesWhere({}) }),

@@ -6,7 +6,7 @@ import { deviceFromUA, geoFromHeaders } from "../src/lib/activity/geo";
 import { MIN_WRITE_GAP_MS, activityStatus, activityWhere, ago, shouldRecord } from "../src/lib/activity/status";
 import { firstTouchFrom, parseFirstTouch } from "../src/lib/activity/source";
 import { adminDecision, isAdminEmail } from "../src/lib/admin/access";
-import { checksPerMinute, monthlyValue, segmentOf } from "../src/lib/admin/plan-mix";
+import { checksPerMinute, inTrial, monthlyValue, planBucketOf, segmentOf } from "../src/lib/admin/plan-mix";
 
 const NOW = Date.parse("2026-11-25T08:00:00Z");
 
@@ -86,14 +86,32 @@ test("admin guard: every admin page checks access on the server, admin layout is
   assert.match(layout, /index: false/);
 });
 
-test("plan mix: segments, MRR and check load", () => {
-  assert.equal(segmentOf({ plan: "free", dodoStatus: null }), "free");
-  assert.equal(segmentOf({ plan: "pro", dodoStatus: "active" }), "paid");
-  assert.equal(segmentOf({ plan: "pro", dodoStatus: "on_hold" }), "at-risk");
-  assert.equal(segmentOf({ plan: "pro", dodoStatus: "trialing" }), "trial");
-  assert.equal(monthlyValue({ plan: "pro", dodoStatus: "active", sitePackCount: 0 }), 12);
-  assert.equal(monthlyValue({ plan: "pro", dodoStatus: "cancelled", sitePackCount: 0 }), 0);
-  assert.equal(monthlyValue({ plan: "free", dodoStatus: null }), 0);
+test("plan mix: segments, buckets, MRR and check load", () => {
+  const now = Date.parse("2026-11-25T12:00:00Z");
+  const future = new Date(now + 10 * 86_400_000), past = new Date(now - 86_400_000);
+  // Legacy Free (default for old rows) vs new accounts without a plan.
+  assert.equal(segmentOf({ plan: "free", dodoStatus: null }, now), "legacy-free");
+  assert.equal(segmentOf({ plan: "free", dodoStatus: null, legacyFree: false }, now), "no-plan");
+  assert.equal(segmentOf({ plan: "pro", dodoStatus: "cancelled", legacyFree: false }, now), "no-plan");
+  assert.equal(segmentOf({ plan: "pro", dodoStatus: "active" }, now), "paid");
+  assert.equal(segmentOf({ plan: "pro", dodoStatus: "on_hold" }, now), "at-risk");
+  // Trials come from our trial fields (Dodo reports a running trial as "active").
+  assert.equal(segmentOf({ plan: "starter", dodoStatus: "active", trialEndsAt: future }, now), "trial");
+  assert.equal(segmentOf({ plan: "starter", dodoStatus: "active", trialEndsAt: future, trialConvertedAt: past }, now), "paid");
+  assert.equal(segmentOf({ plan: "starter", dodoStatus: "active", trialEndsAt: past }, now), "paid");
+  assert.equal(inTrial({ plan: "starter", dodoStatus: "cancelled", trialEndsAt: future }, now), false);
+  assert.equal(planBucketOf({ plan: "starter", dodoStatus: "active", trialEndsAt: future }, now), "starter-trial");
+  assert.equal(planBucketOf({ plan: "business", dodoStatus: "active", sitePackCount: 3 }, now), "custom");
+  assert.equal(planBucketOf({ plan: "business", dodoStatus: "active", sitePackCount: 0 }, now), "business");
+  assert.equal(planBucketOf({ plan: "free", dodoStatus: null, legacyFree: true }, now), "legacy-free");
+  assert.equal(planBucketOf({ plan: "free", dodoStatus: null, legacyFree: false }, now), "no-plan");
+  assert.equal(monthlyValue({ plan: "starter", dodoStatus: "active", trialEndsAt: future }, now), 0);
+  assert.equal(monthlyValue({ plan: "starter", dodoStatus: "active" }, now), 5);
+  assert.equal(monthlyValue({ plan: "pro", dodoStatus: "active", sitePackCount: 2 }, now), 12);
+  assert.equal(monthlyValue({ plan: "business", dodoStatus: "active", sitePackCount: 3 }, now), 39);
+  assert.equal(monthlyValue({ plan: "pro", dodoStatus: "cancelled", sitePackCount: 0 }, now), 0);
+  assert.equal(monthlyValue({ plan: "free", dodoStatus: null }, now), 0);
   assert.equal(checksPerMinute("free"), 0.2);
   assert.equal(checksPerMinute("business"), 1);
+  assert.ok(Math.abs(checksPerMinute("business", true) - 1 / 3) < 1e-9);
 });

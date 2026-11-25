@@ -1,7 +1,8 @@
 import type { ReactNode } from "react";
 import { countryName } from "@/lib/activity/geo";
 import { ago } from "@/lib/activity/status";
-import { monthlyValue, SEGMENT_LABEL, segmentOf } from "@/lib/admin/plan-mix";
+import { monthlyValue, PLAN_BUCKET_LABEL, planBucketOf, SEGMENT_LABEL, segmentOf } from "@/lib/admin/plan-mix";
+import { customSites } from "@/lib/plans";
 import type { UserDetail } from "@/lib/admin/user-detail";
 import { CopyText } from "../CopyText";
 import { Badge, Panel, fmtDate } from "../ui";
@@ -41,14 +42,18 @@ export function ProfilePanel({ u, now }: { u: UserDetail["user"]; now: number })
 export function BillingPanel({ u }: { u: UserDetail["user"] }) {
   const seg = segmentOf(u);
   const mrr = monthlyValue(u);
+  const bucket = planBucketOf(u);
   return (
     <Panel title="Plan & billing">
       <dl className="divide-y divide-rule">
-        <Row k="Plan"><Badge tone={u.plan === "free" ? "muted" : "accent"}>{u.plan}</Badge>{u.sitePackCount ? ` + ${u.sitePackCount} pack(s)` : ""} <span className="text-muted">· {SEGMENT_LABEL[seg]}</span></Row>
+        <Row k="Plan"><Badge tone={u.plan === "free" ? "muted" : "accent"}>{PLAN_BUCKET_LABEL[bucket]}</Badge>{bucket === "custom" ? ` · ${customSites(u.sitePackCount)} sites (${u.sitePackCount} × 25 extra)` : ""} <span className="text-muted">· {SEGMENT_LABEL[seg]}</span></Row>
+        {u.trialStartedAt && (
+          <Row k="Trial">{`Started ${fmtDate(u.trialStartedAt, false)}`}{u.trialConvertedAt ? ` · converted ${fmtDate(u.trialConvertedAt, false)}` : u.trialEndsAt ? ` · ends ${fmtDate(u.trialEndsAt, false)}` : " · ended without converting"}</Row>
+        )}
         <Row k="Monthly value">{mrr ? `$${mrr} (list price)` : "$0"}</Row>
         <Row k="Billing status">{u.dodoStatus ? <Badge tone={u.dodoStatus === "active" ? "ok" : u.dodoStatus === "past_due" || u.dodoStatus === "on_hold" ? "danger" : "muted"}>{u.dodoStatus}</Badge> : null}{u.cancelAtPeriodEnd ? " · cancels at period end" : ""}</Row>
         {u.pendingPlan && <Row k="Scheduled">{`${u.pendingPlan} from ${fmtDate(u.pendingPlanAt, false)}`}</Row>}
-        {u.pendingSitePackCount != null && <Row k="Packs change">{`${u.pendingSitePackCount} pack(s) from ${fmtDate(u.pendingPackChangeAt, false)}`}</Row>}
+        {u.pendingSitePackCount != null && <Row k="Size change">{`${customSites(u.pendingSitePackCount)} sites from ${fmtDate(u.pendingPackChangeAt, false)}`}</Row>}
         <Row k="Subscription">{u.dodoSubscriptionId ? <CopyText value={u.dodoSubscriptionId} /> : null}</Row>
         <Row k="Customer">{u.dodoCustomerId ? <CopyText value={u.dodoCustomerId} /> : null}</Row>
         <Row k="Last sync">{u.dodoSyncedAt ? fmtDate(u.dodoSyncedAt) : null}</Row>

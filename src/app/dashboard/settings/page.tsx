@@ -2,7 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { getEffectivePlan, PLANS } from "@/lib/plans";
+import { getEffectivePlan, planDisplayName } from "@/lib/plans";
 import { ratePercent } from "@/lib/referrals/config";
 import { ProfileForm } from "@/components/ProfileForm";
 import { PageHeader, Panel } from "@/components/dash/ui";
@@ -15,11 +15,11 @@ const ROW = "flex items-center justify-between gap-4 border-b border-rule px-4 p
 export default async function SettingsPage() {
   const session = await getSession();
   if (!session?.user?.id) redirect("/login");
-  const user = await prisma.user.findUnique({ where: { id: session.user.id }, select: { name: true, email: true, plan: true, dodoStatus: true, cancelAtPeriodEnd: true } });
+  const user = await prisma.user.findUnique({ where: { id: session.user.id }, select: { name: true, email: true, plan: true, dodoStatus: true, cancelAtPeriodEnd: true, legacyFree: true, sitePackCount: true } });
   if (!user) redirect("/login");
   const plan = getEffectivePlan(user.plan, user.dodoStatus);
   const links = [
-    { href: "/plan", title: "Plan and billing", text: `${PLANS[plan].name} plan${user.cancelAtPeriodEnd ? " · cancels at period end" : ""}. Change plan, invoices and payment method.` },
+    { href: "/plan", title: "Plan and billing", text: `${plan === "free" && !user.legacyFree ? "No plan yet" : `${planDisplayName(plan, plan === "business" ? user.sitePackCount : 0, user.legacyFree)} plan`}${user.cancelAtPeriodEnd ? " · cancels at period end" : ""}. Change plan, invoices and payment method.` },
     { href: "/dashboard/alerts", title: "Alert emails", text: "Turn down, SSL and domain emails on or off." },
     { href: "/dashboard/reports", title: "Weekly report", text: "One summary email a week." },
     { href: "/referrals", title: "Referral program", text: `Earn ${ratePercent}% when people you refer pay for a plan.` },

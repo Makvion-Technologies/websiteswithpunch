@@ -12,9 +12,22 @@ const since = (r: Range | undefined, now: number) => (r ? { createdAt: { gte: ne
 /** Start of the window, rounded down to the minute so the Overview and the page agree. */
 const minute = (n: number) => Math.floor(n / 60_000) * 60_000;
 
-export const USER_PLANS = ["free", "starter", "pro", "business", "paid"] as const;
-export function usersWhere(o: { q?: string; plan?: string }): Prisma.UserWhereInput {
-  const plan = o.plan === "paid" ? { plan: { in: ["starter", "pro", "business"] } } : o.plan && (USER_PLANS as readonly string[]).includes(o.plan) ? { plan: o.plan } : {};
+export const USER_PLANS = ["free", "starter", "pro", "business", "paid", "custom", "trial", "legacy", "noplan"] as const;
+const PAID = ["starter", "pro", "business"];
+/** Plan filters. trial / legacy / noplan match lib/admin/plan-mix.ts (trial: our trial fields, not a Dodo status). */
+function planWhere(plan: string | undefined, now: number): Prisma.UserWhereInput {
+  switch (plan) {
+    case "paid": return { plan: { in: PAID } };
+    case "custom": return { plan: "business", sitePackCount: { gt: 0 } };
+    case "trial": return { plan: { in: PAID }, trialEndsAt: { gt: new Date(minute(now)) }, trialConvertedAt: null };
+    case "legacy": return { plan: "free", legacyFree: true };
+    case "noplan": return { plan: "free", legacyFree: false };
+    case "free": case "starter": case "pro": case "business": return { plan };
+    default: return {};
+  }
+}
+export function usersWhere(o: { q?: string; plan?: string }, now = Date.now()): Prisma.UserWhereInput {
+  const plan = planWhere(o.plan, now);
   return {
     ...(o.q && { OR: [{ email: { contains: o.q, mode: "insensitive" } }, { name: { contains: o.q, mode: "insensitive" } }] }),
     ...plan,

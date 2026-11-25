@@ -1,9 +1,10 @@
+import { PLAN_BUCKET_LABEL, planBucketOf, type Row } from "@/lib/admin/plan-mix";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { ago, clock } from "@/lib/activity/status";
 import { Badge, Panel, fmtDate } from "./ui";
 
-type Signup = { id: string; email: string; plan: string; createdAt: Date };
+type Signup = Row & { id: string; email: string; createdAt: Date };
 type Audit = { id: string; action: string; createdAt: Date };
 
 /** Recent sign-ups, recently active users and admin actions, side by side on wide screens. */
@@ -22,7 +23,7 @@ export async function RecentUsers({ signups, activity }: { signups: Signup[]; ac
               <li key={u.id}>
                 <Link href={`/admin/users/${u.id}`} className="flex items-center gap-3 px-4 py-2.5 hover:bg-accent-soft">
                   <span className="min-w-0 flex-1 truncate text-sm text-ink">{u.email}</span>
-                  <Badge tone={u.plan === "free" ? "muted" : "accent"}>{u.plan}</Badge>
+                  <Badge tone={u.plan === "free" ? "muted" : "accent"}>{PLAN_BUCKET_LABEL[planBucketOf(u)]}</Badge>
                   <span className="hidden shrink-0 text-xs text-muted sm:inline">{fmtDate(u.createdAt, false)}</span>
                 </Link>
               </li>

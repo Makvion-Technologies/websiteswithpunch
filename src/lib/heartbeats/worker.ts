@@ -1,6 +1,6 @@
 import type { Heartbeat } from "@prisma/client";
 import type { PlanId } from "@/lib/plans";
-import { effectivePeriod, HEARTBEATS, HEARTBEAT_LIMIT } from "./config";
+import { effectivePeriod, HEARTBEATS, heartbeatLimit } from "./config";
 
 /**
  * App → monitor Worker calls for heartbeats. Best effort: never throws, gives up after a few
@@ -27,9 +27,9 @@ export function toWorker(h: Pick<Heartbeat, "id" | "token" | "periodSec" | "grac
 }
 
 /** Ids beyond the plan limit (oldest are kept), e.g. after a downgrade. They don't run. */
-export function overLimitIds(list: { id: string; createdAt: Date }[], plan: PlanId): Set<string> {
+export function overLimitIds(list: { id: string; createdAt: Date }[], plan: PlanId, legacyFree = true): Set<string> {
   const sorted = [...list].sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime() || a.id.localeCompare(b.id));
-  return new Set(sorted.slice(HEARTBEAT_LIMIT[plan]).map((h) => h.id));
+  return new Set(sorted.slice(heartbeatLimit(plan, legacyFree)).map((h) => h.id));
 }
 
 async function call<T>(path: string, body: unknown, ms = 3000): Promise<T | null> {

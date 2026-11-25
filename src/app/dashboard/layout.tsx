@@ -6,8 +6,9 @@ import { recordSessionStart, SESSION_COOKIE } from "@/lib/activity/record";
 import { NO_INDEX } from "@/lib/site-config";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { getEffectivePlan, getUserEffectiveSiteLimit, PLANS } from "@/lib/plans";
+import { getEffectivePlan, getUserEffectiveSiteLimit, planDisplayName } from "@/lib/plans";
 import { HEARTBEATS } from "@/lib/heartbeats/config";
+import { inTrial } from "@/lib/admin/plan-mix";
 import { dashNav } from "@/components/dash/nav-items";
 import { DashSidebar } from "@/components/dash/DashSidebar";
 import { DashMobileNav } from "@/components/dash/DashMobileNav";
@@ -25,7 +26,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const [user, used] = await Promise.all([
     prisma.user.findUnique({
       where: { id: session.user.id },
-      select: { plan: true, dodoStatus: true, sitePackCount: true, pendingSitePackCount: true, pendingPackChangeAt: true },
+      select: { plan: true, dodoStatus: true, sitePackCount: true, pendingSitePackCount: true, pendingPackChangeAt: true, legacyFree: true, trialEndsAt: true, trialConvertedAt: true },
     }),
     prisma.site.count({ where: { userId: session.user.id, locked: false } }),
   ]);
@@ -38,11 +39,16 @@ export default async function DashboardLayout({ children }: { children: React.Re
     after(() => recordSessionStart(id, h, "session").catch((e) => console.warn("[activity] session record failed", e)));
   }
   const plan = getEffectivePlan(user.plan, user.dodoStatus);
-  const limit = getUserEffectiveSiteLimit(plan, user.sitePackCount, user.pendingSitePackCount, user.pendingPackChangeAt);
+  // legacyFree: "free" is the 1-site Free plan only for accounts from before paid-only pricing;
+  // newer accounts without a subscription have no plan and 0 sites.
+  const limit = getUserEffectiveSiteLimit(plan, user.sitePackCount, user.pendingSitePackCount, user.pendingPackChangeAt, user.legacyFree);
+  const blocks = plan === "business" ? (user.sitePackCount ?? 0) : 0;
+  const noPlan = plan === "free" && !user.legacyFree;
+  const trial = plan === "starter" && inTrial(user);
   const groups = dashNav(HEARTBEATS);
   return (
     <div data-app-shell className="app-shell mx-auto w-full px-4 sm:px-6 lg:grid lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-8 lg:px-8 2xl:gap-10 2xl:px-10">
-      <DashSidebar groups={groups} plan={{ planName: PLANS[plan].name, used, limit, upgrade: plan !== "business" }} />
+      <DashSidebar groups={groups} plan={{ planName: planDisplayName(plan, blocks, user.legacyFree), used, limit, upgrade: plan !== "business", noPlan, trial }} />
       <div className="min-w-0 py-6 lg:py-8">{children}</div>
       <DashMobileNav groups={groups} />
     </div>

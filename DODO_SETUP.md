@@ -18,18 +18,21 @@ Dashboard → **Products → Create Product** → type **Subscription**. For eac
 only, 0 on all others.** The app never passes `trial_period_days` at checkout (that would bypass Prevent Trial
 Misuse), so the trial comes only from the product.
 
-Country pricing (if your Dodo account offers it on the product's pricing): add an **India (INR)** price as below.
-INR is only charged when `DODO_LOCALIZED_PRICING=1` is set in Vercel **and Adaptive Currency is ON** in Dodo
-(Settings → Pricing). With Adaptive Currency off, Dodo ignores `billing_currency` and charges the product's USD base
-price even for an Indian billing address (verified in test mode on 25 Nov 2026: an IN checkout preview of Starter
-came back $5 + 18% GST in USD, not ₹399). Add-ons can't have INR prices (Dodo: "Add-ons are not localized").
+**Currency: USD for everyone (decision 25 Nov 2026).** Production charges every customer in USD: do **not** set
+`DODO_LOCALIZED_PRICING` in Vercel, and the site shows USD prices only (no ₹ anywhere on the homepage, pricing or
+FAQ). With the flag unset the app sends `billing_currency: "USD"` with the currency picker hidden on every checkout.
+INR prices aren't needed in live mode; the INR columns below are optional and unused.
 
-**Custom is always USD.** In an INR checkout Dodo would charge the fixed ₹1,999 Business price plus the USD add-on
-converted at a live FX rate, so a Custom total would drift every renewal and never match the pricing page. A
-subscription's currency is locked at checkout and never changes on Change Plan. So the app sends
-`billing_currency: "USD"` (currency picker hidden) for every Custom checkout, keeps INR for plain Starter / Pro /
-Business checkouts, and refuses to add Extra 25 blocks to a non-USD subscription with a "contact us" message
-(`CUSTOM_USD_ONLY`). An INR Business customer who wants more than 100 sites is moved over by hand.
+<details><summary>Optional INR code path (off by default, kept for later)</summary>
+
+`DODO_LOCALIZED_PRICING=1` lets plain Starter / Pro / Business checkouts use the products' INR prices (Dodo
+Localized Pricing, by_currency). It only takes effect if **Adaptive Currency is ON** in Dodo (Settings → Pricing);
+otherwise Dodo ignores `billing_currency` and charges USD (verified in test mode: an IN checkout preview of Starter
+came back $5 + 18% GST in USD, not ₹399). Add-ons can't be localized, so even with the flag on, Custom checkouts
+(Business + Extra 25) are forced to USD, and adding Extra 25 blocks to a non-USD subscription is refused with a
+"contact us" message (`CUSTOM_USD_ONLY`): a fixed ₹ base plus a USD add-on converted at a live rate would drift
+every renewal, and a subscription's currency never changes on Change Plan.
+</details>
 
 | Product name | USD | INR | Repeat every | Trial days | Env var |
 |---|---|---|---|---|---|
@@ -58,7 +61,8 @@ Business checkouts, and refuses to add Extra 25 blocks to a non-USD subscription
 | `DODO_ADDON_PACK_BUSINESS_MONTHLY` | `adn_0NpLCrRRJVnmh06KS7V1z` (detached, legacy) |
 | `DODO_ADDON_PACK_BUSINESS_ANNUAL` | `adn_0NpLCssENw6Xe5QYmhg3t` (detached, legacy) |
 
-Test mode also has Prevent Trial Misuse ON and INR country prices, so `DODO_LOCALIZED_PRICING=1` is valid there.
+Test mode also has Prevent Trial Misuse ON. It has INR prices on the 6 plan products, but they're unused: keep
+`DODO_LOCALIZED_PRICING` unset there too, so test checkouts match production (USD).
 Live mode needs its own IDs (repeat this section in Live Mode).
 
 **Existing site-pack holders after detaching:** the app never sends a retired pack ID to Dodo. Every Change Plan
@@ -95,10 +99,12 @@ customers change plans in the portal, which skips our site-limit checks).
 Dashboard → **Products → Add-ons → Create Add-on** (tax category SaaS). An add-on bills on its parent's cycle,
 so monthly and annual are separate. Attach each one **only** to the Business product of the same interval.
 
-| Add-on | USD | INR | Attach to | Env var |
-|---|---|---|---|---|
-| Extra 25 sites (monthly) | $5 | ₹399 | Business (Monthly) only | `DODO_ADDON_EXTRA25_MONTHLY` |
-| Extra 25 sites (annual) | $50 | ₹3,999 | Business (Annual) only | `DODO_ADDON_EXTRA25_ANNUAL` |
+| Add-on | USD | Attach to | Env var |
+|---|---|---|---|
+| Extra 25 sites (monthly) | $5 | Business (Monthly) only | `DODO_ADDON_EXTRA25_MONTHLY` |
+| Extra 25 sites (annual) | $50 | Business (Annual) only | `DODO_ADDON_EXTRA25_ANNUAL` |
+
+Add-ons are USD only (Dodo doesn't localize add-on prices).
 
 Description: "25 more monitored sites on Business (Custom plan). Sites beyond the first 100 are checked every 3 minutes."
 Custom = Business + 1 to 16 of these (125 to 500 sites). Above 500 is "contact us".
@@ -138,7 +144,8 @@ The portal is used for payment method updates (incl. reactivating an on-hold sub
 `DODO_PRODUCT_BUSINESS_MONTHLY`, `DODO_PRODUCT_BUSINESS_ANNUAL`, `DODO_ADDON_EXTRA25_MONTHLY`, `DODO_ADDON_EXTRA25_ANNUAL`,
 legacy: `DODO_PRODUCT_BUSINESS_LEGACY_MONTHLY`, `DODO_PRODUCT_BUSINESS_LEGACY_ANNUAL`, `DODO_ADDON_PACK_PRO_MONTHLY`,
 `DODO_ADDON_PACK_PRO_ANNUAL`, `DODO_ADDON_PACK_BUSINESS_MONTHLY`, `DODO_ADDON_PACK_BUSINESS_ANNUAL`;
-optional: `DODO_LOCALIZED_PRICING=1` (INR), `WORKER_SITES_PER_MINUTE` (default 600, Custom capacity guard).
+optional: `WORKER_SITES_PER_MINUTE` (default 600, Custom capacity guard).
+**Do not set** `DODO_LOCALIZED_PRICING` (USD for everyone; see section 2).
 `NEXTAUTH_URL` must be the live site URL (checkout and portal return URLs are built from it). Redeploy after changing env.
 
 ### Launch order (paid-only pricing)

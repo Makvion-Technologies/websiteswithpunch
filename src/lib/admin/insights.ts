@@ -1,39 +1,53 @@
 import { prisma } from "@/lib/prisma";
-import { RESEND_DAILY_LIMIT, WORKER_CAPACITY_PER_MIN, checksPerMinute, monthlyValue, segmentOf, type Segment } from "./plan-mix";
+import { currentCapacityUnits } from "@/lib/monitor/feed";
+import { PLAN_BUCKETS, RESEND_DAILY_LIMIT, WORKER_CAPACITY_PER_MIN, monthlyValue, planBucketOf, segmentOf, type PlanBucket, type Segment } from "./plan-mix";
 
 const DAY = 86_400_000;
 const ago = (now: number, d: number) => new Date(now - d * DAY);
 
 /** Platform KPIs for the admin Overview. Real counts; MRR is an estimate at monthly list price. */
 export async function platformKpis(now = Date.now()) {
-  const [users, new7, new30, dau, wau, mau, billing, cancelled30, cancelling, siteLoad, emails] = await Promise.all([
+  const [users, new7, new30, dau, wau, mau, billing, cancelled30, cancelling, sites, perMin, emails, trialsStarted, trialsConverted] = await Promise.all([
     prisma.user.count(),
     prisma.user.count({ where: { createdAt: { gte: ago(now, 7) } } }),
     prisma.user.count({ where: { createdAt: { gte: ago(now, 30) } } }),
     prisma.user.count({ where: { lastActiveAt: { gte: ago(now, 1) } } }),
     prisma.user.count({ where: { lastActiveAt: { gte: ago(now, 7) } } }),
     prisma.user.count({ where: { lastActiveAt: { gte: ago(now, 30) } } }),
-    prisma.user.groupBy({ by: ["plan", "dodoStatus"], _count: { _all: true }, _sum: { sitePackCount: true } }),
+    prisma.user.findMany({
+      select: { plan: true, dodoStatus: true, sitePackCount: true, legacyFree: true, trialEndsAt: true, trialConvertedAt: true },
+    }),
     prisma.user.count({ where: { dodoStatus: { in: ["cancelled", "expired"] }, dodoSyncedAt: { gte: ago(now, 30) } } }),
     prisma.user.count({ where: { cancelAtPeriodEnd: true } }),
-    prisma.$queryRaw<Array<{ plan: string; n: bigint }>>`SELECT u."plan" AS plan, COUNT(*)::bigint AS n FROM "Site" s JOIN "User" u ON u."id" = s."userId" WHERE s."locked" = false GROUP BY u."plan"`,
+    prisma.site.count({ where: { locked: false } }),
+    // Same feed and intervals the Worker gets (paid 1 min, legacy Free 5, extra Custom sites 3).
+    currentCapacityUnits(),
     emailsLast24h(now),
+    prisma.user.count({ where: { trialStartedAt: { not: null } } }),
+    prisma.user.count({ where: { trialConvertedAt: { not: null } } }),
   ]);
-  const seg: Record<Segment, number> = { paid: 0, trial: 0, "at-risk": 0, free: 0 };
+  const seg: Record<Segment, number> = { paid: 0, trial: 0, "at-risk": 0, "legacy-free": 0, "no-plan": 0 };
+  const plans = Object.fromEntries(PLAN_BUCKETS.map((b) => [b, 0])) as Record<PlanBucket, number>;
   let mrr = 0;
   for (const r of billing) {
-    const n = r._count._all;
-    seg[segmentOf(r)] += n;
-    // Pack totals are summed per group, so price the plan per user and packs from the sum.
-    mrr += monthlyValue({ ...r, sitePackCount: 0 }) * n + (monthlyValue({ ...r, sitePackCount: r._sum.sitePackCount ?? 0 }) - monthlyValue({ ...r, sitePackCount: 0 }));
+    seg[segmentOf(r, now)] += 1;
+    plans[planBucketOf(r, now)] += 1;
+    mrr += monthlyValue(r, now);
   }
-  const sites = siteLoad.reduce((a, r) => a + Number(r.n), 0);
-  const perMin = siteLoad.reduce((a, r) => a + Number(r.n) * checksPerMinute(r.plan), 0);
+  // Trials that finished: converted, or ended without converting (not running any more).
+  const trialsEnded = Math.max(0, trialsStarted - seg.trial);
+  const trials = {
+    running: seg.trial,
+    started: trialsStarted,
+    converted: trialsConverted,
+    conversionPct: trialsEnded ? Math.round((Math.min(trialsConverted, trialsEnded) / trialsEnded) * 1000) / 10 : null,
+  };
   return {
-    users, new7, new30, dau, wau, mau, seg, mrr: Math.round(mrr), cancelled30, cancelling, sites,
+    users, new7, new30, dau, wau, mau, seg, plans, trials, mrr: Math.round(mrr), cancelled30, cancelling, sites,
     capacity: { perMin: Math.round(perMin), limit: WORKER_CAPACITY_PER_MIN },
     emails: { ...emails, limit: RESEND_DAILY_LIMIT },
-    paidShare: users ? Math.round((seg.paid / users) * 1000) / 10 : 0,
+    // Paying = billed subscriptions, including payment issues still in retry; trials excluded.
+    paidShare: users ? Math.round(((seg.paid + seg["at-risk"]) / users) * 1000) / 10 : 0,
   };
 }
 

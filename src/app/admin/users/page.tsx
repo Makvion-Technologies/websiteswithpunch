@@ -24,7 +24,7 @@ export default async function AdminUsers(props: { searchParams: Promise<Search> 
     prisma.user.count({ where }),
     prisma.user.findMany({ where, orderBy: userOrder(o.sort), skip: (page - 1) * PAGE_SIZE, take: PAGE_SIZE, select: USER_ROW_SELECT }),
   ]);
-  const seen = await viewSection(admin.email!, ["users", "users:paid", "users:free", "users:pro", "users:business"], [o.plan ? `users:${o.plan}` : "users"]);
+  const seen = await viewSection(admin.email!, ["users", "users:paid", "users:starter", "users:pro", "users:business", "users:custom", "users:legacy", "users:noplan"], [o.plan ? `users:${o.plan}` : "users"]);
   const isNew = (d: Date) => d > seen.since;
   const base = { q: o.q, plan: o.plan, act: o.act, sort: o.sort === "joined" ? undefined : o.sort, country: o.country };
 
@@ -46,7 +46,7 @@ export default async function AdminUsers(props: { searchParams: Promise<Search> 
         <button className="border border-rule px-3 py-2 text-sm font-medium text-ink hover:border-accent hover:text-accent">Apply</button>
       </form>
       <div className="flex flex-col gap-2 xl:flex-row xl:items-center xl:justify-between">
-        <Filters path="/admin/users" q={base} name="plan" badges={{ "": seen.counts.users, paid: seen.counts["users:paid"], free: seen.counts["users:free"], pro: seen.counts["users:pro"], business: seen.counts["users:business"] }} options={[["", "All plans"], ["paid", "Paying"], ["free", "Free"], ["pro", "Pro"], ["business", "Business"]]} />
+        <Filters path="/admin/users" q={base} name="plan" badges={{ "": seen.counts.users, paid: seen.counts["users:paid"], starter: seen.counts["users:starter"], pro: seen.counts["users:pro"], business: seen.counts["users:business"], custom: seen.counts["users:custom"], legacy: seen.counts["users:legacy"], noplan: seen.counts["users:noplan"] }} options={[["", "All plans"], ["paid", "Paying"], ["trial", "On trial"], ["starter", "Starter"], ["pro", "Pro"], ["business", "Business"], ["custom", "Custom"], ["legacy", "Legacy Free"], ["noplan", "No plan"]]} />
         <Filters path="/admin/users" q={base} name="act" options={[["", "Any activity"], ["today", "Active today"], ["week", "This week"], ["month", "This month"], ["dormant", "Dormant 30d+"]]} />
       </div>
       <Panel>

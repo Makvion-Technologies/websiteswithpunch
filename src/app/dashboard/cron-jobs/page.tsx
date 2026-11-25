@@ -12,7 +12,7 @@ export default async function CronJobsPage() {
   if (!HEARTBEATS) notFound();
   const session = await getSession();
   if (!session?.user?.id) redirect("/login");
-  const user = await prisma.user.findUnique({ where: { id: session.user.id }, select: { id: true, plan: true, dodoStatus: true } });
+  const user = await prisma.user.findUnique({ where: { id: session.user.id }, select: { id: true, plan: true, dodoStatus: true, legacyFree: true } });
   if (!user) redirect("/login");
-  return <HeartbeatsSection userId={user.id} plan={getEffectivePlan(user.plan, user.dodoStatus)} />;
+  return <HeartbeatsSection userId={user.id} plan={getEffectivePlan(user.plan, user.dodoStatus)} legacyFree={user.legacyFree} />;
 }

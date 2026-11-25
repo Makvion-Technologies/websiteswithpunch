@@ -9,7 +9,7 @@ export async function loadUserDetail(rawId: string) {
     select: {
       id: true, email: true, name: true, plan: true, emailVerified: true, createdAt: true, updatedAt: true,
       sitePackCount: true, pendingSitePackCount: true, pendingPackChangeAt: true, pendingPlan: true, pendingPlanAt: true,
-      cancelAtPeriodEnd: true, dodoCustomerId: true, dodoSubscriptionId: true, dodoStatus: true, dodoSyncedAt: true,
+      cancelAtPeriodEnd: true, legacyFree: true, trialStartedAt: true, trialEndsAt: true, trialConvertedAt: true, dodoCustomerId: true, dodoSubscriptionId: true, dodoStatus: true, dodoSyncedAt: true,
       lastActiveAt: true, lastLoginAt: true, lastCountry: true, lastRegion: true, lastCity: true, lastDevice: true,
       signupCountry: true, signupCity: true, signupSource: true, signupUtm: true,
       referralCode: true, referralClicks: true, referredAt: true, payoutMethod: true, payoutAddress: true,
