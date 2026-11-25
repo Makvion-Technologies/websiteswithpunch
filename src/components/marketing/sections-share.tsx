@@ -8,8 +8,7 @@ const linkClass = "font-medium text-ink underline decoration-rule underline-offs
 
 /**
  * "Stay informed, and share it": product replicas of alerts, a public status page,
- * the expiry calendar, the weekly report and uptime badges. Links go to pricing and the FAQ
- * until dedicated feature pages ship.
+ * the expiry calendar, the weekly report and uptime badges. Captions link to the feature pages.
  */
 export function ShareSection() {
   return (
@@ -21,7 +20,8 @@ export function ShareSection() {
           <p className="mt-3 text-muted">
             When something changes, we email you and any Slack, Discord, Telegram or webhook
             channels you connect. Publish a status page for clients, get a weekly report, keep
-            renewals on a calendar, and embed an uptime badge.
+            renewals on a calendar, and embed an uptime badge.{" "}
+            <Link href="/features" className={linkClass}>See all features</Link>
           </p>
         </div>
 
@@ -38,9 +38,7 @@ export function ShareSection() {
             </div>
             <p className="mt-4 max-w-3xl text-sm leading-relaxed text-muted">
               {shareAlertsCaption}{" "}
-              <Link href="/pricing" className={linkClass}>See plans</Link>
-              {" · "}
-              <Link href="/#faq" className={linkClass}>Questions, answered</Link>
+              <Link href="/website-alerts" className={linkClass}>Website alerts</Link>
             </p>
           </div>
 
@@ -57,9 +55,13 @@ export function ShareSection() {
             </div>
             <p className="mt-4 max-w-3xl text-sm leading-relaxed text-muted">
               {shareStatusCaption}{" "}
-              <Link href="/pricing" className={linkClass}>See plans</Link>
+              <Link href="/status-pages" className={linkClass}>Status pages</Link>
               {" · "}
-              <Link href="/#faq" className={linkClass}>Questions, answered</Link>
+              <Link href="/expiry-calendar" className={linkClass}>Expiry calendar</Link>
+              {" · "}
+              <Link href="/weekly-reports" className={linkClass}>Weekly reports</Link>
+              {" · "}
+              <Link href="/uptime-badges" className={linkClass}>Uptime badges</Link>
             </p>
           </div>
         </div>

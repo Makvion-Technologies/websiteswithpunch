@@ -16,6 +16,8 @@
   --solid: 216 35% 6%;
   --solid-fg: 45 14% 96%;
   --danger: 0 72% 45%;
+  /* Emerald badge (Starter trial); dark enough for white text in both themes */
+  --ok: 152 68% 32%;
   --background: var(--bg);
   --foreground: var(--ink);
   --border: var(--rule);
@@ -39,6 +41,7 @@
   --solid: 216 35% 6%;
   --solid-fg: 45 14% 96%;
   --danger: 0 85% 70%;
+  --ok: 152 55% 38%;
   --background: var(--bg);
   --foreground: var(--ink);
   --border: var(--rule);
