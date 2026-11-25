@@ -53,7 +53,18 @@ const NOT_FOUND = /could not be found|doesn'?t exist|does not exist|has been del
 /** True when Dodo says an ID we sent doesn't exist (404 or its wording). */
 export function isDodoNotFound(err: unknown): boolean {
   const e = err as { status?: number; error?: { message?: string }; message?: string };
+  if (isAddonRejection(err)) return false;
   return e?.status === 404 || NOT_FOUND.test(e?.error?.message ?? "");
+}
+
+/**
+ * Dodo refusing an add-on for the product, e.g. a detached legacy pack (real test-mode reply:
+ * 422 MISSING_ADDON_IDS "One or more addon IDs are not found or not allowed for this product").
+ */
+export function isAddonRejection(err: unknown): boolean {
+  const e = err as { status?: number; error?: { message?: string; code?: string } };
+  if (typeof e?.status !== "number" || e.status < 400 || e.status >= 500) return false;
+  return e.error?.code === "MISSING_ADDON_IDS" || /add-?on/i.test(e.error?.message ?? "");
 }
 
 /**
@@ -66,10 +77,11 @@ export const LEGACY_ADDON_ERROR =
   "This change can't be made automatically because of an add-on on your subscription (for example an older site pack). Nothing was charged. Contact us (Contact → Billing) and we'll make the change for you.";
 
 export function dodoUserMessage(err: unknown, fallback: string): string {
+  // Before the not-found check: Dodo's add-on refusal says "not found or not allowed".
+  if (isAddonRejection(err)) return LEGACY_ADDON_ERROR;
   if (isDodoNotFound(err)) return BILLING_SETUP_ERROR;
   const e = err as { status?: number; error?: { message?: string } };
   const msg = e?.error?.message;
-  if (typeof e?.status === "number" && e.status >= 400 && e.status < 500 && msg && /add-?on/i.test(msg)) return LEGACY_ADDON_ERROR;
   return typeof e?.status === "number" && e.status >= 400 && e.status < 500 && msg ? msg : fallback;
 }
 

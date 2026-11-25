@@ -19,15 +19,24 @@ only, 0 on all others.** The app never passes `trial_period_days` at checkout (t
 Misuse), so the trial comes only from the product.
 
 Country pricing (if your Dodo account offers it on the product's pricing): add an **India (INR)** price as below.
-INR is only charged when `DODO_LOCALIZED_PRICING=1` is set in Vercel; leave that unset until every product and
-add-on has its INR price.
+INR is only charged when `DODO_LOCALIZED_PRICING=1` is set in Vercel **and Adaptive Currency is ON** in Dodo
+(Settings → Pricing). With Adaptive Currency off, Dodo ignores `billing_currency` and charges the product's USD base
+price even for an Indian billing address (verified in test mode on 25 Nov 2026: an IN checkout preview of Starter
+came back $5 + 18% GST in USD, not ₹399). Add-ons can't have INR prices (Dodo: "Add-ons are not localized").
+
+**Custom is always USD.** In an INR checkout Dodo would charge the fixed ₹1,999 Business price plus the USD add-on
+converted at a live FX rate, so a Custom total would drift every renewal and never match the pricing page. A
+subscription's currency is locked at checkout and never changes on Change Plan. So the app sends
+`billing_currency: "USD"` (currency picker hidden) for every Custom checkout, keeps INR for plain Starter / Pro /
+Business checkouts, and refuses to add Extra 25 blocks to a non-USD subscription with a "contact us" message
+(`CUSTOM_USD_ONLY`). An INR Business customer who wants more than 100 sites is moved over by hand.
 
 | Product name | USD | INR | Repeat every | Trial days | Env var |
 |---|---|---|---|---|---|
 | Websites With Punch Starter (Monthly) | $5 | ₹399 | 1 month | 30 | `DODO_PRODUCT_STARTER_MONTHLY` |
 | Websites With Punch Starter (Annual) | $50 | ₹3,990 | 1 year | 30 | `DODO_PRODUCT_STARTER_ANNUAL` |
 | Websites With Punch Pro (Monthly) | $12 | ₹999 | 1 month | 0 | `DODO_PRODUCT_PRO_MONTHLY` (existing product: keep the ID, update the description) |
-| Websites With Punch Pro (Annual) | $120 | ₹9,999 | 1 year | 0 | `DODO_PRODUCT_PRO_ANNUAL` (existing product: keep the ID) |
+| Websites With Punch Pro (Annual) | $120 | ₹9,990 | 1 year | 0 | `DODO_PRODUCT_PRO_ANNUAL` (existing product: keep the ID) |
 | Websites With Punch Business (Monthly) | $24 | ₹1,999 | 1 month | 0 | `DODO_PRODUCT_BUSINESS_MONTHLY` (**new** product) |
 | Websites With Punch Business (Annual) | $240 | ₹19,990 | 1 year | 0 | `DODO_PRODUCT_BUSINESS_ANNUAL` (**new** product) |
 
@@ -36,8 +45,8 @@ add-on has its INR price.
 |---|---|
 | `DODO_PRODUCT_STARTER_MONTHLY` | `pdt_0NshusnrHZPcBqdFLoAyv` ($5, 30-day trial, ₹399) |
 | `DODO_PRODUCT_STARTER_ANNUAL` | `pdt_0Nshv2QmKE78gldyvvBz3` ($50, 30-day trial, ₹3,990) |
-| `DODO_PRODUCT_PRO_MONTHLY` | `pdt_0NpLCIBI12ChWV6uXEHTj` ($12) |
-| `DODO_PRODUCT_PRO_ANNUAL` | `pdt_0NpLCNQ2nSS0hrAQRO6x6` ($120) |
+| `DODO_PRODUCT_PRO_MONTHLY` | `pdt_0NpLCIBI12ChWV6uXEHTj` ($12, ₹999) |
+| `DODO_PRODUCT_PRO_ANNUAL` | `pdt_0NpLCNQ2nSS0hrAQRO6x6` ($120, ₹9,990) |
 | `DODO_PRODUCT_BUSINESS_MONTHLY` | `pdt_0Nshv6gwASVqBbVSqmL00` ($24, ₹1,999) |
 | `DODO_PRODUCT_BUSINESS_ANNUAL` | `pdt_0NshvHWiksYP0zVKUa8yS` ($240, ₹19,990) |
 | `DODO_ADDON_EXTRA25_MONTHLY` | `adn_0NshvrMqxcDTZNOfQ7DWY` (attached only to Business Monthly) |
@@ -55,8 +64,19 @@ Live mode needs its own IDs (repeat this section in Live Mode).
 **Existing site-pack holders after detaching:** the app never sends a retired pack ID to Dodo. Every Change Plan
 sends the full add-on list for the target (Extra 25 only on Business, otherwise none), so any change a pack holder
 makes (interval switch, upgrade, Custom size, downgrade) drops the old pack and moves them to a current product
-that already covers their old size (Pro 30, Business 100). Renewals don't go through the app. If Dodo ever rejects
-a change because of an add-on, the customer sees a "contact us, nothing was charged" message, not Dodo's raw error.
+that already covers their old size (Pro 30, Business 100). If Dodo ever rejects a change because of an add-on, the
+customer sees a "contact us, nothing was charged" message, not Dodo's raw error.
+
+Verified against real test mode (25 Nov 2026, read-only previews on `sub_0NpLLS9zSUj1lobmjYZ2v`, legacy Business
+Annual + Pack Business Annual ×1):
+- Change Plan that **keeps** a detached pack is rejected: `422 MISSING_ADDON_IDS` "One or more addon IDs are not
+  found or not allowed for this product". So a pack holder can't change pack quantity or keep the pack through a
+  plan change; the app never tries (it sends Extra 25 or `addons: []`), and the error maps to the contact-us message.
+- Change Plan to the new Business Annual with `addons: []` or with Extra 25 is accepted.
+- **Renewals keep the pack.** Detaching doesn't touch existing subscriptions: the subscription still lists the pack
+  and its recurring amount is still $510 ($420 + $90 pack). Dodo's docs say the same for archived add-ons ("existing
+  subscriptions keep the add-on and continue to renew with it"). A pack holder keeps paying for, and keeping, the
+  pack at every renewal until `scripts/migrate-legacy-billing.ts --book` (or their own plan change) moves them.
 
 Descriptions (shown on checkout and invoices):
 - Starter: "Uptime, SSL and domain expiry monitoring for up to 10 sites. 30-day free trial, then billed until you cancel."

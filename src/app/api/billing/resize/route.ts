@@ -9,6 +9,7 @@ import { recurringBreakdown, recurringTotalCents } from "@/lib/billing-totals";
 import { formatChargeToday, formatRecurringFromCents, formatShortDate } from "@/lib/billing-format";
 import { setKeepOnDowngrade } from "@/lib/site-limits";
 import { checkCustomCapacity } from "@/lib/monitor/capacity";
+import { addsBlocksInWrongCurrency, CUSTOM_USD_ONLY_ERROR } from "@/lib/dodo-currency";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -32,6 +33,9 @@ function check(ctx: BillingCtx, blocks: number) {
   if (blocked) return blocked;
   if (blocks === ctx.st.packs && !(ctx.st.scheduled && ctx.st.scheduled.packs < ctx.st.packs)) {
     return fail(400, `You're already on ${customSites(blocks)} sites.`);
+  }
+  if (addsBlocksInWrongCurrency(ctx.sub.currency, blocks, ctx.st.packs)) {
+    return fail(409, CUSTOM_USD_ONLY_ERROR, "CUSTOM_USD_ONLY");
   }
   return null;
 }

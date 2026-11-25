@@ -13,6 +13,7 @@ import { checkCustomCapacity } from "@/lib/monitor/capacity";
 import { syncSubscription } from "@/lib/dodo-sync";
 import { blockIfScheduled, fail, loadUser, ON_HOLD_ERROR } from "@/lib/billing-route";
 import { isVerified } from "@/lib/email-verify";
+import { addsBlocksInWrongCurrency, checkoutCurrencyOptions, CUSTOM_USD_ONLY_ERROR } from "@/lib/dodo-currency";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -69,14 +70,6 @@ async function capacityBlock(blocks: number, currentBlocks = 0) {
   );
 }
 
-/** Localized (INR) prices from Dodo country pricing: only when DODO_LOCALIZED_PRICING=1. */
-function currencyOptions() {
-  if (process.env.DODO_LOCALIZED_PRICING === "1") return {};
-  // Prices are USD. If Adaptive Currency is on in Dodo, charge USD anyway and hide the
-  // currency picker (Indian cards often decline foreign-currency INR conversions).
-  return { billing_currency: "USD" as const, feature_flags: { allow_currency_selection: false } };
-}
-
 async function newCheckout(dodo: DodoPayments, user: User, planId: PaidPlanId, interval: BillingInterval, blocks: number) {
   const productId = productIdFor(planId, interval);
   if (!productId) return fail(503, missingCatalogMessage("plan", planId, interval), "PRICE_MISSING");
@@ -101,7 +94,8 @@ async function newCheckout(dodo: DodoPayments, user: User, planId: PaidPlanId, i
     return_url: `${appUrl()}/dashboard?checkout=done`,
     cancel_url: `${appUrl()}/dashboard?checkout=canceled`,
     metadata: { userId: user.id, planId, interval, blocks: String(blocks) },
-    ...currencyOptions(),
+    // INR for plain plans when DODO_LOCALIZED_PRICING=1; Custom (add-on blocks) always USD.
+    ...checkoutCurrencyOptions(blocks),
   });
   if (!session.checkout_url) return fail(502, "Could not start checkout. Please try again.");
   return NextResponse.json({ url: session.checkout_url });
@@ -143,6 +137,9 @@ async function changeInPlace(
   }
   const blocked = blockIfScheduled(st, ["packs"]);
   if (blocked) return blocked;
+  if (addsBlocksInWrongCurrency(sub.currency, target, samePlan ? st.packs : 0)) {
+    return fail(409, CUSTOM_USD_ONLY_ERROR, "CUSTOM_USD_ONLY");
+  }
   const full = await capacityBlock(target, samePlan ? st.packs : 0);
   if (full) return full;
   if (target > CUSTOM.maxBlocks) return fail(400, "Custom goes up to 500 sites. Contact us for more.");
