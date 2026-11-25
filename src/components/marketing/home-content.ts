@@ -1,5 +1,6 @@
-export { faqs } from "./faq-content";
+import { byCadence } from "@/lib/monitor/config";
 
+export { faqs } from "./faq-content";
 
 export const howSteps = [
   {
@@ -24,25 +25,31 @@ export const monitorRows = [
     title: "Uptime",
     eyebrow: "Availability",
     body: "We hit your URL on a schedule and record whether it responded. See up/down status, recent history, and response latency so you know when something broke — and how long it took to recover.",
+    href: "/uptime-monitoring",
+    link: "Read about uptime monitoring",
     visual: "uptime",
   },
   {
     title: "SSL certificates",
     eyebrow: "Trust",
     body: "For HTTPS sites we read the certificate expiry date and show days remaining. Get ahead of browser trust warnings before customers see them and bounce.",
+    href: "/ssl-certificate-monitoring",
+    link: "Read about SSL monitoring",
     visual: "ssl",
   },
   {
     title: "Domain expiry",
     eyebrow: "Ownership",
     body: "Best-effort RDAP/WHOIS lookups surface when your root domain is due for renewal. A lapsed domain takes the site and often email offline — catch that early.",
+    href: "/domain-expiry-monitoring",
+    link: "Read about domain expiry monitoring",
     visual: "domain",
   },
 ] as const;
 
 export const proofMetrics = [
-  { label: "Uptime", detail: "Scheduled HTTP checks" },
-  { label: "SSL", detail: "Days until expiry" },
-  { label: "Domain", detail: "Renewal window" },
-  { label: "Alerts & status", detail: "Slack, Discord, Telegram, status pages" },
+  { label: "Uptime", detail: byCadence("Checked every minute on paid plans", "Checked once a day") },
+  { label: "SSL & domain", detail: "Expiry dates, checked daily" },
+  { label: "Alerts", detail: "Email, Slack, Discord, Telegram, webhook" },
+  { label: "Share", detail: "Status pages, badges and a weekly report" },
 ];

@@ -5,13 +5,14 @@ import { HeroCheckForm } from "./hero-check/HeroCheckForm";
 import { HeroCheckProvider } from "./hero-check/HeroCheckProvider";
 import { HeroResultSlot } from "./hero-check/HeroResultSlot";
 import { FREE_TRUST, START_LABEL } from "./StartCta";
-import { IconGlobe, IconLock, IconPulse } from "./icons";
+import { IconBell, IconGlobe, IconLock, IconPulse } from "./icons";
 
-/** Neutral "what we check" row: protocols we really use, not customer logos. */
+/** Neutral "what we check" row: protocols we really use, plus where alerts go. */
 const checks = [
   { tag: "HTTP(S)", label: "Uptime & latency", Icon: IconPulse },
   { tag: "TLS", label: "Certificate expiry", Icon: IconLock },
   { tag: "RDAP / WHOIS", label: "Domain expiry", Icon: IconGlobe },
+  { tag: "ALERTS", label: "Email, Slack, Discord, Telegram", Icon: IconBell },
 ];
 
 function Before() {
@@ -50,8 +51,9 @@ export function HeroSection() {
               SSL or domain lets you down.
             </h1>
             <p className="mt-6 max-w-lg text-lg leading-relaxed text-muted lg:max-w-[36rem]">
-              Websites With Punch is website monitoring for your sites’ uptime, SSL certificate
-              expiry and domain expiry, with all three on one dashboard.
+              Websites With Punch watches your sites’ uptime, SSL certificates and domain expiry
+              on one dashboard. Alerts go to email, Slack, Discord, Telegram or a webhook, and you
+              can publish a status page, get a weekly report and keep renewals on a calendar.
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-3">

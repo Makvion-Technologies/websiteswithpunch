@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { DomainVisual } from "./DomainVisual";
 import { SslVisual } from "./SslVisual";
 import { UptimeVisual } from "./UptimeVisual";
@@ -35,6 +36,12 @@ export function FeaturesSection() {
                     {row.title}
                   </h3>
                   <p className="mt-4 max-w-md text-base leading-relaxed text-muted">{row.body}</p>
+                  <Link
+                    href={row.href}
+                    className="mt-5 inline-block text-sm font-medium text-ink underline decoration-rule underline-offset-4 hover:decoration-ink"
+                  >
+                    {row.link} →
+                  </Link>
                 </div>
               </div>
             );

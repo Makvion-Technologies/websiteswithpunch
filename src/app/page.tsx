@@ -11,15 +11,16 @@ import { ProductPreviewSection } from "@/components/marketing/sections-preview";
 import { WhyItMattersSection } from "@/components/marketing/sections-why";
 import { HowItWorksSection } from "@/components/marketing/sections-how";
 import { HeroSection } from "@/components/marketing/sections-hero";
-import { IntroLine, ProofStrip } from "@/components/marketing/sections-top";
+import { ProofStrip } from "@/components/marketing/sections-top";
 import { HomeToolsStrip } from "@/components/marketing/HomeToolsStrip";
+import { ShareSection } from "@/components/marketing/sections-share";
 import { HomeJsonLd } from "@/components/marketing/HomeJsonLd";
 import { byCadence } from "@/lib/monitor/config";
 
 const title = "Website Uptime Monitoring – SSL & Domain Expiry";
 const description = byCadence(
-  "Uptime checked every minute, plus SSL and domain expiry alerts, on one dashboard. From $5/month for 10 sites, with a 30-day free trial on Starter.",
-  "Monitor website uptime, SSL certificates and domain expiry on one dashboard, with email alerts. From $5/month for 10 sites, with a 30-day free trial.",
+  "Uptime checked every minute, plus SSL and domain expiry, alerts and a public status page, on one dashboard. From $5/month for 10 sites, with a 30-day free trial on Starter.",
+  "Monitor website uptime, SSL certificates and domain expiry on one dashboard, with email alerts and a public status page. From $5/month for 10 sites, with a 30-day free trial.",
 );
 
 export const metadata: Metadata = {
@@ -38,15 +39,14 @@ export default function HomePage() {
     <div>
       <HomeJsonLd />
       <HeroSection />
-      <IntroLine />
       <ProofStrip />
       <HowItWorksSection />
       <FeaturesSection />
+      <ShareSection />
       <HomeToolsStrip />
-      <CtaBand line={byCadence("Uptime checked every few minutes, SSL and domain expiry every day, all on one dashboard.", "Uptime, SSL and domain expiry for your site, checked every day.")} />
+      <CtaBand line="Add your sites, get the alerts, share a status page." />
       <WhyItMattersSection />
       <ProductPreviewSection />
-      <CtaBand line="Add your site and see it on this dashboard." />
       <AudienceSection />
       <PricingSection />
       <FaqSection />
