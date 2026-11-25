@@ -23,12 +23,12 @@ export function ProductPreviewSection() {
         {/* lg: pt = stage border + padding, so the copy starts level with the window's top edge. */}
         <div className="lg:col-start-1 lg:row-start-1 lg:pb-6 lg:pt-[13px]">
           <p className="label-caps">Inside the dashboard</p>
-          <h2 className="mt-4 lg:mt-3 max-w-[18ch] font-display text-[2.1rem] font-medium leading-[1.05] tracking-[-0.03em] text-ink sm:text-5xl lg:text-[2.5rem]">
-            One screen. Every site. <span className="text-accent">Three signals.</span>
+          <h2 className="mt-4 lg:mt-3 max-w-[18ch] font-display text-3xl font-medium text-ink sm:text-4xl">
+            Every site on one monitors screen
           </h2>
           <p className="mt-6 max-w-md text-lg leading-relaxed text-muted lg:mt-4 lg:text-base">
             This is the Monitors screen in your dashboard. Each site gets its own card with status,
-            SSL days left and domain days left, plus a manual recheck and a full analytics view.
+            SSL days left and domain days left. Open a site for its Health Score, charts and details.
           </p>
         </div>
 
