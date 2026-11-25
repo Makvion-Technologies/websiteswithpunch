@@ -3,7 +3,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { changeBody } from "../src/lib/dodo-change";
 import { nextPaymentText } from "../src/lib/next-payment";
-import { BILLING_SETUP_ERROR, dodoUserMessage } from "../src/lib/dodo";
+import { BILLING_SETUP_ERROR, LEGACY_ADDON_ERROR, dodoUserMessage } from "../src/lib/dodo";
 import type { SubscriptionState } from "../src/lib/dodo-subscription";
 
 process.env.DODO_PRODUCT_PRO_MONTHLY = "pdt_pro_m";
@@ -68,4 +68,10 @@ test("Dodo 'not found' errors never reach the user raw", () => {
   assert.equal(dodoUserMessage({ status: 400, error: { message: "ID doesn't exist or has been deleted" } }, "f"), BILLING_SETUP_ERROR);
   assert.equal(dodoUserMessage({ status: 409, error: { message: "A plan change is already pending" } }, "f"), "A plan change is already pending");
   assert.equal(dodoUserMessage(new Error("boom"), "fallback"), "fallback");
+});
+
+test("an add-on rejection from Dodo becomes a friendly contact-us message", () => {
+  const err = { status: 422, error: { message: "Addon adn_x is not attached to product pdt_y" } };
+  assert.equal(dodoUserMessage(err, "fallback"), LEGACY_ADDON_ERROR);
+  assert.equal(dodoUserMessage({ status: 400, error: { message: "Card declined" } }, "fallback"), "Card declined");
 });

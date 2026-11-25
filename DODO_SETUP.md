@@ -25,11 +25,38 @@ add-on has its INR price.
 | Product name | USD | INR | Repeat every | Trial days | Env var |
 |---|---|---|---|---|---|
 | Websites With Punch Starter (Monthly) | $5 | ₹399 | 1 month | 30 | `DODO_PRODUCT_STARTER_MONTHLY` |
-| Websites With Punch Starter (Annual) | $50 | ₹3,999 | 1 year | 30 | `DODO_PRODUCT_STARTER_ANNUAL` |
+| Websites With Punch Starter (Annual) | $50 | ₹3,990 | 1 year | 30 | `DODO_PRODUCT_STARTER_ANNUAL` |
 | Websites With Punch Pro (Monthly) | $12 | ₹999 | 1 month | 0 | `DODO_PRODUCT_PRO_MONTHLY` (existing product: keep the ID, update the description) |
 | Websites With Punch Pro (Annual) | $120 | ₹9,999 | 1 year | 0 | `DODO_PRODUCT_PRO_ANNUAL` (existing product: keep the ID) |
 | Websites With Punch Business (Monthly) | $24 | ₹1,999 | 1 month | 0 | `DODO_PRODUCT_BUSINESS_MONTHLY` (**new** product) |
-| Websites With Punch Business (Annual) | $240 | ₹19,999 | 1 year | 0 | `DODO_PRODUCT_BUSINESS_ANNUAL` (**new** product) |
+| Websites With Punch Business (Annual) | $240 | ₹19,990 | 1 year | 0 | `DODO_PRODUCT_BUSINESS_ANNUAL` (**new** product) |
+
+### TEST-MODE IDs (set up 25 Nov 2026)
+| Env var | Test-mode ID |
+|---|---|
+| `DODO_PRODUCT_STARTER_MONTHLY` | `pdt_0NshusnrHZPcBqdFLoAyv` ($5, 30-day trial, ₹399) |
+| `DODO_PRODUCT_STARTER_ANNUAL` | `pdt_0Nshv2QmKE78gldyvvBz3` ($50, 30-day trial, ₹3,990) |
+| `DODO_PRODUCT_PRO_MONTHLY` | `pdt_0NpLCIBI12ChWV6uXEHTj` ($12) |
+| `DODO_PRODUCT_PRO_ANNUAL` | `pdt_0NpLCNQ2nSS0hrAQRO6x6` ($120) |
+| `DODO_PRODUCT_BUSINESS_MONTHLY` | `pdt_0Nshv6gwASVqBbVSqmL00` ($24, ₹1,999) |
+| `DODO_PRODUCT_BUSINESS_ANNUAL` | `pdt_0NshvHWiksYP0zVKUa8yS` ($240, ₹19,990) |
+| `DODO_ADDON_EXTRA25_MONTHLY` | `adn_0NshvrMqxcDTZNOfQ7DWY` (attached only to Business Monthly) |
+| `DODO_ADDON_EXTRA25_ANNUAL` | `adn_0Nshvuro8r11OXk2aEF15` (attached only to Business Annual) |
+| `DODO_PRODUCT_BUSINESS_LEGACY_MONTHLY` | `pdt_0NpLCQ83EVYnmldyEf5Yo` ($42, legacy) |
+| `DODO_PRODUCT_BUSINESS_LEGACY_ANNUAL` | `pdt_0NpLCTKExazFC23zjN2WB` ($420, legacy) |
+| `DODO_ADDON_PACK_PRO_MONTHLY` | `adn_0NpLCnpNfnnRcNkN0A9Ve` (detached, legacy) |
+| `DODO_ADDON_PACK_PRO_ANNUAL` | `adn_0NpLCqAVMPtyryAWRLpSU` (detached, legacy) |
+| `DODO_ADDON_PACK_BUSINESS_MONTHLY` | `adn_0NpLCrRRJVnmh06KS7V1z` (detached, legacy) |
+| `DODO_ADDON_PACK_BUSINESS_ANNUAL` | `adn_0NpLCssENw6Xe5QYmhg3t` (detached, legacy) |
+
+Test mode also has Prevent Trial Misuse ON and INR country prices, so `DODO_LOCALIZED_PRICING=1` is valid there.
+Live mode needs its own IDs (repeat this section in Live Mode).
+
+**Existing site-pack holders after detaching:** the app never sends a retired pack ID to Dodo. Every Change Plan
+sends the full add-on list for the target (Extra 25 only on Business, otherwise none), so any change a pack holder
+makes (interval switch, upgrade, Custom size, downgrade) drops the old pack and moves them to a current product
+that already covers their old size (Pro 30, Business 100). Renewals don't go through the app. If Dodo ever rejects
+a change because of an add-on, the customer sees a "contact us, nothing was charged" message, not Dodo's raw error.
 
 Descriptions (shown on checkout and invoices):
 - Starter: "Uptime, SSL and domain expiry monitoring for up to 10 sites. 30-day free trial, then billed until you cancel."
@@ -103,6 +130,9 @@ optional: `DODO_LOCALIZED_PRICING=1` (INR), `WORKER_SITES_PER_MINUTE` (default 6
 5. Merge and deploy.
 6. `scripts/migrate-legacy-billing.ts` (dry run), check the table, then `--book` to move legacy Business / pack
    subscribers to the new products at their renewal (never a price rise).
+
+Local end-to-end without a Dodo key: `DODO_PAYMENTS_MOCK_URL` points the SDK at a mock Dodo server
+(dev only; ignored when NODE_ENV=production).
 
 ## 7. Test cards (test mode only; expiry 06/32, CVV 123)
 - Success: Visa `4242 4242 4242 4242`, Mastercard `5555 5555 5555 4444`, India Mastercard `5409 1626 6938 1034`

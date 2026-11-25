@@ -11,9 +11,9 @@ async function main() {
   if (!dodo) throw new Error("DODO_PAYMENTS_API_KEY is not set");
   console.log(`Dodo mode: ${dodoEnvironment()}\n`);
   const lines = await checkCatalog(dodo);
-  for (const l of lines) console.log(`${l.ok ? "OK  " : "FAIL"} ${l.envVar.padEnd(34)} ${(l.id ?? "-").padEnd(28)} ${l.detail}`);
+  for (const l of lines) console.log(`${l.ok ? "OK  " : "FAIL"} ${l.envVar.padEnd(38)} ${(l.id ?? "-").padEnd(28)} ${l.detail}`);
   const bad = lines.filter((l) => !l.ok).length;
-  console.log(bad ? `\n${bad} problem(s). Fix them in Vercel → Settings → Environment Variables, then redeploy.` : "\nAll 8 IDs check out.");
+  console.log(bad ? `\n${bad} problem(s). Fix them in Vercel → Settings → Environment Variables, then redeploy.` : `\nAll ${lines.length} IDs check out.`);
   if (bad) process.exitCode = 1;
 }
 

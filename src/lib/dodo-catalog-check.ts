@@ -72,6 +72,22 @@ export async function checkCatalog(dodo: DodoPayments): Promise<CatalogLine[]> {
     }
   }
 
+  // Legacy Business products: still recognised for existing subscribers; read only to see
+  // whether a retired pack is still attached to them.
+  for (const interval of INTERVALS) {
+    const v = LEGACY_ENV.plan.business[interval];
+    const id = env(v);
+    if (!id) continue;
+    try {
+      const p = await dodo.products.retrieve(id);
+      attachedTo[v] = p.addons ?? [];
+      const price = "price" in p.price ? p.price.price : null;
+      out.push({ envVar: v, id, ok: true, detail: `legacy "${p.name}" ${p.price.currency} ${price == null ? "?" : price / 100} (existing subscribers only, not sold)` });
+    } catch (e) {
+      out.push({ envVar: v, id, ok: false, detail: is404(e) ? "legacy product not found in this Dodo mode" : `lookup failed: ${String(e)}` });
+    }
+  }
+
   // Retired site packs must not be attached to anything we sell any more.
   for (const plan of ["pro", "business"] as const) {
     for (const interval of INTERVALS) {

@@ -17,9 +17,11 @@ export function getDodo(): DodoPayments | null {
   const key = process.env.DODO_PAYMENTS_API_KEY?.trim();
   if (!key) return null;
   if (!cached) {
+    // Local end-to-end tests only: point the SDK at a mock Dodo server. Ignored in production builds.
+    const mock = process.env.NODE_ENV !== "production" ? process.env.DODO_PAYMENTS_MOCK_URL?.trim() : undefined;
     cached = new DodoPayments({
       bearerToken: key,
-      environment: dodoEnvironment(),
+      ...(mock ? { baseURL: mock, environment: undefined } : { environment: dodoEnvironment() }),
       webhookKey: process.env.DODO_PAYMENTS_WEBHOOK_KEY?.trim() || null,
       maxRetries: 2,
       timeout: 20_000,
@@ -54,10 +56,20 @@ export function isDodoNotFound(err: unknown): boolean {
   return e?.status === 404 || NOT_FOUND.test(e?.error?.message ?? "");
 }
 
+/**
+ * Shown when Dodo refuses a change because of an add-on on the subscription. Old site packs are
+ * detached from every product (never re-attached); the app never sends their IDs and every plan
+ * change replaces the add-on list, so this should not happen. If Dodo still objects to an old
+ * add-on, the customer is pointed at support instead of seeing Dodo's raw error.
+ */
+export const LEGACY_ADDON_ERROR =
+  "This change can't be made automatically because of an add-on on your subscription (for example an older site pack). Nothing was charged. Contact us (Contact → Billing) and we'll make the change for you.";
+
 export function dodoUserMessage(err: unknown, fallback: string): string {
   if (isDodoNotFound(err)) return BILLING_SETUP_ERROR;
   const e = err as { status?: number; error?: { message?: string } };
   const msg = e?.error?.message;
+  if (typeof e?.status === "number" && e.status >= 400 && e.status < 500 && msg && /add-?on/i.test(msg)) return LEGACY_ADDON_ERROR;
   return typeof e?.status === "number" && e.status >= 400 && e.status < 500 && msg ? msg : fallback;
 }
 
