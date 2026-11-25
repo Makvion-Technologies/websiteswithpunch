@@ -23,6 +23,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     page("/", 1, "weekly"),
     page("/pricing", 0.8),
+    page("/features", 0.8),
     ...FEATURE_LINKS.map((l) => page(l.href, 0.8)),
     page("/tools", 0.8, "weekly"),
     page("/is-down", 0.8, "weekly"),

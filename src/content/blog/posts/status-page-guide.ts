@@ -10,7 +10,7 @@ export const post: BlogPost = {
   category: "uptime",
   query: "how to create a status page",
   published: "2026-11-11",
-  updated: "2026-11-11",
+  updated: "2026-11-25",
   body,
   related: ["website-maintenance-without-hurting-seo", "cost-of-website-downtime", "uptime-percentage-explained"],
   faqs: [
