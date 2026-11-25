@@ -76,24 +76,24 @@ export function CalendarReportPreview() {
           ))}
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[420px] text-sm">
+          <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-rule text-left text-xs text-muted">
-                <th className="px-4 py-2 font-medium">Site</th>
-                <th className="px-4 py-2 text-right font-medium">Uptime</th>
-                <th className="px-4 py-2 text-right font-medium">Incidents</th>
-                <th className="px-4 py-2 text-right font-medium">Downtime</th>
-                <th className="px-4 py-2 text-right font-medium">Avg response</th>
+                <th className="px-3 py-2 font-medium sm:px-4">Site</th>
+                <th className="px-3 py-2 text-right font-medium sm:px-4">Uptime</th>
+                <th className="px-3 py-2 text-right font-medium sm:px-4">Incidents</th>
+                <th className="hidden px-4 py-2 text-right font-medium sm:table-cell">Downtime</th>
+                <th className="px-3 py-2 text-right font-medium sm:px-4">Avg response</th>
               </tr>
             </thead>
             <tbody>
               {r.sites.map((s) => (
                 <tr key={s.id} className="border-b border-rule last:border-b-0">
-                  <td className="max-w-[200px] truncate px-4 py-2 text-ink">{s.name}</td>
-                  <td className="px-4 py-2 text-right text-ink">{pct(s.uptime)}</td>
-                  <td className="px-4 py-2 text-right text-ink">{s.incidents}</td>
-                  <td className="px-4 py-2 text-right text-ink">{shortDuration(s.downMs)}</td>
-                  <td className="px-4 py-2 text-right text-ink">{s.avgMs == null ? "–" : `${s.avgMs} ms`}</td>
+                  <td className="max-w-[120px] truncate px-3 py-2 text-ink sm:max-w-[200px] sm:px-4">{s.name}</td>
+                  <td className="px-3 py-2 text-right text-ink sm:px-4">{pct(s.uptime)}</td>
+                  <td className="px-3 py-2 text-right text-ink sm:px-4">{s.incidents}</td>
+                  <td className="hidden px-4 py-2 text-right text-ink sm:table-cell">{shortDuration(s.downMs)}</td>
+                  <td className="px-3 py-2 text-right text-ink sm:px-4">{s.avgMs == null ? "–" : `${s.avgMs} ms`}</td>
                 </tr>
               ))}
             </tbody>

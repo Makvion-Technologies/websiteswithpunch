@@ -39,7 +39,7 @@ export function MobileNav() {
         aria-expanded={open}
         onClick={() => setOpen(true)}
         title="Menu"
-        className={`inline-flex h-8 w-8 shrink-0 items-center justify-center border border-rule text-ink hover:bg-accent-soft ${FOCUS_RING}`}
+        className={`inline-flex h-10 w-10 shrink-0 items-center justify-center border border-rule text-ink hover:bg-accent-soft ${FOCUS_RING}`}
       >
         <svg aria-hidden viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
           <path d="M4 7h16M4 12h16M4 17h16" />

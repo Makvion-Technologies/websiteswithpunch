@@ -30,7 +30,7 @@ export function FooterThemeSwitch() {
             role="radio"
             aria-checked={on}
             onClick={() => setTheme(o.id)}
-            className={`inline-flex h-7 items-center gap-1.5 px-2.5 text-xs transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent ${
+            className={`inline-flex h-10 items-center gap-1.5 px-2.5 text-xs lg:h-7 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent ${
               on ? "bg-ink/[0.07] text-ink" : "text-muted hover:text-ink"
             }`}
           >

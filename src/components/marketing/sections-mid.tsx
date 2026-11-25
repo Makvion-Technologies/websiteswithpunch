@@ -38,7 +38,7 @@ export function FeaturesSection() {
                   <p className="mt-4 max-w-md text-base leading-relaxed text-muted">{row.body}</p>
                   <Link
                     href={row.href}
-                    className="mt-5 inline-block text-sm font-medium text-ink underline decoration-rule underline-offset-4 hover:decoration-ink"
+                    className="mt-3 inline-flex min-h-10 items-center text-sm font-medium text-ink underline decoration-rule underline-offset-4 hover:decoration-ink"
                   >
                     {row.link} →
                   </Link>

@@ -74,7 +74,7 @@ export function FeaturesHub() {
                   <div className="flex flex-1 flex-col p-5 sm:p-6">
                     <h3 className="font-display text-xl font-medium text-ink">{l.title}</h3>
                     <p className="mt-2 flex-1 text-sm leading-relaxed text-muted">{l.body}</p>
-                    <Link href={l.href} className="mt-5 inline-block text-sm font-medium text-ink underline decoration-rule underline-offset-4 hover:decoration-ink">
+                    <Link href={l.href} className="mt-3 inline-flex min-h-10 items-center self-start text-sm font-medium text-ink underline decoration-rule underline-offset-4 hover:decoration-ink">
                       {l.title} →
                     </Link>
                   </div>

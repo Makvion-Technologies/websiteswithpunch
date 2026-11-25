@@ -73,7 +73,7 @@ export function AlertsPreview() {
           </Panel>
 
           <section className="border border-rule bg-surface">
-            <div className="border-b border-rule px-6 py-4">
+            <div className="border-b border-rule px-4 py-4 sm:px-6">
               <p className="label-caps text-muted">Email alerts</p>
               <p className="mt-1 text-sm text-muted">
                 Sent to <span className="text-ink">alex@studio.example</span> {alertsSentWhen()}
@@ -81,7 +81,7 @@ export function AlertsPreview() {
             </div>
             <ul className="divide-y divide-rule">
               {shareEmailRows.map((r) => (
-                <li key={r.title} className="flex items-start justify-between gap-4 px-6 py-4">
+                <li key={r.title} className="flex items-start justify-between gap-4 px-4 py-4 sm:px-6">
                   <div className="min-w-0">
                     <p className="text-sm font-medium text-ink">{r.title}</p>
                     <p className="mt-0.5 text-xs leading-5 text-muted">{r.body}</p>
