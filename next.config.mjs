@@ -4,17 +4,17 @@ const onVercel = Boolean(process.env.VERCEL);
 /**
  * Content-Security-Policy. Pages are static/ISR, so per-request nonces aren't possible:
  * scripts allow 'self' + 'unsafe-inline' (Next's inline bootstrap and the theme script) and
- * nothing else from third parties except Vercel Analytics. 'unsafe-eval' is dev only.
+ * third-party scripts only from Vercel Analytics and Microsoft Clarity. 'unsafe-eval' is dev only.
  * Dodo Payments checkout and the customer portal open as full-page redirects, so they need
  * no CSP entries (no Dodo script, frame or form runs on our pages).
  */
 const csp = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://va.vercel-scripts.com`,
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://va.vercel-scripts.com https://www.clarity.ms https://*.clarity.ms`,
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob:",
+  "img-src 'self' data: blob: https://www.clarity.ms https://*.clarity.ms https://c.bing.com",
   "font-src 'self' data:",
-  `connect-src 'self' https://vitals.vercel-insights.com${isDev ? " ws: wss:" : ""}`,
+  `connect-src 'self' https://vitals.vercel-insights.com https://www.clarity.ms https://*.clarity.ms https://c.bing.com${isDev ? " ws: wss:" : ""}`,
   "frame-src 'none'",
   "form-action 'self'",
   "frame-ancestors 'none'",

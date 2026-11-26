@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { MicrosoftClarity } from "@/components/analytics/clarity";
 import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
@@ -105,6 +106,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <SpeedInsights />
           </>
         ) : null}
+        {/* Microsoft Clarity: production only, skipped on /admin. See Cookie Policy. */}
+        <MicrosoftClarity />
       </body>
     </html>
   );

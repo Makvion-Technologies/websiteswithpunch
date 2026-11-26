@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <LegalPage title="Privacy Policy" updated="November 25, 2026" path="/privacy">
+    <LegalPage title="Privacy Policy" updated="November 26, 2026" path="/privacy">
       <p>
         Websites With Punch is a product operated by <strong>Makvion Technologies</strong>, based
         in India (&quot;we&quot;, &quot;us&quot;, or &quot;our&quot;). This Privacy Policy explains
@@ -102,6 +102,12 @@ export default function PrivacyPage() {
           track you across other sites.
         </li>
         <li>
+          <strong>Microsoft Clarity</strong> helps us understand how visitors use the live site
+          (clicks, scrolling and session replays, with typed text such as passwords and emails
+          masked). See Microsoft&apos;s{" "}
+          <A href="https://privacy.microsoft.com/privacystatement">privacy statement</A>.
+        </li>
+        <li>
           <strong>Neon</strong> hosts our database (in Singapore).
         </li>
         <li>
@@ -120,11 +126,12 @@ export default function PrivacyPage() {
 
       <H2>Cookies</H2>
       <P>
-        We only use cookies needed to keep you signed in (a session cookie and related security
-        cookies). We don&apos;t use advertising or tracking cookies. Your light/dark theme choice,
-        and a small layout hint (site counts and name lengths) used to draw loading screens, are
-        kept in your browser&apos;s local storage. See our{" "}
-        <A href="/cookie-policy">Cookie Policy</A> for the cookie names and how analytics works.
+        We use cookies needed to keep you signed in (a session cookie and related security
+        cookies), plus Microsoft Clarity&apos;s first-party analytics cookies on the live site. We
+        don&apos;t use advertising cookies. Your light/dark theme choice, and a small layout hint
+        (site counts and name lengths) used to draw loading screens, are kept in your
+        browser&apos;s local storage. See our <A href="/cookie-policy">Cookie Policy</A> for the
+        cookie names and how analytics works.
       </P>
 
       <H2>Sharing of Information</H2>

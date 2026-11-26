@@ -39,7 +39,7 @@ Websites With Punch watches the sites you care about and tells you before someth
 | Payments | Dodo Payments |
 | Email | Resend |
 | Hosting / cron | Vercel (app + daily cron) |
-| Analytics | Vercel Analytics, Speed Insights |
+| Analytics | Vercel Analytics, Speed Insights, Microsoft Clarity |
 
 ## Getting started
 
