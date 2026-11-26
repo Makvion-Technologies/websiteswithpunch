@@ -3,7 +3,7 @@ import { A, H2, LegalContact, LegalPage, P, UL } from "@/components/legal/LegalP
 
 const title = "Cookie Policy";
 const description =
-  "How Websites With Punch uses essential session cookies and privacy-friendly, cookieless analytics. No advertising or third-party marketing cookies.";
+  "How Websites With Punch uses essential session cookies, Microsoft Clarity, and cookieless Vercel analytics. No advertising or third-party marketing cookies.";
 
 export const metadata: Metadata = {
   title,
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 export default function CookiePolicyPage() {
   return (
-    <LegalPage title="Cookie Policy" updated="November 25, 2026" path="/cookie-policy">
+    <LegalPage title="Cookie Policy" updated="November 26, 2026" path="/cookie-policy">
       <P>
         This Cookie Policy explains how Websites With Punch, operated by{" "}
         <strong>Makvion Technologies</strong>, based in India, uses cookies and similar storage when
@@ -32,7 +32,9 @@ export default function CookiePolicyPage() {
       <H2>What Cookies Are</H2>
       <P>
         Cookies are small text files a website stores in your browser. Some keep you signed in;
-        others are used for ads or tracking. We only use the first kind.
+        others are used for ads or tracking. We use essential cookies to keep you signed in, and
+        Microsoft Clarity sets a small first-party cookie so it can tell visits apart. We do not
+        use advertising cookies.
       </P>
 
       <H2>Essential Cookies (Necessary)</H2>
@@ -75,7 +77,7 @@ export default function CookiePolicyPage() {
         We do not use social login, so we do not set OAuth cookies such as PKCE, state or nonce.
       </P>
 
-      <H2>Analytics (No Cookies)</H2>
+      <H2 id="analytics">Analytics</H2>
       <P>
         On Vercel deployments we use <strong>Vercel Web Analytics</strong> and{" "}
         <strong>Speed Insights</strong> to count page views and measure how fast pages load. They
@@ -84,6 +86,16 @@ export default function CookiePolicyPage() {
         Web Analytics uses a short-lived hash of the request instead of a cookie; Speed Insights
         reports anonymous performance metrics (such as Core Web Vitals). Neither runs in local
         development.
+      </P>
+      <P>
+        On the live site we also use <strong>Microsoft Clarity</strong> to understand how you use
+        the site: where you click, how far you scroll, and a replay of the visit. Typed text such
+        as passwords and email addresses is masked in those recordings. Clarity sets first-party
+        cookies so it can tell visits apart: typically <code className="text-sm">_clck</code> (about
+        a year) and <code className="text-sm">_clsk</code> (the current session). It does not show
+        ads. Recordings are kept by Microsoft for about 30 days. See Microsoft&apos;s{" "}
+        <A href="https://privacy.microsoft.com/privacystatement">privacy statement</A>. Clarity is
+        not loaded on preview deployments, in local development, or on our admin pages.
       </P>
 
       <H2>What We Do Not Use</H2>
@@ -103,8 +115,8 @@ export default function CookiePolicyPage() {
       <P>
         You can view, block or delete cookies in your browser settings. Blocking essential cookies
         or clearing them will sign you out, and you will need to log in again to use the dashboard.
-        There is no cookie consent banner on this site because we only use necessary cookies and
-        cookieless analytics.
+        Blocking or deleting Clarity&apos;s cookies only stops those recordings and heatmaps; it
+        does not affect sign-in.
       </P>
 
       <LegalContact />
